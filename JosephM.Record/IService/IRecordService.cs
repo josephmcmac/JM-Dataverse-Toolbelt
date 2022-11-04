@@ -1,4 +1,5 @@
 using JosephM.Core.FieldType;
+using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
@@ -198,9 +199,9 @@ namespace JosephM.Record.IService
 
         void ProcessResults(QueryDefinition query, Func<IEnumerable<IRecord>, bool> processEachResultSet);
 
-        void LoadFieldsForAllEntities();
+        void LoadFieldsForAllEntities(LogController logController = null);
 
-        void LoadRelationshipsForAllEntities();
+        void LoadRelationshipsForAllEntities(LogController logController = null);
 
         bool SupportsExecuteMultiple { get; }
 

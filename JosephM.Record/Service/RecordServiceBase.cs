@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using JosephM.Core.FieldType;
+using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
@@ -347,11 +348,11 @@ namespace JosephM.Record.Service
             processEachResultSet(results);
         }
 
-        public void LoadFieldsForAllEntities()
+        public void LoadFieldsForAllEntities(LogController logController = null)
         {
         }
 
-        public void LoadRelationshipsForAllEntities()
+        public void LoadRelationshipsForAllEntities(LogController logController = null)
         {
         }
 

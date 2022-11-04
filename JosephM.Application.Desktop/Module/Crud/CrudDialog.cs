@@ -6,6 +6,7 @@ using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.Query;
 using JosephM.Core.FieldType;
+using JosephM.Core.Log;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
@@ -40,7 +41,7 @@ namespace JosephM.Application.Desktop.Module.Crud
             {
                 //this bit messy because may take a while to load the record types
                 //so spawn on async thread, then back to the main thread for the ui objects
-                LoadingViewModel.LoadingMessage = "Loading metadata - please wait this may take a while";
+                LoadingViewModel.LoadingMessage = "Loading entity metadata. Please wait this may take a while";
                 Thread.Sleep(100);
                 var recordTypesForBrowsing = Task.Run<IEnumerable<string>>(() => RecordService.GetAllRecordTypes()
                     .Where(r =>
@@ -92,8 +93,9 @@ namespace JosephM.Application.Desktop.Module.Crud
                 {
                     try
                     {
-                        RecordService.LoadFieldsForAllEntities();
-                        RecordService.LoadRelationshipsForAllEntities();
+                        var logController = new LogController(LoadingViewModel);
+                        RecordService.LoadFieldsForAllEntities(logController);
+                        RecordService.LoadRelationshipsForAllEntities(logController);
                     }
                     finally
                     {

@@ -265,14 +265,12 @@ namespace JosephM.Xrm
 
         public virtual OrganizationResponse Execute(OrganizationRequest request, bool retry)
         {
-            var requestDescription = GetRequestDescription(request);
-
             OrganizationResponse result;
             try
             {
                 result = Service.Execute(request);
             }
-            catch (FaultException<OrganizationServiceFault> ex)
+            catch (FaultException<OrganizationServiceFault>)
             {
                 if (!retry)
                     throw;
@@ -285,7 +283,7 @@ namespace JosephM.Xrm
                     result = Service.Execute(request);
                 }
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException)
             {
                 if (!retry)
                     throw;
@@ -304,8 +302,6 @@ namespace JosephM.Xrm
                     }
                 }
             }
-
-            requestDescription = GetRequestDescription(request);
             return result;
         }
 
@@ -2080,51 +2076,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             Disassociate(relationshipName, keyAttributeFrom, entityFrom, keyAttributeTo, new[] { relatedEntity });
         }
 
-        private static string GetRequestDescription(OrganizationRequest request)
-        {
-            var result = request.GetType().Name;
-            if (request is CreateRequest)
-            {
-                return result + " - Type = " + ((CreateRequest)request).Target.LogicalName;
-            }
-            else if (request is UpdateRequest)
-            {
-                var tRequest = ((UpdateRequest)request);
-                return result + " Type = " + tRequest.Target.LogicalName + ", Id = " + tRequest.Target.Id;
-            }
-            else if (request is RetrieveRequest)
-            {
-                var tRequest = ((RetrieveRequest)request);
-                return result + " Type = " + tRequest.Target.LogicalName + ", Id = " + tRequest.Target.Id;
-            }
-            else if (request is RetrieveMultipleRequest)
-            {
-                var tRequest = ((RetrieveMultipleRequest)request);
-                if (tRequest.Query is QueryExpression)
-                    return result + " Type = " + ((QueryExpression)tRequest.Query).EntityName;
-            }
-            else if (request is RetrieveEntityRequest)
-            {
-                var tRequest = ((RetrieveEntityRequest)request);
-                return result + " Type = " + tRequest.LogicalName + ", Filters = " + tRequest.EntityFilters;
-            }
-            else if (request is AssociateRequest)
-            {
-                var tRequest = ((AssociateRequest)request);
-                return result + " Relationship = " + tRequest.Relationship.SchemaName + ", Type = " +
-                       tRequest.Target.LogicalName + ", Id = " + tRequest.Target.Id + ", Related = " +
-                       String.Join(", ", tRequest.RelatedEntities.Select(XrmEntity.GetLookupGuid));
-            }
-            else if (request is DisassociateRequest)
-            {
-                var tRequest = ((DisassociateRequest)request);
-                return result + " Relationship = " + tRequest.Relationship.SchemaName + ", Type = " +
-                       tRequest.Target.LogicalName + ", Id = " + tRequest.Target.Id + ", Related = " +
-                       String.Join(", ", tRequest.RelatedEntities.Select(XrmEntity.GetLookupGuid));
-            }
-            return result;
-        }
-
         public void Update(Entity entity, IEnumerable<string> fieldsToSubmit)
         {
             if (fieldsToSubmit != null && fieldsToSubmit.Any())
@@ -3725,18 +3676,24 @@ string recordType)
         }
 
         private bool _allFieldsLoaded;
-        public void LoadFieldsForAllEntities()
+        public void LoadFieldsForAllEntities(LogController logController = null)
         {
+            logController = logController ?? new LogController();
             lock (LockObject)
             {
                 if (!_allFieldsLoaded)
                 {
                     var allEntityTypes = GetAllEntityMetadata()
-                        .Where(e => e.Value.IsValidForAdvancedFind ?? false)
                         .Select(e => e.Value.LogicalName)
                         .ToList();
-                    while(allEntityTypes.Any())
+                    var totalToDo = allEntityTypes.Count();
+                    while (true)
                     {
+                        logController.LogLiteral($"Loading field metadata. Please wait this may take a while\n\nEntities completed: {totalToDo - allEntityTypes.Count}/{totalToDo}");
+                        if(!allEntityTypes.Any())
+                        {
+                            break;
+                        }
                         var topX = allEntityTypes.Take(200).ToArray();
                         allEntityTypes.RemoveRange(0, topX.Count());
                         var requests = topX
@@ -3752,6 +3709,7 @@ string recordType)
                             if (response.Fault == null && response.Response is RetrieveEntityResponse entityMetadataResponse)
                             {
                                 if (entityMetadataResponse.EntityMetadata != null
+                                    && entityMetadataResponse.EntityMetadata.LogicalName != null
                                     && !EntityFieldMetadata.ContainsKey(entityMetadataResponse.EntityMetadata.LogicalName)
                                     && entityMetadataResponse.EntityMetadata.Attributes != null)
                                 {
@@ -3775,36 +3733,64 @@ string recordType)
         }
 
         private bool _allRelationshipsLoaded;
-        public void LoadRelationshipsForAllEntities()
+        public void LoadRelationshipsForAllEntities(LogController logController = null)
         {
+            logController = logController ?? new LogController();
             lock (LockObject)
             {
                 if (!_allRelationshipsLoaded)
                 {
-                    var request = new RetrieveAllEntitiesRequest()
-                    {
-                        EntityFilters = EntityFilters.Relationships
-                    };
-                    var response = (RetrieveAllEntitiesResponse)Execute(request);
                     EntityRelationships.Clear();
-                    foreach (var item in response.EntityMetadata)
+                    var allEntityTypes = GetAllEntityMetadata()
+                        //.Where(e => e.Value.IsValidForAdvancedFind ?? false)
+                        .Select(e => e.Value.LogicalName)
+                        .ToList();
+                    var totalToDo = allEntityTypes.Count();
+                    while (true)
                     {
-                        var relationships = new List<RelationshipMetadataBase>();
-                        if (item.OneToManyRelationships != null)
+                        logController.LogLiteral($"Loading relationship metadata. Please wait this may take a while\n\nEntities completed: {totalToDo - allEntityTypes.Count}/{totalToDo}");
+                        if (!allEntityTypes.Any())
                         {
-                            relationships.AddRange(item.OneToManyRelationships);
+                            break;
                         }
-                        if (item.ManyToManyRelationships != null)
+                        var topX = allEntityTypes.Take(200).ToArray();
+                        allEntityTypes.RemoveRange(0, topX.Count());
+                        var requests = topX
+                            .Select(e => new RetrieveEntityRequest
+                            {
+                                EntityFilters = EntityFilters.Relationships,
+                                LogicalName = e
+                            })
+                            .ToArray();
+                        var responses = ExecuteMultiple(requests);
+                        foreach (var response in responses)
                         {
-                            relationships.AddRange(item.ManyToManyRelationships);
-                        }
-                        if (item.ManyToOneRelationships != null)
-                        {
-                            relationships.AddRange(item.ManyToOneRelationships);
-                        }
-                        if (!EntityRelationships.ContainsKey(item.LogicalName))
-                        {
-                            EntityRelationships.Add(item.LogicalName, relationships.ToArray());
+                            if (response.Fault == null && response.Response is RetrieveEntityResponse entityMetadataResponse)
+                            {
+                                var item = entityMetadataResponse.EntityMetadata;
+                                if (item != null
+                                    && item.LogicalName != null
+                                    && !EntityRelationships.ContainsKey(item.LogicalName))
+                                {
+                                    var relationships = new List<RelationshipMetadataBase>();
+                                    if (item.OneToManyRelationships != null)
+                                    {
+                                        relationships.AddRange(item.OneToManyRelationships);
+                                    }
+                                    if (item.ManyToManyRelationships != null)
+                                    {
+                                        relationships.AddRange(item.ManyToManyRelationships);
+                                    }
+                                    if (item.ManyToOneRelationships != null)
+                                    {
+                                        relationships.AddRange(item.ManyToOneRelationships);
+                                    }
+                                    if (!EntityRelationships.ContainsKey(item.LogicalName))
+                                    {
+                                        EntityRelationships.Add(item.LogicalName, relationships.ToArray());
+                                    }
+                                }
+                            }
                         }
                     }
                     _allRelationshipsLoaded = true;

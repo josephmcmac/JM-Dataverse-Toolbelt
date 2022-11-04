@@ -242,7 +242,7 @@
       <Button guid="guidXrmPackageCmdSet" id="CrudCommandId" priority="0x0102" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
-          <ButtonText>Query &amp; Update Data</ButtonText>
+          <ButtonText>Query and Update Data</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="AboutCommandId" priority="0x010A" type="Button">

@@ -74,14 +74,14 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
-        public void LoadFieldsForAllEntities()
+        public void LoadFieldsForAllEntities(LogController logController = null)
         {
-            XrmService.LoadFieldsForAllEntities();
+            XrmService.LoadFieldsForAllEntities(logController);
         }
 
-        public void LoadRelationshipsForAllEntities()
+        public void LoadRelationshipsForAllEntities(LogController logController = null)
         {
-            XrmService.LoadRelationshipsForAllEntities();
+            XrmService.LoadRelationshipsForAllEntities(logController);
         }
 
         public string SendEmail(Lookup from, Lookup to, string subject, string body)

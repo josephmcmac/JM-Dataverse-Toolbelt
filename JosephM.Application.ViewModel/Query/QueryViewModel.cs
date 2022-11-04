@@ -9,6 +9,7 @@ using JosephM.Application.ViewModel.Shared;
 using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
+using JosephM.Record.Attributes;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
@@ -17,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -51,7 +51,11 @@ namespace JosephM.Application.ViewModel.Query
 
             RunQueryButton = new XrmButtonViewModel("Run Query", QuickFind, ApplicationController);
             IncludeNotInButton = new XrmButtonViewModel("Add Not In Query", NotInSwitch, ApplicationController);
-            ChangeQueryType();
+            if (!AllowQuery)
+            {
+                IsQuickFind = true;
+                ChangeQueryType();
+            }
 
             QueryTypeButton.IsVisible = AllowQuery;
 
@@ -830,7 +834,7 @@ namespace JosephM.Application.ViewModel.Query
                 {
                     if(value != null)
                     {
-                        LoadingViewModel.LoadingMessage = $"Loading {RecordService.GetDisplayName(value)} Fields";
+                        LoadingViewModel.LoadingMessage = $"Loading {RecordService.GetDisplayName(value)} Query";
                         var fieldNames = Task.Run(() => RecordService.GetFields(value).ToArray()).Result;
                         //var manyRelationships = Task.Run(() => RecordService.GetManyToManyRelationships(RecordType).ToArray()).Result;
                         //var oneToManyRelationships = Task.Run(() => RecordService.GetOneToManyRelationships(RecordType).ToArray()).Result;
