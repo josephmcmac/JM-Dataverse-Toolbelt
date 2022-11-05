@@ -2549,7 +2549,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
 
         public bool FieldExists(string fieldName, string recordType)
         {
-            return GetEntityFieldMetadata(recordType).ContainsKey(fieldName);
+            return GetEntityFieldMetadata(recordType).Keys.Any(k => k == fieldName);
         }
 
         public void CreateOrUpdateDateAttribute(string schemaName, string displayName, string description,
@@ -3675,26 +3675,25 @@ string recordType)
             }
         }
 
-        private bool _allFieldsLoaded;
-        public void LoadFieldsForAllEntities(LogController logController = null)
+        public void LoadFieldsForEntities(IEnumerable<string> entityType, LogController logController)
         {
             logController = logController ?? new LogController();
             lock (LockObject)
             {
-                if (!_allFieldsLoaded)
+                var allEntityTypes = entityType
+                    .Where(e => !EntityFieldMetadata.ContainsKey(e))
+                    .ToList();
+                if (allEntityTypes.Any())
                 {
-                    var allEntityTypes = GetAllEntityMetadata()
-                        .Select(e => e.Value.LogicalName)
-                        .ToList();
                     var totalToDo = allEntityTypes.Count();
                     while (true)
                     {
-                        logController.LogLiteral($"Loading field metadata. Please wait this may take a while\n\nEntities completed: {totalToDo - allEntityTypes.Count}/{totalToDo}");
-                        if(!allEntityTypes.Any())
+                        logController.UpdateProgress(totalToDo - allEntityTypes.Count, totalToDo, $"Loading field metadata. Please wait this may take a while\n\nEntities completed: {totalToDo - allEntityTypes.Count}/{totalToDo}");
+                        if (!allEntityTypes.Any())
                         {
                             break;
                         }
-                        var topX = allEntityTypes.Take(200).ToArray();
+                        var topX = allEntityTypes.Take(50).ToArray();
                         allEntityTypes.RemoveRange(0, topX.Count());
                         var requests = topX
                             .Select(e => new RetrieveEntityRequest
@@ -3704,7 +3703,7 @@ string recordType)
                             })
                             .ToArray();
                         var responses = ExecuteMultiple(requests);
-                        foreach(var response in responses)
+                        foreach (var response in responses)
                         {
                             if (response.Fault == null && response.Response is RetrieveEntityResponse entityMetadataResponse)
                             {
@@ -3727,13 +3726,73 @@ string recordType)
                             }
                         }
                     }
-                    _allFieldsLoaded = true;
+                }
+            }
+        }
+
+        private bool _allFieldsLoaded;
+        public void LoadFieldsForAllEntities(LogController logController)
+        {
+            logController = logController ?? new LogController();
+            lock (LockObject)
+            {
+                if (!_allFieldsLoaded)
+                {
+                    var allEntityTypes = GetAllEntityMetadata()
+                        .Select(e => e.Value.LogicalName)
+                        .Where(e => !EntityFieldMetadata.ContainsKey(e))
+                        .ToList();
+                    if (allEntityTypes.Any())
+                    {
+                        var totalToDo = allEntityTypes.Count();
+                        while (true)
+                        {
+                            logController.UpdateProgress(totalToDo - allEntityTypes.Count, totalToDo, $"Loading field metadata. Please wait this may take a while\n\nEntities completed: {totalToDo - allEntityTypes.Count}/{totalToDo}");
+                            if (!allEntityTypes.Any())
+                            {
+                                break;
+                            }
+                            var topX = allEntityTypes.Take(200).ToArray();
+                            allEntityTypes.RemoveRange(0, topX.Count());
+                            var requests = topX
+                                .Select(e => new RetrieveEntityRequest
+                                {
+                                    EntityFilters = EntityFilters.Attributes,
+                                    LogicalName = e
+                                })
+                                .ToArray();
+                            var responses = ExecuteMultiple(requests);
+                            foreach (var response in responses)
+                            {
+                                if (response.Fault == null && response.Response is RetrieveEntityResponse entityMetadataResponse)
+                                {
+                                    if (entityMetadataResponse.EntityMetadata != null
+                                        && entityMetadataResponse.EntityMetadata.LogicalName != null
+                                        && !EntityFieldMetadata.ContainsKey(entityMetadataResponse.EntityMetadata.LogicalName)
+                                        && entityMetadataResponse.EntityMetadata.Attributes != null)
+                                    {
+                                        var dictionary = new SortedDictionary<string, AttributeMetadata>();
+                                        var filteredFields = FilterAttributeMetadata(entityMetadataResponse.EntityMetadata.Attributes);
+                                        foreach (var field in filteredFields)
+                                        {
+                                            if (!dictionary.ContainsKey(field.LogicalName))
+                                            {
+                                                dictionary.Add(field.LogicalName, field);
+                                            }
+                                        }
+                                        EntityFieldMetadata.Add(entityMetadataResponse.EntityMetadata.LogicalName, dictionary);
+                                    }
+                                }
+                            }
+                        }
+                        _allFieldsLoaded = true;
+                    }
                 }
             }
         }
 
         private bool _allRelationshipsLoaded;
-        public void LoadRelationshipsForAllEntities(LogController logController = null)
+        public void LoadRelationshipsForAllEntities(LogController logController)
         {
             logController = logController ?? new LogController();
             lock (LockObject)
@@ -3742,13 +3801,12 @@ string recordType)
                 {
                     EntityRelationships.Clear();
                     var allEntityTypes = GetAllEntityMetadata()
-                        //.Where(e => e.Value.IsValidForAdvancedFind ?? false)
                         .Select(e => e.Value.LogicalName)
                         .ToList();
                     var totalToDo = allEntityTypes.Count();
                     while (true)
                     {
-                        logController.LogLiteral($"Loading relationship metadata. Please wait this may take a while\n\nEntities completed: {totalToDo - allEntityTypes.Count}/{totalToDo}");
+                        logController.UpdateProgress(totalToDo - allEntityTypes.Count, totalToDo, $"Loading relationship metadata. Please wait this may take a while\n\nEntities completed: {totalToDo - allEntityTypes.Count}/{totalToDo}");
                         if (!allEntityTypes.Any())
                         {
                             break;

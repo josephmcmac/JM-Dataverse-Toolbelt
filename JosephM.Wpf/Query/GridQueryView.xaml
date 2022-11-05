@@ -165,7 +165,7 @@
                                             <Border>
                                                 <StackPanel Orientation="Vertical">
                                                     <WrapPanel>
-                                                        <TextBox Text="Where Not In - note not in will perform slowly on large volumes of data"  Style="{StaticResource ValidationMessageTextBox}" />
+                                                        <TextBox Text="Where Not In - note not in will perform slowly and may fail on large volumes of data"  Style="{StaticResource ValidationMessageTextBox}" />
                                                     </WrapPanel>
                                                     <query:FilterConditionsView DataContext="{Binding NotInFilterConditions}" />
                                                     <query:JoinsView DataContext="{Binding NotInJoins}" />

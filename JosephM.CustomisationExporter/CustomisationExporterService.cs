@@ -36,13 +36,11 @@ namespace JosephM.CustomisationExporter
 
             if ((request.Fields || request.FieldOptionSets))
             {
-                controller.UpdateProgress(0, 1, "Loading All Fields.....");
-                Service.LoadFieldsForAllEntities();
+                Service.LoadFieldsForAllEntities(controller.Controller);
             }
             if ((request.Fields || request.Relationships))
             {
-                controller.UpdateProgress(0, 1, "Loading All Relationships.....");
-                Service.LoadRelationshipsForAllEntities();
+                Service.LoadRelationshipsForAllEntities(controller.Controller);
             }
 
             //add progress counts

@@ -61,13 +61,13 @@ namespace JosephM.InstanceComparer
             if(request.Entities && request.AllTypesForEntityMetadata)
             {
                 processContainer.Controller.LogLiteral($"Loading Field Metadata For {request.ConnectionOne.Name}");
-                processContainer.ServiceOne.LoadFieldsForAllEntities();
+                processContainer.ServiceOne.LoadFieldsForAllEntities(processContainer.Controller);
                 processContainer.Controller.LogLiteral($"Loading Relationship Metadata For {request.ConnectionOne.Name}");
-                processContainer.ServiceOne.LoadRelationshipsForAllEntities();
+                processContainer.ServiceOne.LoadRelationshipsForAllEntities(processContainer.Controller);
                 processContainer.Controller.LogLiteral($"Loading Field Metadata For {request.ConnectionTwo.Name}");
-                processContainer.ServiceTwo.LoadFieldsForAllEntities();
+                processContainer.ServiceTwo.LoadFieldsForAllEntities(processContainer.Controller);
                 processContainer.Controller.LogLiteral($"Loading Relationship Metadata For {request.ConnectionTwo.Name}");
-                processContainer.ServiceTwo.LoadRelationshipsForAllEntities();
+                processContainer.ServiceTwo.LoadRelationshipsForAllEntities(processContainer.Controller);
             }
 
             foreach (var item in processContainer.Comparisons)

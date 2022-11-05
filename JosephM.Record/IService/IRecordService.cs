@@ -15,6 +15,10 @@ namespace JosephM.Record.IService
     {
         IEnumerable<IFieldMetadata> GetFieldMetadata(string recordType);
 
+        bool FieldExists(string fieldName, string recordType);
+
+        string GetFieldLabel(string fieldName, string recordtype);
+
         IRecordTypeMetadata GetRecordTypeMetadata(string recordType);
 
         IEnumerable<IPicklistSet> GetSharedPicklists();
@@ -199,9 +203,11 @@ namespace JosephM.Record.IService
 
         void ProcessResults(QueryDefinition query, Func<IEnumerable<IRecord>, bool> processEachResultSet);
 
-        void LoadFieldsForAllEntities(LogController logController = null);
+        void LoadFieldsForAllEntities(LogController logController);
 
-        void LoadRelationshipsForAllEntities(LogController logController = null);
+        void LoadFieldsForEntities(IEnumerable<string> types, LogController logController);
+
+        void LoadRelationshipsForAllEntities(LogController logController);
 
         bool SupportsExecuteMultiple { get; }
 

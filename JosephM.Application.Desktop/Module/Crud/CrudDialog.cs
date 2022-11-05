@@ -33,16 +33,11 @@ namespace JosephM.Application.Desktop.Module.Crud
             OverideCompletionScreenMethod = () => { };
         }
 
-        public override bool CompleteDialogExtentionAsync => true;
-
         protected override void CompleteDialogExtention()
         {
             try
             {
-                //this bit messy because may take a while to load the record types
-                //so spawn on async thread, then back to the main thread for the ui objects
                 LoadingViewModel.LoadingMessage = "Loading entity metadata. Please wait this may take a while";
-                Thread.Sleep(100);
                 var recordTypesForBrowsing = Task.Run<IEnumerable<string>>(() => RecordService.GetAllRecordTypes()
                     .Where(r =>
                     RecordService.GetRecordTypeMetadata(r).Searchable)
@@ -88,21 +83,7 @@ namespace JosephM.Application.Desktop.Module.Crud
                         };
                 customFunctionList.AddRange(GetExtendedGridFunctions());
                 QueryViewModel = new QueryViewModel(recordTypesForBrowsing, RecordService, ApplicationController, allowQuery: true, customFunctions: customFunctionList);
-
-                ApplicationController.DoOnAsyncThread(() =>
-                {
-                    try
-                    {
-                        var logController = new LogController(LoadingViewModel);
-                        RecordService.LoadFieldsForAllEntities(logController);
-                        RecordService.LoadRelationshipsForAllEntities(logController);
-                    }
-                    finally
-                    {
-                        LoadingViewModel.IsLoading = false;
-                        Controller.LoadToUi(QueryViewModel);
-                    }
-                });
+                Controller.LoadToUi(QueryViewModel);
             }
             catch (Exception ex)
             {

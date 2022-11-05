@@ -1,6 +1,7 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.FieldType;
+using JosephM.Core.Log;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
@@ -12,9 +13,10 @@ namespace JosephM.Application.ViewModel.Query
 {
     public class JoinViewModel : ViewModelBase
     {
-        public JoinViewModel(string recordType, IRecordService recordService, IApplicationController controller, Action onPopulated, Action<JoinViewModel> remove, Action onConditionSelectedChanged)
+        public JoinViewModel(string recordType, IRecordService recordService, IApplicationController controller, Action onPopulated, Action<JoinViewModel> remove, Action onConditionSelectedChanged, LoadingViewModel loadingViewModel)
             : base(controller)
         {
+            LoadingViewModel = loadingViewModel;
             OnConditionSelectedChanged = onConditionSelectedChanged;
             RecordType = recordType;
             RecordService = recordService;
@@ -22,7 +24,6 @@ namespace JosephM.Application.ViewModel.Query
             LinkSelections = GetSelections();
             OnPopulated = onPopulated;
             Remove = new MyCommand(() => remove(this));
-            LoadingViewModel = new LoadingViewModel(ApplicationController);
         }
 
         private IEnumerable<PicklistOption> GetSelections()
@@ -30,70 +31,88 @@ namespace JosephM.Application.ViewModel.Query
             if (RecordType == null)
                 return new PicklistOption[0];
 
-            //need to generate a list of all join optionds
-            //n:N, 1:N or N:1
-
-            var options = new List<PicklistOption>();
-            var lookupFields = RecordService.GetFieldMetadata(RecordType)
-                .Where(f => f.FieldType == Record.Metadata.RecordFieldType.Lookup || f.FieldType == Record.Metadata.RecordFieldType.Customer)
-                .ToArray();
-            //okay these need appending for each target type
-            foreach(var lookupField in lookupFields)
+            try
             {
-                var targetTypes = RecordService.GetLookupTargetType(lookupField.SchemaName, RecordType);
-                if(RecordType == "activitymimeattachment" && lookupField.SchemaName == "objectid")
+                //need to generate a list of all join options
+                //n:N, 1:N or N:1
+                LoadingViewModel.LoadingMessage = $"Loading join options for {RecordService.GetDisplayName(RecordType)}";
+                LoadingViewModel.IsLoading = true;
+
+                var options = new List<PicklistOption>();
+                var lookupFields = RecordService.GetFieldMetadata(RecordType)
+                    .Where(f => f.FieldType == Record.Metadata.RecordFieldType.Lookup || f.FieldType == Record.Metadata.RecordFieldType.Customer)
+                    .ToArray();
+                //okay these need appending for each target type
+                foreach (var lookupField in lookupFields)
                 {
-                    targetTypes = "email,appointment";
-                }
-                if(!string.IsNullOrWhiteSpace(targetTypes))
-                {
-                    var relationshipLabel = lookupField.DisplayName;
-                    var split = targetTypes.Split(',');
-                    var isMultiple = split.Count() > 1;
-                    foreach(var target in split)
+                    var targetTypes = RecordService.GetLookupTargetType(lookupField.SchemaName, RecordType);
+                    if (RecordType == "activitymimeattachment" && lookupField.SchemaName == "objectid")
                     {
-                        var key = $"n1:{lookupField.SchemaName}:{target}";
-                        var label = relationshipLabel + (isMultiple ? ($" ({RecordService.GetDisplayName(target)})") : null);
+                        targetTypes = "email,appointment";
+                    }
+                    if (!string.IsNullOrWhiteSpace(targetTypes))
+                    {
+                        var relationshipLabel = lookupField.DisplayName;
+                        var split = targetTypes.Split(',');
+                        var isMultiple = split.Count() > 1;
+                        foreach (var target in split)
+                        {
+                            var key = $"n1:{lookupField.SchemaName}:{target}";
+                            var label = relationshipLabel + (isMultiple ? ($" ({RecordService.GetDisplayName(target)})") : null);
+                            var option = new PicklistOption(key, label);
+                            options.Add(option);
+                        }
+                    }
+                }
+
+                var manyToManyRelationships = RecordService.GetManyToManyRelationships(RecordType).ToArray();
+                foreach (var manyToMany in manyToManyRelationships)
+                {
+                    if (manyToMany.RecordType1 == RecordType)
+                    {
+                        var key = $"nn:{manyToMany.IntersectEntityName}:{manyToMany.Entity1IntersectAttribute}:{manyToMany.Entity2IntersectAttribute}:{manyToMany.RecordType2}";
+                        var label = manyToMany.RecordType2UseCustomLabel ? manyToMany.RecordType2CustomLabel : RecordService.GetDisplayName(manyToMany.RecordType2);
+                        var option = new PicklistOption(key, label);
+                        options.Add(option);
+                    }
+                    if (manyToMany.RecordType2 == RecordType)
+                    {
+                        var key = $"nn:{manyToMany.IntersectEntityName}:{manyToMany.Entity2IntersectAttribute}:{manyToMany.Entity1IntersectAttribute}:{manyToMany.RecordType1}";
+                        var label = manyToMany.RecordType1UseCustomLabel ? manyToMany.RecordType1CustomLabel : RecordService.GetDisplayName(manyToMany.RecordType1);
                         var option = new PicklistOption(key, label);
                         options.Add(option);
                     }
                 }
-            }
 
-            var manyToManyRelationships = RecordService.GetManyToManyRelationships(RecordType).ToArray();
-            foreach(var manyToMany in manyToManyRelationships)
-            {
-                if(manyToMany.RecordType1 == RecordType)
-                {
-                    var key = $"nn:{manyToMany.IntersectEntityName}:{manyToMany.Entity1IntersectAttribute}:{manyToMany.Entity2IntersectAttribute}:{manyToMany.RecordType2}";
-                    var label = manyToMany.RecordType2UseCustomLabel ? manyToMany.RecordType2CustomLabel : RecordService.GetDisplayName(manyToMany.RecordType2);
-                    var option = new PicklistOption(key, label);
-                    options.Add(option);
-                }
-                if (manyToMany.RecordType2 == RecordType)
-                {
-                    var key = $"nn:{manyToMany.IntersectEntityName}:{manyToMany.Entity2IntersectAttribute}:{manyToMany.Entity1IntersectAttribute}:{manyToMany.RecordType1}";
-                    var label = manyToMany.RecordType1UseCustomLabel ? manyToMany.RecordType1CustomLabel : RecordService.GetDisplayName(manyToMany.RecordType1);
-                    var option = new PicklistOption(key, label);
-                    options.Add(option);
-                }
-            }
+                var oneToManyRelationships = RecordService.GetOneToManyRelationships(RecordType);
+                var referencedTypes = oneToManyRelationships
+                    .Select(r => r.ReferencingEntity)
+                    .Distinct()
+                    .ToArray();
+                RecordService.LoadFieldsForEntities(referencedTypes, new LogController(LoadingViewModel));
+                LoadingViewModel.LoadingMessage = $"Loading join options for {RecordService.GetDisplayName(RecordType)}";
 
-            var oneToManyRelationships = RecordService.GetOneToManyRelationships(RecordType).ToArray();
-            foreach(var oneToMany in oneToManyRelationships)
-            {
-                if (RecordService.FieldExists(oneToMany.ReferencingAttribute, oneToMany.ReferencingEntity))
+                oneToManyRelationships = oneToManyRelationships
+                    .Where(r => RecordService.FieldExists(r.ReferencingAttribute, r.ReferencingEntity))
+                    .ToArray();
+                foreach (var oneToMany in oneToManyRelationships)
                 {
+                    var entityLabel = RecordService.GetDisplayName(oneToMany.ReferencingEntity);
+                    var fieldLabel = RecordService.GetFieldLabel(oneToMany.ReferencingAttribute, oneToMany.ReferencingEntity);
                     var key = $"1n:{oneToMany.ReferencingEntity}:{oneToMany.ReferencingAttribute}";
-                    var label = $"{RecordService.GetDisplayName(oneToMany.ReferencingEntity)} ({RecordService.GetFieldLabel(oneToMany.ReferencingAttribute, oneToMany.ReferencingEntity)})";
+                    var label = $"{entityLabel} ({fieldLabel})";
                     var option = new PicklistOption(key, label);
                     options.Add(option);
                 }
-            }
 
-            options.Sort((p1, p2) => p1.CompareTo(p2));
-            options = options.Distinct().ToList();
-            return options;
+                options.Sort((p1, p2) => p1.CompareTo(p2));
+                options = options.Distinct().ToList();
+                return options;
+            }
+            finally
+            {
+                LoadingViewModel.IsLoading = false;
+            }
         }
 
         public bool Validate()
@@ -129,24 +148,8 @@ namespace JosephM.Application.ViewModel.Query
                 }
                 if (isChanging && value != null)
                 {
-                    //DoOnAsynchThread(() =>
-                    //{
-                    //    try
-                    //    {
-                            //LoadingViewModel.LoadingMessage = $"Loading {RecordService.GetDisplayName(SelectedRelationshipTarget)} Fields";
-                            //LoadingViewModel.IsLoading = true;
-                            FilterConditions = CreateFilterCondition();
-                            Joins = new JoinsViewModel(SelectedRelationshipTarget, RecordService, ApplicationController, OnConditionSelectedChanged);
-                    //    }
-                    //    catch(Exception ex)
-                    //    {
-                    //        ApplicationController.ThrowException(ex);
-                    //    }
-                    //    finally
-                    //    {
-                    //        LoadingViewModel.IsLoading = false;
-                    //    }
-                    //});
+                    FilterConditions = CreateFilterCondition();
+                    Joins = new JoinsViewModel(SelectedRelationshipTarget, RecordService, ApplicationController, OnConditionSelectedChanged, LoadingViewModel);
                 }
                 OnPropertyChanged(nameof(SelectedItem));
             }

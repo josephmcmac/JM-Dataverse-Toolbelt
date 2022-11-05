@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Shared;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
 using System;
@@ -9,10 +10,11 @@ namespace JosephM.Application.ViewModel.Query
 {
     public class JoinsViewModel : ViewModelBase
     {
-        public JoinsViewModel(string recordType, IRecordService recordService, IApplicationController controller, Action onConditionSelectedChanged)
+        public JoinsViewModel(string recordType, IRecordService recordService, IApplicationController controller, Action onConditionSelectedChanged, LoadingViewModel loadingViewModel)
             : base(controller)
         {
             OnConditionSelectedChanged = onConditionSelectedChanged;
+            LoadingViewModel = loadingViewModel;
             RecordType = recordType;
             RecordService = recordService;
             Joins = new ObservableCollection<JoinViewModel>();
@@ -20,13 +22,14 @@ namespace JosephM.Application.ViewModel.Query
         }
 
         public Action OnConditionSelectedChanged { get; private set; }
+        public LoadingViewModel LoadingViewModel { get; }
         public string RecordType { get; set; }
 
         private IRecordService RecordService { get; set; }
 
         private void AddNewJoin()
         {
-            var join = new JoinViewModel(RecordType, RecordService, ApplicationController, AddNewJoin, j => Joins.Remove(j), OnConditionSelectedChanged);
+            var join = new JoinViewModel(RecordType, RecordService, ApplicationController, AddNewJoin, j => Joins.Remove(j), OnConditionSelectedChanged, LoadingViewModel);
             Joins.Add(join);
         }
 

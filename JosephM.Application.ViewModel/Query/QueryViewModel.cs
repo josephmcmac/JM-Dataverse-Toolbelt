@@ -66,8 +66,26 @@ namespace JosephM.Application.ViewModel.Query
 
         private void NotInSwitch()
         {
-            IncludeNotIn = !IncludeNotIn;
-            IncludeNotInButton.Label = IncludeNotIn ? "Remove Not In Query" : "Add Not In Query";
+            ApplicationController.DoOnAsyncThread(() =>
+                {
+                    try
+                    {
+                        LoadingViewModel.LoadingMessage = "Loading Not In Query";
+                        LoadingViewModel.IsLoading = true;
+                        if (!IncludeNotIn)
+                        {
+                            NotInFilterConditions = CreateFilterCondition(isNotIn: true);
+                            NotInJoins = CreateJoins(isNotIn: true);
+                        }
+                        IncludeNotIn = !IncludeNotIn;
+                        IncludeNotInButton.Label = IncludeNotIn ? "Remove Not In Query" : "Add Not In Query";
+                    }
+                    finally
+                    {
+                        LoadingViewModel.IsLoading = false;
+                    }
+                });
+
         }
 
         public bool AllowCrud { get; set; }
@@ -300,7 +318,7 @@ namespace JosephM.Application.ViewModel.Query
 
         private JoinsViewModel CreateJoins(bool isNotIn = false)
         {
-            return new JoinsViewModel(RecordType, RecordService, ApplicationController, () => RefreshConditionButtons(isNotIn: isNotIn));
+            return new JoinsViewModel(RecordType, RecordService, ApplicationController, () => RefreshConditionButtons(isNotIn: isNotIn), LoadingViewModel);
         }
 
         private void GroupSelected(FilterOperator filterOperator, bool isNotIn = false)
@@ -836,8 +854,6 @@ namespace JosephM.Application.ViewModel.Query
                     {
                         LoadingViewModel.LoadingMessage = $"Loading {RecordService.GetDisplayName(value)} Query";
                         var fieldNames = Task.Run(() => RecordService.GetFields(value).ToArray()).Result;
-                        //var manyRelationships = Task.Run(() => RecordService.GetManyToManyRelationships(RecordType).ToArray()).Result;
-                        //var oneToManyRelationships = Task.Run(() => RecordService.GetOneToManyRelationships(RecordType).ToArray()).Result;
                     }
                     _recordType = value;
                     ClearNotInIds();
@@ -848,9 +864,6 @@ namespace JosephM.Application.ViewModel.Query
                     {
                         FilterConditions = CreateFilterCondition();
                         Joins = CreateJoins();
-                        NotInFilterConditions = CreateFilterCondition(isNotIn: true);
-                        NotInJoins = CreateJoins(isNotIn: true);
-                        //LoadViewButtons();
                     }
                     OnPropertyChanged(nameof(RecordTypeSelected));
                     if (_recordType != null)

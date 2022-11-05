@@ -348,11 +348,15 @@ namespace JosephM.Record.Service
             processEachResultSet(results);
         }
 
-        public void LoadFieldsForAllEntities(LogController logController = null)
+        public void LoadFieldsForAllEntities(LogController logController)
         {
         }
 
-        public void LoadRelationshipsForAllEntities(LogController logController = null)
+        public void LoadFieldsForEntities(IEnumerable<string> types, LogController logController)
+        {
+        }
+
+        public void LoadRelationshipsForAllEntities(LogController logController)
         {
         }
 
@@ -427,5 +431,15 @@ namespace JosephM.Record.Service
         }
 
         public virtual bool SupportsExecuteMultiple { get { return false; } }
+
+        public bool FieldExists(string fieldName, string recordType)
+        {
+            return GetFieldMetadata(recordType).Any(f => f.SchemaName == fieldName);
+        }
+
+        public string GetFieldLabel(string fieldName, string recordtype)
+        {
+            return this.GetFieldMetadata(fieldName, recordtype).DisplayName ?? fieldName;
+        }
     }
 }

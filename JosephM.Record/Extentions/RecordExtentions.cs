@@ -223,11 +223,6 @@ namespace JosephM.Record.Extentions
             return recordService.GetFirstX(recordType, -1, fields, conditions, null);
         }
 
-        public static string GetFieldLabel(this IRecordService recordService, string fieldName, string recordtype)
-        {
-            return recordService.GetFieldMetadata(fieldName, recordtype).DisplayName ?? fieldName;
-        }
-
         public static int GetMaxLength(this IRecordService recordService, string fieldName, string recordtype)
         {
             return recordService.GetFieldMetadata(fieldName, recordtype).MaxLength;
@@ -396,11 +391,6 @@ namespace JosephM.Record.Extentions
         public static bool RecordTypeExists(this IRecordService recordService, string recordType)
         {
             return recordService.GetAllRecordTypes().Contains(recordType);
-        }
-
-        public static bool FieldExists(this IRecordService recordService, string fieldName, string recordType)
-        {
-            return recordService.GetFieldMetadata(recordType).Any(f => f.SchemaName == fieldName);
         }
 
         public static IMany2ManyRelationshipMetadata GetManyRelationshipMetadata(this IRecordService recordService, string name, string recordType)

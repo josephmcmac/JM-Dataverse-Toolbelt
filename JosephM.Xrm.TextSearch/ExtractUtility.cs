@@ -2,6 +2,7 @@
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Xrm.Schema;
+using Microsoft.Xrm.Sdk;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -61,7 +62,7 @@ namespace JosephM.Xrm.TextSearch
                 Entities.authorizationserver, Entities.complexcontrol, Entities.workflowwaitsubscription, Entities.sdkmessagerequestfield,
                 Entities.untrackedemail, Entities.mailboxtrackingfolder, Entities.sharepointdocument, Entities.pluginassembly, Entities.sdkmessageprocessingstep, Entities.sdkmessageprocessingstepimage, Entities.plugintracelog,
                 Entities.solutioncomponent, Entities.msdyn_solutioncomponentsummary, Entities.msdyn_componentlayer, Entities.msdyn_componentlayerdatasource, Entities.msdyn_solutioncomponentdatasource, Entities.msdyn_solutionhistory,
-                Entities.msdyn_nonrelationalds, Entities.datalakeworkspace, Entities.datalakeworkspacepermission, Entities.msdyn_casesuggestion, Entities.msdyn_knowledgearticlesuggestion, Entities.virtualresourcegroupresource, Entities.msdyn_solutioncomponentcountsummary, Entities.msdyn_solutioncomponentcountdatasource, "aaduser"
+                Entities.msdyn_nonrelationalds, Entities.datalakeworkspace, Entities.datalakeworkspacepermission, Entities.msdyn_casesuggestion, Entities.msdyn_knowledgearticlesuggestion, Entities.virtualresourcegroupresource, Entities.msdyn_solutioncomponentcountsummary, Entities.msdyn_solutioncomponentcountdatasource, Entities.msdyn_suggestedactivity, Entities.msdyn_suggestedcontact, "aaduser"
             };
         }
 

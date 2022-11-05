@@ -60,7 +60,7 @@ namespace JosephM.Xrm.TextSearch
             if(container.Request.SearchAllTypes)
             {
                 container.Controller.LogLiteral("Loading metadata - this may take a while");
-                Service.LoadFieldsForAllEntities();
+                Service.LoadFieldsForAllEntities(container.Controller);
             }
 
             foreach (var recordType in recordTypes)

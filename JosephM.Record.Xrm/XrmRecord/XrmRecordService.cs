@@ -74,12 +74,16 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
-        public void LoadFieldsForAllEntities(LogController logController = null)
+        public void LoadFieldsForAllEntities(LogController logController)
         {
             XrmService.LoadFieldsForAllEntities(logController);
         }
+        public void LoadFieldsForEntities(IEnumerable<string> types, LogController logController)
+        {
+            XrmService.LoadFieldsForEntities(types, logController);
+        }
 
-        public void LoadRelationshipsForAllEntities(LogController logController = null)
+        public void LoadRelationshipsForAllEntities(LogController logController)
         {
             XrmService.LoadRelationshipsForAllEntities(logController);
         }
@@ -469,6 +473,16 @@ namespace JosephM.Record.Xrm.XrmRecord
         public bool FieldsEqual(object fieldValue1, object fieldValue2)
         {
             return XrmEntity.FieldsEqual(ToEntityValue(fieldValue1), ToEntityValue(fieldValue2));
+        }
+
+        public bool FieldExists(string fieldName, string recordType)
+        {
+            return XrmService.FieldExists(fieldName, recordType);
+        }
+
+        public string GetFieldLabel(string fieldName, string recordtype)
+        {
+            return XrmService.GetFieldLabel(fieldName, recordtype);
         }
 
         /// <summary>

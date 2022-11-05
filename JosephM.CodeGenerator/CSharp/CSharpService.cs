@@ -7,7 +7,6 @@ using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -50,14 +49,12 @@ namespace JosephM.CodeGenerator.CSharp
             AppendEntities(controller, request, stringBuilder);
             if (request.Relationships && request.IncludeAllRecordTypes)
             {
-                controller.UpdateProgress(0, 1, "Loading All Relationships.....");
-                Service.LoadRelationshipsForAllEntities();
+                Service.LoadRelationshipsForAllEntities(controller);
             }
             AppendRelationships(controller, request, stringBuilder);
             if ((request.Fields || request.FieldOptions) && request.IncludeAllRecordTypes)
             {
-                controller.UpdateProgress(0, 1, "Loading All Fields.....");
-                Service.LoadFieldsForAllEntities();
+                Service.LoadFieldsForAllEntities(controller);
             }
             AppendFields(controller, stringBuilder, request);
             AppendOptionSets(stringBuilder, request, controller);
