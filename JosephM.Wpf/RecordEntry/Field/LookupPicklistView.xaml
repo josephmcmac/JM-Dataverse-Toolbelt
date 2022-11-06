@@ -5,23 +5,20 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel.Fakes"
-    xmlns:converters="clr-namespace:JosephM.Wpf.Converters"
     xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
     xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
     mc:Ignorable="d" d:DesignHeight="100" d:DesignWidth="500"
     d:DataContext="{d:DesignInstance Type=fakes:FakeLookupViewModel, IsDesignTimeCreatable=True}">
     <field:FieldControlBase.Resources>
         <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="BoolToVis" />
-            <converters:BooleanToVisibilityHiddenConverter x:Key="BoolToHidden" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
-        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToHidden}}" >
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
             <TextBox
                 Style="{StaticResource  StringFieldEntryStyleReadOnly}"
                 TextWrapping="WrapWithOverflow"
@@ -31,13 +28,13 @@
                 Height="Auto">
             </TextBox>
         </Grid>
-        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}" >
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0"
-                  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BoolToHidden}, Mode=OneWay}">
+                  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -53,10 +50,10 @@
                             ItemsSource="{Binding ItemsSourceAsync}"
                             SelectedItem="{Binding SelectedItem, Mode=TwoWay, NotifyOnValidationError=True}"
                             IsEnabled="{Binding IsEditable}"
-                            Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
+                            Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     </WrapPanel>
                 </Grid>
-                <Grid Grid.Column="1" Visibility="{Binding AllowNew, Converter={StaticResource BoolToVis}}" Style="{StaticResource FieldEntryButtonGridStyle}">
+                <Grid Grid.Column="1" Visibility="{Binding AllowNew, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource FieldEntryButtonGridStyle}">
                     <Button DataContext="{Binding Path=NewButton}" Style="{StaticResource AddNewButton}"
                             Command="{Binding Command}" ToolTip="Click To Create New">
                     </Button>

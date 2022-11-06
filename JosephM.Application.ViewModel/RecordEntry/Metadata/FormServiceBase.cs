@@ -1,4 +1,5 @@
-﻿using JosephM.Application.ViewModel.Grid;
+﻿using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Validation;
@@ -213,7 +214,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         {
         }
 
-        public virtual AutocompleteFunction GetAutocompletesFunction(StringFieldViewModel stringFieldViewModel)
+        public virtual AutocompleteFunction GetAutocompletesFunction(string recordType, string field, IApplicationController applicationController)
         {
             return null;
         }

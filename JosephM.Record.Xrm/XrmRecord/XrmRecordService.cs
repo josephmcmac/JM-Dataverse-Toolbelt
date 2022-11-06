@@ -13,6 +13,7 @@ using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
 using System;
@@ -772,66 +773,99 @@ namespace JosephM.Record.Xrm.XrmRecord
         private readonly SortedDictionary<string, IEnumerable<ViewMetadata>> _recordViews =
             new SortedDictionary<string, IEnumerable<ViewMetadata>>();
 
-        public IEnumerable<ViewMetadata> GetViews(string recordType)
+        public void LoadViewsFor(IEnumerable<string> recordTypes, LogController logController)
         {
             lock (_lockObject)
             {
-                if (!_recordViews.ContainsKey(recordType))
+                var allEntityTypes = recordTypes
+                        .Where(e => !_recordViews.ContainsKey(e))
+                        .ToList();
+                if (allEntityTypes.Any())
                 {
-                    var savedQueries =
-                        _xrmService.RetrieveAllActive(Entities.savedquery, null,
-                            new[]
+                    var totalToDo = allEntityTypes.Count();
+                    while (true)
+                    {
+                        logController.UpdateProgress(totalToDo - allEntityTypes.Count, totalToDo, $"Loading view metadata. Please wait this may take a while\n\nEntities completed: {totalToDo - allEntityTypes.Count}/{totalToDo}");
+                        if (!allEntityTypes.Any())
+                        {
+                            break;
+                        }
+                        var topX = allEntityTypes.Take(200).ToArray();
+                        allEntityTypes.RemoveRange(0, topX.Count());
+                        var requests = topX
+                            .Select(e => new RetrieveMultipleRequest
                             {
+                                Query = XrmService.BuildQueryActive(Entities.savedquery, null,
+                                new[]
+                                {
                                 new ConditionExpression(Fields.savedquery_.returnedtypecode,
                                     ConditionOperator.Equal,
-                                    recordType)
-                            },
-                            null).ToArray();
-                    var viewMetadatas = new List<ViewMetadata>();
-                    foreach (var query in savedQueries)
-                    {
-                        var viewFields = new List<ViewField>();
-                        var layoutXmlString = query.GetStringField(Fields.savedquery_.layoutxml);
-                        if (layoutXmlString != null)
+                                    e)
+                                },
+                                null)
+                            })
+                            .ToArray();
+                        var responses = _xrmService.ExecuteMultiple(requests);
+                        var j = 0;
+                        foreach (var response in responses)
                         {
-                            var layoutXml = new XmlDocument();
-                            layoutXml.LoadXml(layoutXmlString);
-                            var cellNodes = layoutXml.SelectNodes("//cell");
-                            var i = 0;
-                            if (cellNodes != null)
+                            var viewMetadatas = new List<ViewMetadata>();
+                            var recordType = topX[j];
+                            if (response.Fault == null && response.Response is RetrieveMultipleResponse retreiveMultipleResponse)
                             {
-                                foreach (XmlNode item in cellNodes)
+                                var savedQueries = retreiveMultipleResponse.EntityCollection.Entities;
+                                foreach (var query in savedQueries)
                                 {
-                                    if (item != null && item.Attributes != null)
+                                    var viewFields = new List<ViewField>();
+                                    var layoutXmlString = query.GetStringField(Fields.savedquery_.layoutxml);
+                                    if (layoutXmlString != null)
                                     {
-                                        //exclude where null or where a linked field
-                                        //linked fields in view not implemented in UI
-                                        if (item.Attributes["name"] == null
-                                            || item.Attributes["width"] == null
-                                            || item.Attributes["name"].Value == null
-                                            || item.Attributes["name"].Value.Contains(".")
-                                            || !this.FieldExists(item.Attributes["name"].Value, recordType))
-                                            continue;
-                                        viewFields.Add(new ViewField(item.Attributes["name"].Value, ++i,
-                                            Convert.ToInt32(item.Attributes["width"].Value)));
+                                        var layoutXml = new XmlDocument();
+                                        layoutXml.LoadXml(layoutXmlString);
+                                        var cellNodes = layoutXml.SelectNodes("//cell");
+                                        var i = 0;
+                                        if (cellNodes != null)
+                                        {
+                                            foreach (XmlNode item in cellNodes)
+                                            {
+                                                if (item != null && item.Attributes != null)
+                                                {
+                                                    //exclude where null or where a linked field
+                                                    //linked fields in view not implemented in UI
+                                                    if (item.Attributes["name"] == null
+                                                        || item.Attributes["width"] == null
+                                                        || item.Attributes["name"].Value == null
+                                                        || item.Attributes["name"].Value.Contains(".")
+                                                        || !this.FieldExists(item.Attributes["name"].Value, recordType))
+                                                        continue;
+                                                    viewFields.Add(new ViewField(item.Attributes["name"].Value, ++i,
+                                                        Convert.ToInt32(item.Attributes["width"].Value)));
+                                                }
+                                            }
+                                        }
+                                        var viewType = ViewType.Unmatched;
+                                        if (query.GetField(Fields.savedquery_.querytype) != null)
+                                        {
+                                            Enum.TryParse(query.GetInt(Fields.savedquery_.querytype).ToString(), out viewType);
+                                        }
+                                        var view = new ViewMetadata(viewFields) { ViewType = viewType, Id = query.Id.ToString(), ViewName = query.GetStringField(Fields.savedquery_.name) };
+                                        view.RawQuery = query.GetStringField(Fields.savedquery_.fetchxml);
+                                        viewMetadatas.Add(view);
                                     }
                                 }
                             }
-                            var viewType = ViewType.Unmatched;
-                            if (query.GetField(Fields.savedquery_.querytype) != null)
-                            {
-                                Enum.TryParse(query.GetInt(Fields.savedquery_.querytype).ToString(), out viewType);
-                            }
-                            var view = new ViewMetadata(viewFields) { ViewType = viewType, Id = query.Id.ToString(), ViewName = query.GetStringField(Fields.savedquery_.name) };
-                            view.RawQuery = query.GetStringField(Fields.savedquery_.fetchxml);
-                            viewMetadatas.Add(view);
+                            _recordViews.Add(recordType, viewMetadatas);
+                            j++;
                         }
                     }
-                    _recordViews.Add(recordType, viewMetadatas);
                 }
-
-                return _recordViews[recordType];
             }
+        }
+
+        public IEnumerable<ViewMetadata> GetViews(string recordType)
+        {
+            LoadViewsFor(new[] { recordType }, new LogController());
+            return _recordViews[recordType];
         }
 
         public void UpdateViews(RecordMetadata recordMetadata)

@@ -9,7 +9,7 @@ using JosephM.Application.ViewModel.Shared;
 using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
-using JosephM.Record.Attributes;
+using JosephM.Core.Log;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JosephM.Application.ViewModel.Query
@@ -36,7 +37,7 @@ namespace JosephM.Application.ViewModel.Query
             RecordService = recordService;
             if (closeFunction != null)
                 ReturnButton = new XrmButtonViewModel(closeFunction.LabelFunc(null), () => { closeFunction.Function(DynamicGridViewModel); }, controller);
-            QueryTypeButton = new XrmButtonViewModel("Change Query Type", ChangeQueryType, ApplicationController);
+            QueryTypeButton = new XrmButtonViewModel("Switch to Quickfind", ChangeQueryType, ApplicationController);
             LoadSavedViewButton = new XrmButtonViewModel("LOADVIEW", "Load Saved View", new XrmButtonViewModel[0], ApplicationController);
 
             DeleteSelectedConditionsButton = new XrmButtonViewModel("Delete Selected", () => DeleteSelected(), ApplicationController);
@@ -51,6 +52,7 @@ namespace JosephM.Application.ViewModel.Query
 
             RunQueryButton = new XrmButtonViewModel("Run Query", QuickFind, ApplicationController);
             IncludeNotInButton = new XrmButtonViewModel("Add Not In Query", NotInSwitch, ApplicationController);
+
             if (!AllowQuery)
             {
                 IsQuickFind = true;
@@ -171,24 +173,52 @@ namespace JosephM.Application.ViewModel.Query
                 {
                     DynamicGridViewModel.EditRow = (g) =>
                     {
-                        var formMetadata = FormService.GetFormMetadata(RecordType, RecordService);
-                        var formController = new FormController(RecordService, FormService, ApplicationController);
-                        var selectedRow = g;
-                        if (selectedRow != null)
+                        ApplicationController.DoOnAsyncThread(() =>
                         {
-                            Action onSave = () =>
+                            try
                             {
-                                ClearChildForm();
-                                ClearNotInIds();
-                                DynamicGridViewModel.ReloadGrid();
-                            };
-                            var record = selectedRow.Record;
-                            var createOrUpdateRecord = RecordService.Get(record.Type, record.Id);
-                            new[] { createOrUpdateRecord }.PopulateEmptyLookups(RecordService, null);
-                            var newForm = new CreateOrUpdateViewModel(createOrUpdateRecord, formController, onSave, ClearChildForm);
-                            ClearNotInIds();
-                            LoadChildForm(newForm);
-                        }
+                                LoadingViewModel.LoadingMessage = $"Loading {RecordService.GetDisplayName(RecordType)} for editing";
+                                LoadingViewModel.IsLoading = true;
+                                var formMetadata = FormService.GetFormMetadata(RecordType, RecordService);
+                                var formController = new FormController(RecordService, FormService, ApplicationController);
+                                var selectedRow = g;
+                                if (selectedRow != null)
+                                {
+                                    Action onSave = () =>
+                                    {
+                                        ClearChildForm();
+                                        ClearNotInIds();
+                                        DynamicGridViewModel.ReloadGrid();
+                                    };
+                                    var record = selectedRow.Record;
+                                    var createOrUpdateRecord = RecordService.Get(record.Type, record.Id);
+                                    var fieldsForType = RecordService
+                                        .GetFields(record.Type);
+                                    var targetTypesForLookupField = fieldsForType
+                                        .Select(f => RecordService.GetLookupTargetType(f, record.Type))
+                                        .Where(s => !string.IsNullOrWhiteSpace(s))
+                                        .SelectMany(s => s.Split(','))
+                                        .Distinct()
+                                        .ToArray();
+                                    var logController = new LogController(LoadingViewModel);
+                                    RecordService.LoadFieldsForEntities(targetTypesForLookupField, logController);
+                                    RecordService.LoadViewsFor(targetTypesForLookupField, logController);
+                                    new[] { createOrUpdateRecord }.PopulateEmptyLookups(RecordService, null);
+                                    var newForm = new CreateOrUpdateViewModel(createOrUpdateRecord, formController, onSave, ClearChildForm);
+                                    var suffixMessage = fieldsForType.Count() > 50
+                                        ? "\n\nPlease wait this may take a while and temporarilly freeze due to the volume of fields to render"
+                                        : string.Empty;
+                                    LoadingViewModel.LoadingMessage = $"Loading {RecordService.GetDisplayName(RecordType)} for editing{suffixMessage}";
+                                    Thread.Sleep(100);
+                                    ClearNotInIds();
+                                    LoadChildForm(newForm);
+                                }
+                            }
+                            finally
+                            {
+                                LoadingViewModel.IsLoading = false;
+                            }
+                        });
                     };
                     DynamicGridViewModel.EditRowNew = (g) =>
                     {
@@ -478,7 +508,7 @@ namespace JosephM.Application.ViewModel.Query
         private void ChangeQueryType()
         {
             IsQuickFind = !IsQuickFind;
-            QueryTypeButton.Label = IsQuickFind ? "Switch to Query" : "Switch to Quick Find";
+            QueryTypeButton.Label = IsQuickFind ? "Switch to Query" : "Switch to Quickfind";
             IncludeNotInButton.IsVisible = !IsQuickFind;
             if (!IsQuickFind)
             {

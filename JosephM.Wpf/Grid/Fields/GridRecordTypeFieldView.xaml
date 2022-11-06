@@ -8,18 +8,15 @@
              mc:Ignorable="d">
     <field:FieldControlBase.Resources>
         <ResourceDictionary>
-            <converters:BooleanToVisibilityHiddenConverter x:Key="BoolToHidden" />
-            <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
-        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToHidden}}" >
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
             <TextBox
                 Style="{StaticResource  StringFieldEntryStyleReadOnly}"
                 TextWrapping="WrapWithOverflow"
@@ -31,7 +28,7 @@
                 Height="Auto">
             </TextBox>
         </Grid>
-        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -62,7 +59,7 @@
             </Grid>
             <Grid>
                 <Popup
-                    Visibility="{Binding DisplayAutocomplete, Converter={StaticResource BoolToVis}}"
+                    Visibility="{Binding DisplayAutocomplete, Converter={StaticResource BooleanToVisibilityConverter}}"
                     PlacementTarget="{Binding ElementName=TextBox}"
                     IsOpen="{Binding DisplayAutocomplete}"
                     StaysOpen="False">

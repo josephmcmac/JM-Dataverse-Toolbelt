@@ -1,5 +1,6 @@
 ﻿using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.Shared;
+using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Record.Extentions;
 using JosephM.Record.Metadata;
@@ -261,6 +262,25 @@ namespace JosephM.Wpf.Grid
                                 {
                                     Binding = cellBinding
                                 };
+                            }
+                            else if (column.FieldType == RecordFieldType.String)
+                            {
+                                
+                                if (!column.IsReadOnly
+                                && gridSectionViewModel.FormController.FormService.GetAutocompletesFunction(column.RecordType, column.FieldName, gridSectionViewModel.ApplicationController) != null)
+                                {
+                                    dataGridField = new GridStringWithAutocompleteColumn
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
+                                else
+                                {
+                                    dataGridField = new GridStringColumn
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
                             }
                             else if (column.FieldType == RecordFieldType.Boolean
                             || column.FieldType == RecordFieldType.ManagedProperty)

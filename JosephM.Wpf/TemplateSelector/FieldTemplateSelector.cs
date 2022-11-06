@@ -17,6 +17,7 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate ComboBoxFieldTemplate { get; set; }
         public DataTemplate DateFieldTemplate { get; set; }
         public DataTemplate StringFieldTemplate { get; set; }
+        public DataTemplate StringFieldWithAutocompleteTemplate { get; set; }
         public DataTemplate IntegerFieldTemplate { get; set; }
         public DataTemplate IntegerPicklistFieldTemplate { get; set; }
         public DataTemplate LookupFieldTemplate { get; set; }
@@ -41,6 +42,13 @@ namespace JosephM.Wpf.TemplateSelector
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
         {
+            if (item is StringFieldViewModel sfvm)
+            {
+                if (sfvm.AutocompleteFunction != null)
+                    return StringFieldWithAutocompleteTemplate;
+                else
+                    return StringFieldTemplate;
+            }
             if (item is BooleanFieldViewModel bfvm)
             {
                 if (bfvm.UsePicklist)
@@ -52,8 +60,6 @@ namespace JosephM.Wpf.TemplateSelector
                 return ComboBoxFieldTemplate;
             if (item is DateFieldViewModel)
                 return DateFieldTemplate;
-            if (item is StringFieldViewModel)
-                return StringFieldTemplate;
             if (item is IntegerFieldViewModel ifvm)
             {
                 if (ifvm.UsePicklist)

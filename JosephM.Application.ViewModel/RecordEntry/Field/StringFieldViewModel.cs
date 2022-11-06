@@ -9,7 +9,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public StringFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm)
             : base(fieldName, label, recordForm)
         {
-            AutocompleteFunction = FormService?.GetAutocompletesFunction(this);
+            AutocompleteFunction = FormService?.GetAutocompletesFunction(GetRecordTypeOfThisField(), FieldName, ApplicationController);
             if (AutocompleteFunction != null
                 && AutocompleteFunction.IsValidForForm(RecordEntryViewModel)
                 && (AutocompleteFunction.DisplayInGrid || !(RecordEntryViewModel is GridRowViewModel)))

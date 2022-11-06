@@ -9,6 +9,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public UniqueIdentifierFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm)
             : base(fieldName, label, recordForm)
         {
+            EditableFormWidth = 245;
         }
 
         protected override IsValidResponse VerifyValueRequest(object value)

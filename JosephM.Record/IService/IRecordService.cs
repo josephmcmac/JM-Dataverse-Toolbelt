@@ -207,6 +207,8 @@ namespace JosephM.Record.IService
 
         void LoadFieldsForEntities(IEnumerable<string> types, LogController logController);
 
+        void LoadViewsFor(IEnumerable<string> recordTypes, LogController logController);
+
         void LoadRelationshipsForAllEntities(LogController logController);
 
         bool SupportsExecuteMultiple { get; }

@@ -45,9 +45,4 @@
     <Style x:Key="ButtonsGrid" TargetType="{x:Type Grid}" >
         <Setter Property="Margin" Value="21,0,0,0" />
     </Style>
-    <!--<Style TargetType="{x:Type ContextMenu}" >
-        <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
-        <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundColor}" />
-    </Style>-->
 </ResourceDictionary>

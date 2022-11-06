@@ -237,6 +237,11 @@ namespace JosephM.Record.Service
             throw new NotImplementedException();
         }
 
+        public virtual void LoadViewsFor(IEnumerable<string> recordTypes, LogController logController)
+        {
+
+        }
+
         public virtual IEnumerable<ViewMetadata> GetViews(string recordType)
         {
             return new ViewMetadata[0];

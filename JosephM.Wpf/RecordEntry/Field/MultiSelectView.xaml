@@ -10,15 +10,13 @@
     d:DataContext="{d:DesignInstance Type=fakes:FakeLookupViewModel, IsDesignTimeCreatable=True}">
     <UserControl.Resources>
         <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" >
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
@@ -33,7 +31,7 @@
                     />
         </Grid>
         <Grid
-            Grid.Column="0" Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}"
+            Grid.Column="0" Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}"
             Style="{StaticResource FieldEntryButtonGridStyle}"
             >
             <Button  Command="{Binding EditButton.Command}" Style="{StaticResource EditButton}"

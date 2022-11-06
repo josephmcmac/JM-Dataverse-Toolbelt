@@ -12,7 +12,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         public FormMetadata(IEnumerable<string> fields, string heading = null)
         {
-            FormSections = new[] {new FormFieldSection(heading ?? "Fields", fields.Select(s => new PersistentFormField(s)))};
+            FormSections = new[] {new FormFieldSection(heading ?? "Fields", fields.Select(s => new PersistentFormField(s)), Core.Attributes.Group.DisplayLayoutEnum.VerticalCentered)};
         }
 
         public FormMetadata(FormSection formSection)

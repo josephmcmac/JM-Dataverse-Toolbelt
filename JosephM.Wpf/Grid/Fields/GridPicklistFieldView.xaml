@@ -7,14 +7,12 @@
                         mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
             <TextBox
                 Style="{StaticResource  StringFieldEntryStyleReadOnly}"
@@ -25,7 +23,7 @@
                 Height="Auto">
             </TextBox>
         </Grid>
-        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}" >
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />

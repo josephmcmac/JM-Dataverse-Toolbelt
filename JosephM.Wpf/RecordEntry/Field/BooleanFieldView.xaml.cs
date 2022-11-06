@@ -1,10 +1,6 @@
-﻿#region
-
-using System.Windows.Controls.Primitives;
+﻿using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using JosephM.Application.ViewModel.RecordEntry.Field;
-
-#endregion
 
 namespace JosephM.Wpf.RecordEntry.Field
 {

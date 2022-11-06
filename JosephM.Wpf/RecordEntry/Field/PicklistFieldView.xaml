@@ -1,22 +1,20 @@
 ﻿<field:FieldControlBase
     x:Class="JosephM.Wpf.RecordEntry.Field.PicklistFieldView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
     xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
     mc:Ignorable="d" d:DesignHeight="40" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
             <TextBox
                 Style="{StaticResource  StringFieldEntryStyleReadOnly}"
@@ -27,7 +25,7 @@
                 Height="Auto">
             </TextBox>
         </Grid>
-        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}" >
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />

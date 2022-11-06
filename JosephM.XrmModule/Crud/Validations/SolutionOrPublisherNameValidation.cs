@@ -12,6 +12,8 @@ namespace JosephM.XrmModule.Crud.Validations
         AllowMultiple = false)]
     public class SolutionOrPublisherNameValidation : PropertyValidator
     {
+        public override bool PreventSettingProperty => true;
+
         public override bool IsValid(object value)
         {
             var isValid = true;

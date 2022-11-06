@@ -93,8 +93,8 @@
     <Compile Include="Attributes\BulkAddLookupFunction.cs" />
     <Compile Include="Attributes\CustomObjectFunction.cs" />
     <Compile Include="Dialog\IDialogController.cs" />
-    <Compile Include="Dialog\ObjectGetEntryDialog.cs" />
     <Compile Include="Dialog\ObjectEntryDialogBase.cs" />
+    <Compile Include="Dialog\ObjectGetEntryDialog.cs" />
     <Compile Include="Dialog\ObjectInstanceEntryDialog.cs" />
     <Compile Include="Extentions\Extentions.cs" />
     <Compile Include="Grid\CustomGridFunctions.cs" />

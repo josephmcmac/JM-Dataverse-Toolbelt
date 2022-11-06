@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace JosephM.Wpf.Grid
 {
-    internal class GridStringColumn : DataGridBoundColumn
+    internal class GridStringWithAutocompleteColumn : DataGridBoundColumn
     {
         protected override void CancelCellEdit(FrameworkElement editingElement, object uneditedValue)
         {
@@ -16,7 +16,7 @@ namespace JosephM.Wpf.Grid
 
         protected override FrameworkElement GenerateElement(DataGridCell cell, object dataItem)
         {
-            var field = new GridStringFieldView();
+            var field = new GridStringFieldWithAutocompleteView();
             field.SetBinding(FrameworkElement.DataContextProperty, Binding);
             return field;
         }

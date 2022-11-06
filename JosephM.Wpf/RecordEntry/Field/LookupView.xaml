@@ -10,26 +10,31 @@
     d:DataContext="{d:DesignInstance Type=fakes:FakeLookupViewModel, IsDesignTimeCreatable=True}">
     <field:FieldControlBase.Resources>
         <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
-            <TextBox
-                Style="{StaticResource  StringFieldEntryStyleReadOnly}"
-                TextWrapping="WrapWithOverflow"
-                VerticalScrollBarVisibility="Auto"
-                TabIndex="1"
-                Text="{Binding Mode=OneWay, Path=EnteredText}"
-                Height="Auto">
-            </TextBox>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding CentreAlign, Converter={StaticResource BoolToStar}}" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="{Binding CentreAlign, Converter={StaticResource BoolToStar}}" />
+            </Grid.ColumnDefinitions>
+            <WrapPanel Grid.Column="1" >
+                <TextBox
+                    Style="{StaticResource  StringFieldEntryStyleReadOnly}"
+                    TextWrapping="WrapWithOverflow"
+                    VerticalScrollBarVisibility="Auto"
+                    TabIndex="1"
+                    Text="{Binding Mode=OneWay, Path=EnteredText}"
+                    Height="Auto">
+                </TextBox>
+            </WrapPanel>
         </Grid>
-        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}" >
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition Height="*" />
@@ -39,9 +44,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" Row="0" Visibility="{Binding DisplayTypeSelection, Converter={StaticResource BoolToVis}}">
+            <Grid Grid.Column="0" Row="0" Visibility="{Binding DisplayTypeSelection, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <WrapPanel>
                     <ComboBox
                         MinWidth="{Binding EditableFormWidth}"
@@ -56,7 +60,7 @@
                     />
                 </WrapPanel>
             </Grid>
-            <Grid Grid.Column="1" Row="0" Visibility="{Binding TypePopulatedOrReadOnly, Converter={StaticResource BoolToVis}}">
+            <Grid Grid.Column="1" Row="0" Visibility="{Binding TypePopulatedOrReadOnly, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <WrapPanel>
                     <TextBox
                         MinWidth="{Binding EditableFormWidth}"
@@ -71,18 +75,20 @@
                 </WrapPanel>
             </Grid>
             <Grid
-            Style="{StaticResource FieldEntryButtonGridStyle}"
-            Grid.Column="2"
-            Row="0"
-            Visibility="{Binding EditableAndTypePopulated, Converter={StaticResource BoolToVis}}">
+                HorizontalAlignment="Left"
+                Style="{StaticResource FieldEntryButtonGridStyle}"
+                Grid.Column="2"
+                Row="0"
+                Visibility="{Binding EditableAndTypePopulated, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Button DataContext="{Binding Path=XrmButton}"
                         Style="{StaticResource SearchButton}"
                             Command="{Binding Command}" ToolTip="Click To Search" />
             </Grid>
             <Grid
-            Style="{StaticResource FieldEntryButtonGridStyle}"
-            Grid.Column="3"
-            Visibility="{Binding AllowNew, Converter={StaticResource BoolToVis}}" >
+                HorizontalAlignment="Left"
+                Style="{StaticResource FieldEntryButtonGridStyle}"
+                Grid.Column="3"
+                Visibility="{Binding AllowNew, Converter={StaticResource BooleanToVisibilityConverter}}" >
                 <Button DataContext="{Binding Path=NewButton}"
                         Style="{StaticResource AddNewButton}"
                             Command="{Binding Command}" ToolTip="Click To Create New" />

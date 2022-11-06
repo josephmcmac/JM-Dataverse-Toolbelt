@@ -6,6 +6,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
+        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <BooleanToVisibilityConverter x:Key="BoolToVis" />
     <Style x:Key="SectionHeadingStyle" TargetType="TextBlock" BasedOn="{StaticResource HeadingStyle}" >
@@ -73,6 +74,9 @@
     </DataTemplate>
     <DataTemplate x:Key="stringFieldTemplate">
         <field:StringFieldView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="stringFieldWithAutocompleteTemplate">
+        <field:StringFieldWithAutocompleteView DataContext="{Binding}" />
     </DataTemplate>
     <DataTemplate x:Key="passwordFieldTemplate">
         <field:PasswordFieldView DataContext="{Binding}" />
@@ -142,6 +146,7 @@
         ComboBoxFieldTemplate="{StaticResource comboBoxFieldTemplate}"
         DateFieldTemplate="{StaticResource dateFieldTemplate}"
         StringFieldTemplate="{StaticResource stringFieldTemplate}"
+        StringFieldWithAutocompleteTemplate="{StaticResource stringFieldWithAutocompleteTemplate}"
         IntegerFieldTemplate="{StaticResource integerFieldTemplate}"
         IntegerPicklistFieldTemplate="{StaticResource IntegerPicklistFieldTemplate}"
         FileRefFieldTemplate="{StaticResource fileRefFieldTemplate}"
@@ -170,7 +175,11 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
-                <field:FieldLabelView DataContext="{Binding}" />
+                <TextBlock
+                    ToolTip="{Binding Description}"
+                    Text="{Binding Label}"
+                    Style="{StaticResource FieldLabelStyle}"
+             />
             </Grid>
             <Grid Grid.Column="1" Grid.ColumnSpan="3" >
                 <ContentControl
@@ -187,7 +196,11 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0"
                   HorizontalAlignment="Center">
-                <field:FieldLabelAboveView DataContext="{Binding}" />
+                <TextBlock
+                    ToolTip="{Binding Description}"
+                    Text="{Binding Label}"
+                    Style="{StaticResource FieldLabelAboveStyle}"
+             />
             </Grid>
             <Grid Grid.Row="1"
                   HorizontalAlignment="Center">

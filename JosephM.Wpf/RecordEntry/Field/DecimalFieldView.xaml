@@ -1,24 +1,20 @@
 ﻿<field:FieldControlBase
     x:Class="JosephM.Wpf.RecordEntry.Field.DecimalFieldView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:controls="clr-namespace:JosephM.Wpf.Controls"
     xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
-    xmlns:converters="clr-namespace:JosephM.Wpf.Converters"
     mc:Ignorable="d" d:DesignHeight="40" d:DesignWidth="300">
     <field:FieldControlBase.Resources>
         <ResourceDictionary>
-            <converters:BooleanToFalseConverter x:Key="BooleanToFalseConverter" />
-            <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
             <TextBox
                 Style="{StaticResource  StringFieldEntryStyleReadOnly}"
@@ -29,7 +25,7 @@
                 Height="Auto">
             </TextBox>
         </Grid>
-        <Grid MinWidth="100" Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
+        <Grid MinWidth="100" Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}" >
             <WrapPanel>
                 <controls:DecimalTextBox
                 MinWidth="{Binding EditableFormWidth}"
@@ -39,7 +35,7 @@
                 Text="{Binding ValueString, Mode=TwoWay}"
                 Style="{StaticResource FieldEntryStyle}"
                 IsReadOnly="{Binding IsEditable, Converter={StaticResource BooleanToFalseConverter}}"
-                Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
+                Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
             </WrapPanel>
         </Grid>
     </Grid>

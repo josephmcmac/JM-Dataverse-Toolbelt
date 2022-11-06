@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Forms.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Dialogs.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernProgressRing.xaml" />
             </ResourceDictionary.MergedDictionaries>

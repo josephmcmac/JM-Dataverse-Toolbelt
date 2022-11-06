@@ -228,6 +228,10 @@
       <DependentUpon>GridMultiSelectFieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grid\Fields\GridMultiSelectColumn.cs" />
+    <Compile Include="Grid\Fields\GridStringWithAutocompleteColumn.cs" />
+    <Compile Include="Grid\Fields\GridStringFieldWithAutocompleteView.xaml.cs">
+      <DependentUpon>GridStringFieldWithAutocompleteView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Grid\Fields\UniqueIdentifierColumn.cs" />
     <Compile Include="Grid\Fields\GridUniqueIdentifierFieldView.xaml.cs">
       <DependentUpon>GridUniqueIdentifierFieldView.xaml</DependentUpon>
@@ -296,9 +300,6 @@
     </Compile>
     <Compile Include="RecordEntry\FieldSectionCompactView.xaml.cs">
       <DependentUpon>FieldSectionCompactView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="RecordEntry\Field\FieldLabelAboveView.xaml.cs">
-      <DependentUpon>FieldLabelAboveView.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecordEntry\Field\FileRefView.xaml.cs">
       <DependentUpon>FileRefView.xaml</DependentUpon>
@@ -373,6 +374,9 @@
     <Compile Include="RecordEntry\Field\StringFieldDisplayOnlyView.xaml.cs">
       <DependentUpon>StringFieldDisplayOnlyView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RecordEntry\Field\StringFieldWithAutocompleteView.xaml.cs">
+      <DependentUpon>StringFieldWithAutocompleteView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RecordEntry\Field\UniqueIdentifierFieldView.xaml.cs">
       <DependentUpon>UniqueIdentifierFieldView.xaml</DependentUpon>
     </Compile>
@@ -399,9 +403,6 @@
     </Compile>
     <Compile Include="RecordEntry\Field\DateFieldView.xaml.cs">
       <DependentUpon>DateFieldView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="RecordEntry\Field\FieldLabelView.xaml.cs">
-      <DependentUpon>FieldLabelView.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecordEntry\Field\StringFieldView.xaml.cs">
       <DependentUpon>StringFieldView.xaml</DependentUpon>
@@ -520,6 +521,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Grid\Fields\GridStringFieldWithAutocompleteView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Grid\Fields\GridUniqueIdentifierFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -600,10 +605,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="RecordEntry\Field\FieldLabelAboveView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="RecordEntry\Field\FileRefView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -677,6 +678,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\StringFieldDisplayOnlyView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\StringFieldWithAutocompleteView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -755,10 +760,6 @@
     <Page Include="RecordEntry\Field\DateFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="RecordEntry\Field\FieldLabelView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RecordEntry\Field\StringFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>

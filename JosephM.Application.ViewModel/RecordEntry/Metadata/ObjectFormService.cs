@@ -1,4 +1,5 @@
-﻿using JosephM.Application.ViewModel.Attributes;
+﻿using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
@@ -1118,11 +1119,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             }
         }
 
-        public override AutocompleteFunction GetAutocompletesFunction(StringFieldViewModel stringFieldViewModel)
+        public override AutocompleteFunction GetAutocompletesFunction(string recordType, string field, IApplicationController applicationController)
         {
-            var autocompletes = (AutocompleteFunctions)stringFieldViewModel.ApplicationController.ResolveInstance(typeof(AutocompleteFunctions), stringFieldViewModel.GetRecordTypeOfThisField());
+            var autocompletes = (AutocompleteFunctions)applicationController.ResolveInstance(typeof(AutocompleteFunctions), recordType);
             return autocompletes
-                .GetAutocompleteFunction(stringFieldViewModel.FieldName);
+                .GetAutocompleteFunction(field);
         }
     }
 }

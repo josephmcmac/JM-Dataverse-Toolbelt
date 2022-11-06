@@ -36,10 +36,10 @@ namespace JosephM.XrmModule.Crud
                                 new PersistentFormField(Fields.solution_.friendlyname),
                                 new PersistentFormField(Fields.solution_.publisherid),
                                 new PersistentFormField(Fields.solution_.uniquename),
-                                new PersistentFormField(Fields.solution_.version),
+                                new PersistentFormField(Fields.solution_.version) { EditableFormWidth = 60 },
                                 new PersistentFormField(Fields.solution_.configurationpageid),
                                 new PersistentFormField(Fields.solution_.description)
-                            })
+                            }, Group.DisplayLayoutEnum.VerticalCentered)
                         });
                     }
                     case Entities.publisher:
@@ -53,13 +53,13 @@ namespace JosephM.XrmModule.Crud
                                 new PersistentFormField(Fields.publisher_.customizationprefix),
                                 new PersistentFormField(Fields.publisher_.customizationoptionvalueprefix),
                                 new PersistentFormField(Fields.publisher_.description),
-                            }),
+                            }, Group.DisplayLayoutEnum.VerticalCentered),
                             new FormFieldSection("Contact Details", new []
                             {
                                 new PersistentFormField(Fields.publisher_.address1_telephone1),
                                 new PersistentFormField(Fields.publisher_.emailaddress),
                                 new PersistentFormField(Fields.publisher_.supportingwebsiteurl),
-                            }),
+                            }, Group.DisplayLayoutEnum.VerticalCentered),
                             new FormFieldSection("Address", new []
                             {
                                 new PersistentFormField(Fields.publisher_.address1_line1),
@@ -68,7 +68,7 @@ namespace JosephM.XrmModule.Crud
                                 new PersistentFormField(Fields.publisher_.address1_stateorprovince),
                                 new PersistentFormField(Fields.publisher_.address1_postalcode),
                                 new PersistentFormField(Fields.publisher_.address1_country),
-                            })
+                            }, Group.DisplayLayoutEnum.VerticalCentered)
                         });
                     }
             }
@@ -189,6 +189,7 @@ namespace JosephM.XrmModule.Crud
                             case Fields.solution_.version:
                                 {
                                     conditions.Add(new PropertyAttributeValidationRule(new RequiredProperty()));
+                                    conditions.Add(new PropertyAttributeValidationRule(new VersionPropertyValidator()));
                                     break;
                                 }
                         }

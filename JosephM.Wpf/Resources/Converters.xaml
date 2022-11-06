@@ -14,6 +14,8 @@
     <converters:BooleanToZeroOrStarConverter x:Key="BooleanToZeroOrStar" />
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
     <converters:NullToHiddenConverter x:Key="NullToHiddenConverter" />
+    <converters:FileRefToStringConverter x:Key="FileRefToStringConverter" />
+    <converters:FolderToStringConverter x:Key="FolderToStringConverter" />
     <converters:NullOrEmptyStringToVisibilityConverter x:Key="NullOrEmptyStringToVisibilityConverter" />
     <converters:TabbedApplicationHeightConverter x:Key="TabbedApplicationHeightConverter" />
     <converters:ShellApplicationHeightConverter x:Key="ShellApplicationHeightConverter" />
@@ -25,4 +27,6 @@
     <converters:StringTruncateConverter x:Key="StringTruncateConverter" />
     <converters:HeightAdjuster x:Key="HeightAdjuster" />
     <converters:ScrollWhereGreaterThanOneConverter x:Key="ScrollWhereGreaterThanOneConverter" />
+    <converters:PasswordToStringConverter x:Key="PasswordToStringConverter" />
+    <converters:StringToEnumerableStringConverter x:Key="StringToEnumerableStringConverter" />
 </ResourceDictionary>
