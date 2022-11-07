@@ -73,7 +73,7 @@ namespace JosephM.Application.Desktop.Module.Settings
                     //append new dialog for the setting entry and
                     //trigger this dialog to start it
                     var configEntryDialog = new ObjectEntryDialog(SettingsObject, this, ApplicationController, LookupService,
-                        null, OnSave, null, saveButtonLabel: "Save", cancelButtonLabel: "Close", initialMessage: "Changes Have Been Saved");
+                        null, OnSave, null, saveButtonLabel: "Save", cancelButtonLabel: "Close", initialValidationMessage: "Changes Have Been Saved");
                     SubDialogs = SubDialogs.Union(new[] { configEntryDialog }).ToArray();
                     DialogCompletionCommit = false;
                     StartNextAction();

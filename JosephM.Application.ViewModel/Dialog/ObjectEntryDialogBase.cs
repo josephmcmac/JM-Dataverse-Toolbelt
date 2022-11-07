@@ -47,7 +47,8 @@ namespace JosephM.Application.ViewModel.Dialog
             SaveMethod = saveMethod;
         }
 
-        public string InitialMessage { get; set; }
+        public string InitialValidationMessage { get; set; }
+        public string InitialLoadingMessage { get; set; }
 
         public string SaveButtonLabel { get; set; }
         public string CancelButtonLabel { get; private set; }
@@ -61,13 +62,13 @@ namespace JosephM.Application.ViewModel.Dialog
 
         protected override void LoadDialogExtention()
         {
-            LoadingViewModel.LoadingMessage = "Loading Entry Form";
+            LoadingViewModel.LoadingMessage = InitialLoadingMessage ?? "Loading Entry Form";
             var recordService = new ObjectRecordService(ObjectToEnter, LookupService, OptionsetLimitedValues, ApplicationController, ObjectTypeMaps);
             var formService = new ObjectFormService(ObjectToEnter, recordService, ObjectTypeMaps);
             ViewModel = new ObjectEntryViewModel(StartNextAction, OnCancel, ObjectToEnter,
                 new FormController(recordService, formService, ApplicationController), OnlyValidate, saveButtonLabel: SaveButtonLabel, cancelButtonLabel: CancelButtonLabel);
-            if (InitialMessage != null)
-                ViewModel.ValidationPrompt = InitialMessage;
+            if (InitialValidationMessage != null)
+                ViewModel.ValidationPrompt = InitialValidationMessage;
             Controller.LoadToUi(ViewModel);
         }
 

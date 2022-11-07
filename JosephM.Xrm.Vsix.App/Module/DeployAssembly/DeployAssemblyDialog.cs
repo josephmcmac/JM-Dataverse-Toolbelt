@@ -27,7 +27,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
         IVisualStudioService VisualStudioService { get; set; }
 
         public DeployAssemblyDialog(DeployAssemblyService service, IDialogController dialogController, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService, XrmPackageSettings packageSettings)
-            : base(service, dialogController, null, nextButtonLabel: "Deploy")
+            : base(service, dialogController, null, nextButtonLabel: "Deploy", initialLoadingMessage: "Please wait while loading assembly for grid editing. This may take a while.")
         {
             VisualStudioService = visualStudioService;
             PackageSettings = packageSettings;

@@ -79,8 +79,7 @@ namespace JosephM.CodeGenerator.CSharp
             stringBuilder.AppendLine("\t{");
             foreach (var recordType in types.OrderBy(t => t))
             {
-                controller.UpdateProgress(countDone, countToDo,
-                    string.Format("Processing Entities ({0})", Service.GetDisplayName(recordType)));
+                controller.UpdateProgress(countDone, countToDo, "Processing Entities");
 
                 if (!string.IsNullOrWhiteSpace(recordType))
                     stringBuilder.AppendLine(string.Format("\t\tpublic const string {0} = \"{1}\";", recordType,
@@ -101,8 +100,7 @@ namespace JosephM.CodeGenerator.CSharp
             countDone = 0;
             foreach (var recordType in types.OrderBy(t => t))
             {
-                controller.UpdateProgress(countDone, countToDo,
-                    string.Format("Processing Relationships ({0})", Service.GetDisplayName(recordType)));
+                controller.UpdateProgress(countDone, countToDo, "Processing Relationships");
                 if (!string.IsNullOrWhiteSpace(recordType))
                 {
                     var relationships = Service.GetManyToManyRelationships(recordType);
@@ -146,8 +144,7 @@ namespace JosephM.CodeGenerator.CSharp
             var countDone = 0;
             foreach (var recordType in types.OrderBy(t => t))
             {
-                controller.UpdateProgress(countDone, countToDo,
-                    string.Format("Processing Fields ({0})", Service.GetDisplayName(recordType)));
+                controller.UpdateProgress(countDone, countToDo, "Processing Fields");
                 if (!string.IsNullOrWhiteSpace(recordType))
                 {
                     stringBuilder.AppendLine(string.Format("\t\tpublic static class {0}_", recordType));
@@ -316,8 +313,7 @@ namespace JosephM.CodeGenerator.CSharp
                 stringBuilder.AppendLine("\t\t{");
                 foreach (var item in picklists.OrderBy(s => CreateCodeLabel(string.IsNullOrWhiteSpace(s.DisplayName) ? s.SchemaName : s.DisplayName)))
                 {
-                    controller.UpdateProgress(countOptionsDone, countOptionsToDo,
-                        string.Format("Processing Shared Options ({0})", item.DisplayName));
+                    controller.UpdateProgress(countOptionsDone, countOptionsToDo, "Processing Shared Option Sets");
                     var optionSetLabel = CreateCodeLabel(string.IsNullOrWhiteSpace(item.DisplayName) ? item.SchemaName : item.DisplayName);
                     if (duplicateSharedLabels.Contains(optionSetLabel))
                         optionSetLabel = optionSetLabel + "_" + item.SchemaName;
@@ -357,8 +353,7 @@ namespace JosephM.CodeGenerator.CSharp
                     .ToArray();
                 foreach (var recordType in types.OrderBy(r => r))
                 {
-                    controller.UpdateProgress(countDone, countToDo,
-                        string.Format("Processing Options ({0})", Service.GetDisplayName(recordType)));
+                    controller.UpdateProgress(countDone, countToDo, "Processing Field Options Sets");
 
                     if (IsValidForCode(recordType))
                     {

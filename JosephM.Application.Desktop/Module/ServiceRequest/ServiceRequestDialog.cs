@@ -43,7 +43,7 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
             }
         }
 
-        public ServiceRequestDialog(TService service, IDialogController dialogController, IRecordService lookupService, TRequest request = null, Action onClose = null, string nextButtonLabel = null)
+        public ServiceRequestDialog(TService service, IDialogController dialogController, IRecordService lookupService, TRequest request = null, Action onClose = null, string nextButtonLabel = null, string initialValidationMessage = null, string initialLoadingMessage = null)
             : base(dialogController)
         {
             if (onClose != null)
@@ -56,7 +56,7 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
             else
                 Request = ApplicationController.ResolveType<TRequest>();
 
-            ConfigEntryDialog = new ObjectEntryDialog(Request, this, ApplicationController, lookupService, null, null, onClose, saveButtonLabel: nextButtonLabel ?? "Next");
+            ConfigEntryDialog = new ObjectEntryDialog(Request, this, ApplicationController, lookupService, null, null, onClose, saveButtonLabel: nextButtonLabel ?? "Next", initialValidationMessage: initialValidationMessage, initialLoadingMessage: initialLoadingMessage);
             SubDialogs = new DialogViewModel[] { ConfigEntryDialog };
         }
 

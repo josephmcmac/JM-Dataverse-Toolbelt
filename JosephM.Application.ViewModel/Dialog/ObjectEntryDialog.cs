@@ -26,10 +26,11 @@ namespace JosephM.Application.ViewModel.Dialog
 
         public ObjectEntryDialog(object objectsToEnter, DialogViewModel parentDialog,
     IApplicationController applicationController, IRecordService lookupService,
-    IDictionary<string, IEnumerable<string>> optionsetLimitedValues,Action onSave, Action onCancel, string saveButtonLabel = null, string cancelButtonLabel = null, string initialMessage = null)
+    IDictionary<string, IEnumerable<string>> optionsetLimitedValues,Action onSave, Action onCancel, string saveButtonLabel = null, string cancelButtonLabel = null, string initialValidationMessage = null, string initialLoadingMessage = null)
             : base(parentDialog, applicationController, lookupService, optionsetLimitedValues, onSave, onCancel: onCancel, saveButtonLabel: saveButtonLabel, cancelButtonLabel: cancelButtonLabel)
         {
-            InitialMessage = initialMessage;
+            InitialValidationMessage = initialValidationMessage;
+            InitialLoadingMessage = initialLoadingMessage;
             _objectToEnter = objectsToEnter;
         }
 

@@ -600,7 +600,7 @@ namespace JosephM.CustomisationExporter
                 {
                     var thisType = types.ElementAt(i);
                     var thisTypeLabel = Service.GetDisplayName(thisType);
-                    controller.UpdateProgress(i, count, "Exporting Relationships For " + thisTypeLabel);
+                    controller.UpdateProgress(i, count, "Exporting Relationships");
                     try
                     {
                         var relationships = Service.GetManyToManyRelationships(thisType);
@@ -710,7 +710,7 @@ namespace JosephM.CustomisationExporter
                 {
                     var thisType = types.ElementAt(i);
                     var thisTypeLabel = Service.GetDisplayName(thisType);
-                    controller.UpdateProgress(i, count, "Exporting Options For " + thisTypeLabel);
+                    controller.UpdateProgress(i, count, "Exporting Field Option Sets");
                     try
                     {
                         var fields =
@@ -791,7 +791,7 @@ namespace JosephM.CustomisationExporter
                     var thisType = types.ElementAt(i);
                     var thisTypeLabel = Service.GetDisplayName(thisType);
                     var primaryField = Service.GetPrimaryField(thisType);
-                    controller.UpdateProgress(i, count, "Exporting Fields For " + thisTypeLabel);
+                    controller.UpdateProgress(i, count, "Exporting Fields");
                     try
                     {
                         var fields =
@@ -933,7 +933,7 @@ namespace JosephM.CustomisationExporter
                 {
                     var thisType = types.ElementAt(i);
                     var thisTypeLabel = Service.GetDisplayName(thisType);
-                    controller.UpdateProgress(i, count, "Exporting Record Type " + thisTypeLabel);
+                    controller.UpdateProgress(i, count, "Exporting Record Types");
                     try
                     {
                         var mt = Service.GetRecordTypeMetadata(thisType);
