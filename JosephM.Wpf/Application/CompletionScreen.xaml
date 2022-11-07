@@ -33,7 +33,6 @@
             <ScrollViewer MaxHeight="250" VerticalScrollBarVisibility="Auto">
                 <TextBox
                     Visibility="{Binding CompletionDetails, Converter={StaticResource NullToHiddenConverter}}"
-                    
                     Text="{Binding CompletionHeadingText}"
                     Style="{StaticResource ValidationMessageTextBox}"
                     >

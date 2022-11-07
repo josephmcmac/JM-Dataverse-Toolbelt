@@ -14,5 +14,7 @@ namespace JosephM.CodeGenerator.CSharp
             : base(service, dialogController, lookupService)
         {
         }
+
+        protected override bool UseProgressControlUi => true;
     }
 }

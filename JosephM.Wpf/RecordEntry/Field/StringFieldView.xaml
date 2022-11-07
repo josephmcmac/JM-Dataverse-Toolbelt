@@ -9,6 +9,8 @@
     <field:FieldControlBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -22,6 +24,8 @@
             </Grid.ColumnDefinitions>
             <WrapPanel Grid.Column="1" >
                 <TextBox
+                    MaxWidth="{Binding Path=ActualWidth,
+    RelativeSource={RelativeSource AncestorType={x:Type ScrollViewer}}}"
                     MinWidth="100"
                     Style="{StaticResource  StringFieldEntryStyleReadOnly}"
                     TextWrapping="WrapWithOverflow"
@@ -37,33 +41,28 @@
             </WrapPanel>
         </Grid>
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid>
-                <Grid >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="{Binding CentreAlign, Converter={StaticResource BoolToStar}}" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="{Binding CentreAlign, Converter={StaticResource BoolToStar}}" />
-                    </Grid.ColumnDefinitions>
-                    <WrapPanel Grid.Column="1" >
-                        <TextBox
-                            MinWidth="{Binding EditableFormWidth}"
-                            Grid.Column="0"
-                            Style="{StaticResource  StringFieldEntryStyle}"
-                            Name="TextBox"
-                            TextWrapping="WrapWithOverflow"
-                            AcceptsReturn="{Binding IsMultiline}"
-                            MinLines ="{Binding NumberOfLines}"
-                            TabIndex="1"
-                            Text="{Binding Mode=TwoWay, Path=ValueObject}"
-                            DataContext="{Binding NotifyOnValidationError=True}"
-                            VerticalScrollBarVisibility="Auto"
-                            IsReadOnly="False" />
-                    </WrapPanel>
-                </Grid>
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{Binding CentreAlign, Converter={StaticResource BoolToStar}}" />
+                    <ColumnDefinition Width="*"  />
+                    <ColumnDefinition Width="{Binding CentreAlign, Converter={StaticResource BoolToStar}}" />
+                </Grid.ColumnDefinitions>
+                <WrapPanel Grid.Column="1"
+                           MaxWidth="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type ScrollViewer}}}">
+                    <TextBox
+                        MinWidth="{Binding EditableFormWidth}"
+                        Grid.Column="0"
+                        Style="{StaticResource  StringFieldEntryStyle}"
+                        Name="TextBox"
+                        TextWrapping="WrapWithOverflow"
+                        AcceptsReturn="{Binding IsMultiline}"
+                        MinLines ="{Binding NumberOfLines}"
+                        TabIndex="1"
+                        Text="{Binding Mode=TwoWay, Path=ValueObject}"
+                        DataContext="{Binding NotifyOnValidationError=True}"
+                        VerticalScrollBarVisibility="Auto"
+                        IsReadOnly="False" />
+                </WrapPanel>
             </Grid>
         </Grid>
     </Grid>

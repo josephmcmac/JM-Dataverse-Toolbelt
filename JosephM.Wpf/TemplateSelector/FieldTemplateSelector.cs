@@ -1,10 +1,8 @@
 ﻿#region
 
-using System;
+using JosephM.Application.ViewModel.RecordEntry.Field;
 using System.Windows;
 using System.Windows.Controls;
-using JosephM.Application.ViewModel.RecordEntry.Field;
-using JosephM.Record.Service;
 
 #endregion
 
@@ -42,24 +40,52 @@ namespace JosephM.Wpf.TemplateSelector
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
         {
+            if (item is EnumerableFieldViewModel enumerableVm)
+            {
+                if (enumerableVm.IsGridOnlyEntryField)
+                {
+                    return EnumerableFieldTemplateUniform;
+                }
+                else
+                {
+                    return EnumerableFieldTemplate;
+                }
+            }
+            if (item is FieldViewModelBase fvmb
+                && fvmb.FixedReadOnly)
+            {
+                return StringFieldTemplate;
+            }
             if (item is StringFieldViewModel sfvm)
             {
                 if (sfvm.AutocompleteFunction != null)
+                {
                     return StringFieldWithAutocompleteTemplate;
+                }
                 else
+                {
                     return StringFieldTemplate;
+                }
             }
             if (item is BooleanFieldViewModel bfvm)
             {
                 if (bfvm.UsePicklist)
+                {
                     return BooleanPicklistFieldTemplate;
+                }
                 else
+                {
                     return BooleanFieldTemplate;
+                }
             }
             if (item is PicklistFieldViewModel)
+            {
                 return ComboBoxFieldTemplate;
+            }
             if (item is DateFieldViewModel)
+            {
                 return DateFieldTemplate;
+            }
             if (item is IntegerFieldViewModel ifvm)
             {
                 if (ifvm.UsePicklist)
@@ -77,17 +103,27 @@ namespace JosephM.Wpf.TemplateSelector
             }
             if (item is LookupFieldViewModel)
             {
-                if (((LookupFieldViewModel) item).UsePicklist)
+                if (((LookupFieldViewModel)item).UsePicklist)
+                {
                     return LookupFieldPicklistTemplate;
+                }
                 else
+                {
                     return LookupFieldTemplate;
+                }
             }
             if (item is PasswordFieldViewModel)
+            {
                 return PasswordFieldTemplate;
+            }
             if (item is FolderFieldViewModel)
+            {
                 return FolderFieldTemplate;
+            }
             if (item is StringEnumerableFieldViewModel)
+            {
                 return StringEnumerableFieldTemplate;
+            }
             if (item is RecordTypeFieldViewModel rtfvm)
             {
                 if (rtfvm.UsePicklist)
@@ -100,41 +136,56 @@ namespace JosephM.Wpf.TemplateSelector
                 }
             }
             if (item is RecordFieldFieldViewModel)
+            {
                 return RecordFieldFieldTemplate;
+            }
             if (item is ObjectFieldViewModel)
             {
                 if (((ObjectFieldViewModel)item).UsePicklist)
+                {
                     return LookupFieldPicklistTemplate;
+                }
                 else
+                {
                     return LookupFieldTemplate;
+                }
             }
             if (item is FileRefFieldViewModel)
-                return FileRefFieldTemplate;
-            if (item is EnumerableFieldViewModel enumerableVm)
             {
-                if (enumerableVm.IsGridOnlyEntryField)
-                    return EnumerableFieldTemplateUniform;
-                else
-                    return EnumerableFieldTemplate;
+                return FileRefFieldTemplate;
             }
             if (item is DecimalFieldViewModel)
+            {
                 return DecimalFieldTemplate;
+            }
             if (item is DoubleFieldViewModel)
+            {
                 return DecimalFieldTemplate;
+            }
             if (item is MoneyFieldViewModel)
+            {
                 return DecimalFieldTemplate;
+            }
             if (item is UrlFieldViewModel)
+            {
                 return UrlFieldTemplate;
+            }
             if (item is IMultiSelectFieldViewModel)
+            {
                 return MultiSelectFieldTemplate;
+            }
             if (item is ActivityPartyFieldViewModel)
+            {
                 return ActivityPartyFieldTemplate;
+            }
             if (item is UniqueIdentifierFieldViewModel)
+            {
                 return UniqueIdentifierFieldTemplate;
+            }
             else
+            {
                 return UnmatchedFieldTemplate;
-            throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",
-                item == null ? "null" : item.GetType().FullName));
+            }
         }
     }
 }

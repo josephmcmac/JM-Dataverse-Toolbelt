@@ -188,6 +188,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             get { return IsVisible && IsReadOnly; }
         }
 
+        public bool FixedReadOnly { get; set; }
+
         public bool IsEditable
         {
             get { return _isEditable; }

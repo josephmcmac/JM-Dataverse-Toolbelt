@@ -13,18 +13,18 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Name="OuterGrid">
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="{Binding CentreAlign, Converter={StaticResource BoolToStar}}" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="{Binding CentreAlign, Converter={StaticResource BoolToStar}}" />
             </Grid.ColumnDefinitions>
             <WrapPanel Grid.Column="1" >
                 <TextBox
                     MinWidth="100"
                     Style="{StaticResource  StringFieldEntryStyleReadOnly}"
-                    TextWrapping="WrapWithOverflow"
+                    TextWrapping="Wrap"
                     TextAlignment="{Binding CentreAlign, Converter={StaticResource BooleanToCenterAlignConverter}}"
                     AcceptsReturn="{Binding IsMultiline}"
                     MinLines ="{Binding NumberOfLines}"

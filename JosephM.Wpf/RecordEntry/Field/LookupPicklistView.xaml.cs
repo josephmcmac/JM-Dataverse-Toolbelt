@@ -1,12 +1,4 @@
-﻿#region
-
-using System.Windows.Forms;
-using System.Windows.Input;
-using JosephM.Application.ViewModel.RecordEntry.Field;
-using Binding = System.Windows.Data.Binding;
-using KeyEventArgs = System.Windows.Input.KeyEventArgs;
-
-#endregion
+﻿using Binding = System.Windows.Data.Binding;
 
 namespace JosephM.Wpf.RecordEntry.Field
 {

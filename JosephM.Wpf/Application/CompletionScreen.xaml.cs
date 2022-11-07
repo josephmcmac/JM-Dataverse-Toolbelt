@@ -1,8 +1,4 @@
-﻿#region
-
-using System.Windows.Controls;
-
-#endregion
+﻿using System.Windows.Controls;
 
 namespace JosephM.Wpf.Application
 {

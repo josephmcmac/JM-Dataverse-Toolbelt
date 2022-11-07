@@ -200,15 +200,14 @@ namespace JosephM.Application.ViewModel.Query
                                         .SelectMany(s => s.Split(','))
                                         .Distinct()
                                         .ToArray();
-                                    var logController = new LogController(LoadingViewModel);
-                                    RecordService.LoadFieldsForEntities(targetTypesForLookupField, logController);
-                                    RecordService.LoadViewsFor(targetTypesForLookupField, logController);
+                                    RecordService.LoadFieldsForEntities(targetTypesForLookupField, new LogController());
+                                    RecordService.LoadViewsFor(targetTypesForLookupField, new LogController());
                                     new[] { createOrUpdateRecord }.PopulateEmptyLookups(RecordService, null);
                                     var newForm = new CreateOrUpdateViewModel(createOrUpdateRecord, formController, onSave, ClearChildForm);
-                                    var suffixMessage = fieldsForType.Count() > 50
-                                        ? "\n\nPlease wait this may take a while and temporarilly freeze due to the volume of fields to render"
-                                        : string.Empty;
-                                    LoadingViewModel.LoadingMessage = $"Loading {RecordService.GetDisplayName(RecordType)} for editing{suffixMessage}";
+                                    //var suffixMessage = fieldsForType.Count() > 50
+                                    //    ? "\n\nPlease wait this may take a while and temporarilly freeze due to the volume of fields to render"
+                                    //    : string.Empty;
+                                    //LoadingViewModel.LoadingMessage = $"Loading {RecordService.GetDisplayName(RecordType)} for editing{suffixMessage}";
                                     Thread.Sleep(100);
                                     ClearNotInIds();
                                     LoadChildForm(newForm);
@@ -222,36 +221,80 @@ namespace JosephM.Application.ViewModel.Query
                     };
                     DynamicGridViewModel.EditRowNew = (g) =>
                     {
-                        var formMetadata = FormService.GetFormMetadata(RecordType, RecordService);
-                        var formController = new FormController(RecordService, FormService, ApplicationController);
-                        var selectedRow = g;
-                        if (selectedRow != null)
+                        ApplicationController.DoOnAsyncThread(() =>
                         {
-                            var record = selectedRow.Record;
-                            CreateOrUpdateViewModel vmRef = null;
-                            var createOrUpdateRecord = RecordService.Get(record.Type, record.Id);
-                            new[] { createOrUpdateRecord }.PopulateEmptyLookups(RecordService, null);
-                            vmRef = new CreateOrUpdateViewModel(createOrUpdateRecord, formController, () => {
-                                vmRef.ValidationPrompt = "Changes Have Been Saved";
-                                ClearNotInIds();
-                                DynamicGridViewModel.ReloadGrid();
-                            }, () => ApplicationController.Remove(vmRef), cancelButtonLabel: "Close");
-                            ApplicationController.NavigateTo(vmRef);
-                            //LoadChildForm(newForm);
-                        }
+                            try
+                            {
+                                LoadingViewModel.LoadingMessage = $"Loading {RecordService.GetDisplayName(RecordType)} for editing";
+                                LoadingViewModel.IsLoading = true;
+                                var formMetadata = FormService.GetFormMetadata(RecordType, RecordService);
+                                var formController = new FormController(RecordService, FormService, ApplicationController);
+                                var selectedRow = g;
+                                if (selectedRow != null)
+                                {
+                                    var record = selectedRow.Record;
+                                    CreateOrUpdateViewModel vmRef = null;
+                                    var createOrUpdateRecord = RecordService.Get(record.Type, record.Id); var fieldsForType = RecordService
+                                                .GetFields(record.Type);
+                                    var targetTypesForLookupField = fieldsForType
+                                        .Select(f => RecordService.GetLookupTargetType(f, record.Type))
+                                        .Where(s => !string.IsNullOrWhiteSpace(s))
+                                        .SelectMany(s => s.Split(','))
+                                        .Distinct()
+                                        .ToArray();
+                                    RecordService.LoadFieldsForEntities(targetTypesForLookupField, new LogController());
+                                    RecordService.LoadViewsFor(targetTypesForLookupField, new LogController());
+                                    new[] { createOrUpdateRecord }.PopulateEmptyLookups(RecordService, null);
+                                    vmRef = new CreateOrUpdateViewModel(createOrUpdateRecord, formController, () =>
+                                    {
+                                        vmRef.ValidationPrompt = "Changes Have Been Saved";
+                                        ClearNotInIds();
+                                        DynamicGridViewModel.ReloadGrid();
+                                    }, () => ApplicationController.Remove(vmRef), cancelButtonLabel: "Close");
+                                    ApplicationController.NavigateTo(vmRef);
+                                }
+                            }
+                            finally
+                            {
+                                LoadingViewModel.IsLoading = false;
+                            }
+                        });
                     };
                     DynamicGridViewModel.AddRow = () =>
                     {
-                        var formMetadata = FormService.GetFormMetadata(RecordType, RecordService);
-                        var formController = new FormController(RecordService, FormService, ApplicationController);
-                        Action onSave = () =>
+                        ApplicationController.DoOnAsyncThread(() =>
                         {
-                            ClearChildForm();
-                            ClearNotInIds();
-                            DynamicGridViewModel.ReloadGrid();
-                        };
-                        var newForm = new CreateOrUpdateViewModel(RecordService.NewRecord(RecordType), formController, onSave, ClearChildForm, explicitIsCreate: true);
-                        LoadChildForm(newForm);
+                            try
+                            {
+                                LoadingViewModel.LoadingMessage = $"Loading {RecordService.GetDisplayName(RecordType)} for editing";
+                                LoadingViewModel.IsLoading = true;
+                                var formMetadata = FormService.GetFormMetadata(RecordType, RecordService);
+                                var formController = new FormController(RecordService, FormService, ApplicationController);
+                                Action onSave = () =>
+                                {
+                                    ClearChildForm();
+                                    ClearNotInIds();
+                                    DynamicGridViewModel.ReloadGrid();
+                                };
+                                var record = RecordService.NewRecord(RecordType);
+                                var fieldsForType = RecordService
+                                    .GetFields(record.Type);
+                                var targetTypesForLookupField = fieldsForType
+                                    .Select(f => RecordService.GetLookupTargetType(f, record.Type))
+                                    .Where(s => !string.IsNullOrWhiteSpace(s))
+                                    .SelectMany(s => s.Split(','))
+                                    .Distinct()
+                                    .ToArray();
+                                RecordService.LoadFieldsForEntities(targetTypesForLookupField, new LogController());
+                                RecordService.LoadViewsFor(targetTypesForLookupField, new LogController());
+                                var newForm = new CreateOrUpdateViewModel(RecordService.NewRecord(RecordType), formController, onSave, ClearChildForm, explicitIsCreate: true);
+                                LoadChildForm(newForm);
+                            }
+                            finally
+                            {
+                                LoadingViewModel.IsLoading = false;
+                            }
+                        });
                     };
                 }
                 customFunctionList.Add(new CustomGridFunction("DOWNLOAD", "Download", new[]

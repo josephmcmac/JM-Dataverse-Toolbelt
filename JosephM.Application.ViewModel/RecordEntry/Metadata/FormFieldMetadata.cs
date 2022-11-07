@@ -52,13 +52,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             try
             {
                 RecordFieldType? fieldType = explicitFieldType;
-                string label;
-                var thisFieldEditable = true;
 
                 if (!explicitFieldType.HasValue)
                     fieldType = recordService.GetFieldType(field, recordType);
-                label = recordService.GetFieldLabel(field, recordType);
-                thisFieldEditable = string.IsNullOrWhiteSpace(recordForm.GetRecord().Id) ? recordService.GetFieldMetadata(field, recordType).Createable : recordService.GetFieldMetadata(field, recordType).Writeable;
+                var label = recordService.GetFieldLabel(field, recordType);
+                var thisFieldEditable = string.IsNullOrWhiteSpace(recordForm.GetRecord().Id) ? recordService.GetFieldMetadata(field, recordType).Createable : recordService.GetFieldMetadata(field, recordType).Writeable;
+                var fixReadOnly = !thisFieldEditable;
 
                 FieldViewModelBase fieldVm = null;
                 switch (fieldType)
@@ -308,6 +307,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     fieldVm = new UnmatchedFieldViewModel(field, label, recordForm);
                 }
                 fieldVm.IsEditable = thisFieldEditable;
+                fieldVm.FixedReadOnly = fixReadOnly;
                 fieldVm.DisplayLabel = DisplayLabel;
                 fieldVm.AltRecordType = AltRecordType;
                 fieldVm.AliasedFieldName = AliasedFieldName;
