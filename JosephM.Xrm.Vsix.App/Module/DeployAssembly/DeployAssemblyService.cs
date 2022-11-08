@@ -42,7 +42,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
             if (request.Id != null)
                 assemblyRecord.SetField(Fields.pluginassembly_.pluginassemblyid, request.Id, service);
             assemblyRecord.SetField(Fields.pluginassembly_.name, request.AssemblyName, service);
-            assemblyRecord.SetField(Fields.pluginassembly_.content, request.Content, service);
+            assemblyRecord.SetField(Fields.pluginassembly_.content, request.GetContent(), service);
             assemblyRecord.SetField(Fields.pluginassembly_.isolationmode, (int)request.IsolationMode, service);
             var matchField = Fields.pluginassembly_.pluginassemblyid;
 

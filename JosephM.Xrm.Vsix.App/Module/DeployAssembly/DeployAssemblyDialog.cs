@@ -27,7 +27,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
         IVisualStudioService VisualStudioService { get; set; }
 
         public DeployAssemblyDialog(DeployAssemblyService service, IDialogController dialogController, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService, XrmPackageSettings packageSettings)
-            : base(service, dialogController, null, nextButtonLabel: "Deploy", initialLoadingMessage: "Please wait while loading assembly for grid editing. This may take a while.")
+            : base(service, dialogController, null, nextButtonLabel: "Deploy")
         {
             VisualStudioService = visualStudioService;
             PackageSettings = packageSettings;
@@ -54,6 +54,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
 
         protected override void LoadDialogExtention()
         {
+            LoadingViewModel.LoadingMessage = "Please wait while building and loading assembly information. This may take a while";
             //hijack the load method so that we can prepopulate
             //the entered request with various details
             AssemblyLoadErrorMessage = LoadAssemblyDetails();
@@ -114,7 +115,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
                 return "Assembly Cannot By Deployed. No Plugin Classes Were Found In The Assembly";
 
             Request.AssemblyName = assemblyName;
-            Request.Content = assemblyContent;
+            Request.SetContent(assemblyContent);
 
             var preAssembly = XrmRecordService.GetFirst(Entities.pluginassembly, Fields.pluginassembly_.name, assemblyName);
             if (preAssembly != null)

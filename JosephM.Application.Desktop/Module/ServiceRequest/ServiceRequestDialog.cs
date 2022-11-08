@@ -1,5 +1,4 @@
 ﻿using JosephM.Application.Application;
-using JosephM.Application.ViewModel;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.AppConfig;
@@ -11,7 +10,6 @@ using JosephM.Record.IService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace JosephM.Application.Desktop.Module.ServiceRequest
 {

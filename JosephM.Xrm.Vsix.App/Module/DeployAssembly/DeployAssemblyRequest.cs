@@ -16,8 +16,18 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
 
         [Hidden]
         public string Id { get; set; }
-        [Hidden]
-        public string Content { get; set; }
+
+        private string content;
+
+        public string GetContent()
+        {
+            return content;
+        }
+
+        public void SetContent(string value)
+        {
+            content = value;
+        }
 
         [RequiredProperty]
         [DisplayOrder(10)]
