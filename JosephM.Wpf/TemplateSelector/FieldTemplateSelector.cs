@@ -16,6 +16,7 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate DateFieldTemplate { get; set; }
         public DataTemplate StringFieldTemplate { get; set; }
         public DataTemplate StringFieldWithAutocompleteTemplate { get; set; }
+        public DataTemplate StringFieldDisplayOnlyTemplate { get; set; }
         public DataTemplate IntegerFieldTemplate { get; set; }
         public DataTemplate IntegerPicklistFieldTemplate { get; set; }
         public DataTemplate LookupFieldTemplate { get; set; }
@@ -54,7 +55,7 @@ namespace JosephM.Wpf.TemplateSelector
             if (item is FieldViewModelBase fvmb
                 && fvmb.FixedReadOnly)
             {
-                return StringFieldTemplate;
+                return StringFieldDisplayOnlyTemplate;
             }
             if (item is StringFieldViewModel sfvm)
             {

@@ -78,6 +78,9 @@
     <DataTemplate x:Key="stringFieldWithAutocompleteTemplate">
         <field:StringFieldWithAutocompleteView DataContext="{Binding}" />
     </DataTemplate>
+    <DataTemplate x:Key="stringFieldDisplayOnlyTemplate">
+        <field:StringFieldDisplayOnlyView DataContext="{Binding}" />
+    </DataTemplate>
     <DataTemplate x:Key="passwordFieldTemplate">
         <field:PasswordFieldView DataContext="{Binding}" />
     </DataTemplate>
@@ -147,6 +150,7 @@
         DateFieldTemplate="{StaticResource dateFieldTemplate}"
         StringFieldTemplate="{StaticResource stringFieldTemplate}"
         StringFieldWithAutocompleteTemplate="{StaticResource stringFieldWithAutocompleteTemplate}"
+        StringFieldDisplayOnlyTemplate="{StaticResource stringFieldDisplayOnlyTemplate}"
         IntegerFieldTemplate="{StaticResource integerFieldTemplate}"
         IntegerPicklistFieldTemplate="{StaticResource IntegerPicklistFieldTemplate}"
         FileRefFieldTemplate="{StaticResource fileRefFieldTemplate}"
