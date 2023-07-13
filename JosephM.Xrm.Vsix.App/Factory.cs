@@ -7,7 +7,6 @@ using JosephM.CodeGenerator.JavaScriptOptions;
 using JosephM.Core.AppConfig;
 using JosephM.RecordCounts;
 using JosephM.ToolbeltTheme;
-using JosephM.Xrm.Autonumber;
 using JosephM.Xrm.DataImportExport.Modules;
 using JosephM.Xrm.TextSearch;
 using JosephM.Xrm.Vsix.Application;
@@ -65,7 +64,6 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<SettingsAggregatorModule>(0x011E);
             app.AddModule<AddPortalCodeModule>(0x011B);
             app.AddModule<PackageSettingsAppConnectionModule>();
-            app.AddModule<AutonumberModule>(0x011D);
             app.AddModule<DonateModule>(0x0220);
             app.AddModule<RecordCountsModule>();
             app.AddModule<ColourThemeModule>();

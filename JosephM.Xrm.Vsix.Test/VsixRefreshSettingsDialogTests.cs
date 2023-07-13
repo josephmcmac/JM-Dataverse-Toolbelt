@@ -119,9 +119,9 @@ namespace JosephM.Xrm.Vsix.Test
             testApplication.EnterAndSaveObject(GetXrmRecordConfiguration(), connectionEntryDialog);
 
             var packageentryForm = testApplication.GetSubObjectEntryViewModel(dialog, 1);
-            //verify that the connection was passed into the cponnecitons grid
+            //verify that the connection was passed into the connections grid
             var subgrid = packageentryForm.GetEnumerableFieldViewModel(nameof(XrmPackageSettings.Connections));
-            Assert.IsNotNull(subgrid.GridRecords.First().GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.OrganizationUniqueName)).Value);
+            Assert.IsNotNull(subgrid.GridRecords.First().GetPicklistFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.ConnectionType)).ValueObject);
             //verify that the solution picklist was populated (uses the entered conneciton to populate)
             var solutionPicklist = packageentryForm.GetLookupFieldFieldViewModel(nameof(XrmPackageSettings.Solution));
             Assert.IsTrue(solutionPicklist.ItemsSource.Any());
@@ -131,7 +131,7 @@ namespace JosephM.Xrm.Vsix.Test
 
             var settingsManager = testApplication.Controller.ResolveType(typeof(ISettingsManager)) as ISettingsManager;
             Assert.IsNotNull(settingsManager);
-            Assert.IsNotNull(settingsManager.Resolve<XrmRecordConfiguration>().OrganizationUniqueName);
+            Assert.IsNotNull(settingsManager.Resolve<XrmRecordConfiguration>().WebUrl);
             Assert.IsTrue(settingsManager.Resolve<XrmPackageSettings>().Connections.Any());
         }
     }

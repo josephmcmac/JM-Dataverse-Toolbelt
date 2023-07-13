@@ -234,10 +234,6 @@
       <Project>{ED23E8EF-1623-491E-A30F-BA55C8F65CE7}</Project>
       <Name>JosephM.Wpf</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Xrm.Autonumber\JosephM.Xrm.Autonumber.csproj">
-      <Project>{021a835c-5674-4f77-8713-420a6cc1c854}</Project>
-      <Name>JosephM.Xrm.Autonumber</Name>
-    </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
       <Project>{7F69213D-3EFB-4736-9962-0151F92FA7D4}</Project>
       <Name>JosephM.Xrm</Name>

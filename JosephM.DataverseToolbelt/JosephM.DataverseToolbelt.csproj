@@ -260,10 +260,6 @@
       <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
       <Name>JosephM.Record</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Xrm.Autonumber\JosephM.Xrm.Autonumber.csproj">
-      <Project>{021a835c-5674-4f77-8713-420a6cc1c854}</Project>
-      <Name>JosephM.Xrm.Autonumber</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

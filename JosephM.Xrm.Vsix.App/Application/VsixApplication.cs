@@ -80,12 +80,11 @@ namespace JosephM.Xrm.Vsix
             var settingsManager = (ISettingsManager)Controller.ResolveType(typeof(ISettingsManager));
             var settingsConnection = settingsManager.Resolve<XrmRecordConfiguration>();
             var containerConnection = (IXrmRecordConfiguration)Controller.ResolveType(typeof(IXrmRecordConfiguration));
-            if (settingsConnection.AuthenticationProviderType != containerConnection.AuthenticationProviderType
-                || settingsConnection.DiscoveryServiceAddress != containerConnection.DiscoveryServiceAddress
-                || settingsConnection.OrganizationUniqueName != containerConnection.OrganizationUniqueName
-                || settingsConnection.Domain != containerConnection.Domain
-                || settingsConnection.Username != containerConnection.Username
-                || settingsConnection.Password?.GetRawPassword() != containerConnection.Password?.GetRawPassword())
+            if (settingsConnection.ConnectionType != containerConnection.ConnectionType
+                || settingsConnection.ToolingConnectionId != containerConnection.ToolingConnectionId
+                || settingsConnection.ClientId != containerConnection.ClientId
+                || settingsConnection.ClientSecret?.GetRawPassword() != containerConnection.ClientSecret?.GetRawPassword()
+                || settingsConnection.WebUrl != containerConnection.WebUrl)
             {
                 SavedXrmConnectionsModule.RefreshXrmServices(settingsConnection, Controller);
             }

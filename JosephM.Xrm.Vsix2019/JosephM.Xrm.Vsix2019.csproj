@@ -208,10 +208,6 @@
       <Project>{ed23e8ef-1623-491e-a30f-ba55c8f65ce7}</Project>
       <Name>JosephM.Wpf</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Xrm.Autonumber\JosephM.Xrm.Autonumber.csproj">
-      <Project>{021a835c-5674-4f77-8713-420a6cc1c854}</Project>
-      <Name>JosephM.Xrm.Autonumber</Name>
-    </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm.SolutionTemplate\JosephM.Xrm.SolutionTemplate.csproj">
       <Project>{CF4B064A-6055-4A0C-B658-A2ADBBEA478E}</Project>
       <Name>JosephM.Xrm.SolutionTemplate</Name>

@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.Desktop.Test;
+using JosephM.Core.FieldType;
 using JosephM.Xrm.Vsix.App;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
@@ -58,12 +59,12 @@ namespace JosephM.Xrm.Vsix.Test
 
             var connectionsubGrid = packageSettingsEntry.GetEnumerableFieldViewModel(nameof(XrmPackageSettings.Connections));
             Assert.IsTrue(connectionsubGrid.GridRecords.Any());
-            Assert.AreEqual(connectionToEnter.OrganizationUniqueName, connectionsubGrid.GridRecords.First().GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.OrganizationUniqueName)).Value);
+            Assert.AreEqual(PicklistOption.EnumToPicklistOption(connectionToEnter.ConnectionType), connectionsubGrid.GridRecords.First().GetPicklistFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.ConnectionType)).Value);
 
             packageSettingsEntry.SaveButtonViewModel.Invoke();
 
             Assert.IsTrue(packageSettings.Connections.Any());
-            Assert.AreEqual(connectionToEnter.OrganizationUniqueName, packageSettings.Connections.First().OrganizationUniqueName);
+            Assert.AreEqual(connectionToEnter.WebUrl, packageSettings.Connections.First().WebUrl);
         }
     }
 }

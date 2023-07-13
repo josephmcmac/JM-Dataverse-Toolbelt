@@ -89,10 +89,14 @@ namespace JosephM.Xrm.Test
                 foreach (var prop in xrmConfig.GetType().GetReadWriteProperties())
                 {
                     var value = dictionary[prop.Name];
-                    if (value != null && prop.Name == nameof(XrmConfiguration.Password))
+                    if (value != null && prop.Name == nameof(XrmConfiguration.ClientSecret))
+                    {
                         xrmConfig.SetPropertyByString(prop.Name, new JosephM.Core.FieldType.Password(value).GetRawPassword());
+                    }
                     else
+                    {
                         xrmConfig.SetPropertyByString(prop.Name, value);
+                    }
                 }
                 return xrmConfig;
             }
@@ -213,7 +217,7 @@ namespace JosephM.Xrm.Test
             foreach (var explictiSetField in explicitSetFields)
                 entity.SetField(explictiSetField.Key, explictiSetField.Value);
 
-            var fieldsToExlcude = new[] { "traversedpath", "parentarticlecontentid", "rootarticleid", "previousarticlecontentid" };
+            var fieldsToExlcude = new[] { "traversedpath", "parentarticlecontentid", "rootarticleid", "previousarticlecontentid", "languagelocaleid", "msdyn_languagecode" };
             var fields = XrmService.GetFields(type)
                 .Where(f => !fieldsToExlcude.Contains(f));
             foreach (var field in fields.Where(s => !explicitSetFields.ContainsKey(s)))
@@ -283,7 +287,7 @@ namespace JosephM.Xrm.Test
                                 var typesToExlcude = new[]
                                 {
                                     "equipment", "transactioncurrency", "pricelevel", "service", "systemuser", "incident",
-                                    "campaign", "territory", "sla", "bookableresource", "msdyn_taxcode", "languagelocale", "msdyn_salesaccelerationinsight"
+                                    "campaign", "territory", "sla", "bookableresource", "msdyn_taxcode", "languagelocale", "msdyn_salesaccelerationinsight", "msdyn_accountkpiitem"
                                 };
                                 if (!typesToExlcude.Contains(target))
                                     entity.SetField(field, CreateTestRecord(target).ToEntityReference());

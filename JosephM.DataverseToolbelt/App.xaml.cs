@@ -13,7 +13,6 @@ using JosephM.Deployment;
 using JosephM.InstanceComparer;
 using JosephM.RecordCounts;
 using JosephM.ToolbeltTheme;
-using JosephM.Xrm.Autonumber;
 using JosephM.Xrm.DataImportExport.Modules;
 using JosephM.Xrm.ExcelImport;
 using JosephM.Xrm.MigrateInternal;
@@ -57,7 +56,6 @@ namespace JosephM.XrmDeveloperTool
             app.AddModule<XrmDeveloperToolAboutModule>();
             //app.AddModule<DevAppReleaseCheckModule>();
             app.AddModule<SavedConnectionAppConnectionModule>();
-            app.AddModule<AutonumberModule>();
             app.AddModule<ColourThemeModule>();
             app.AddModule<DevAppApplicationInsightsModule>();
             app.AddModule<DonateModule>();

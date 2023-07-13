@@ -36,7 +36,9 @@ namespace JosephM.RecordCounts
                 "https://graph.microsoft.com is not allowed",
                 "Unauthorized to get shared workspace connection string",
                 "FCB.RealTimeCollaboration is not enabled",
-                "We can’t reach the service"
+                "We can’t reach the service",
+                "Retrieving Service Endpoint for Activity Analysis Service or Relationship Intelligence Service from config entity is not allowed",
+                "AccessToken not found. Please make sure plugin is registered as synchronous and not called with app credentials"
             };
 
             var excludeTheseTypes = new[] { Entities.msdyn_componentlayer, Entities.msdyn_solutioncomponentsummary, Entities.msdyn_nonrelationalds, Entities.datalakeworkspace, Entities.datalakeworkspacepermission, Entities.principalobjectaccess, Entities.msdyn_casesuggestion, Entities.msdyn_knowledgearticlesuggestion, Entities.virtualresourcegroupresource, Entities.usermobileofflineprofilemembership, Entities.teammobileofflineprofilemembership, Entities.systemuserauthorizationchangetracker, Entities.searchtelemetry, Entities.appnotification, Entities.msdyn_solutioncomponentcountsummary, Entities.msdyn_solutioncomponentcountdatasource, Entities.msdyn_suggestedactivity, Entities.msdyn_suggestedcontact };

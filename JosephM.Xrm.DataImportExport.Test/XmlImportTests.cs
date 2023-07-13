@@ -681,7 +681,9 @@ namespace JosephM.Xrm.DataImportExport.Test
                 //create or get a knowledge article
                 var knowledgeArticle = XrmService.GetFirst(type, Fields.knowledgearticle_.articlepublicnumber, PopulateStringValue);
                 if (knowledgeArticle == null)
+                {
                     knowledgeArticle = CreateRecordAllFieldsPopulated(Entities.knowledgearticle);
+                }
 
                 var articleNumber = knowledgeArticle.GetStringField(Fields.knowledgearticle_.articlepublicnumber);
 
