@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>JosephM.Application.Desktop.Console</RootNamespace>
     <AssemblyName>JosephM.Application.Desktop.Console</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
