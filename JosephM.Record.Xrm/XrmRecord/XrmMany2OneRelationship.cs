@@ -5,24 +5,24 @@ using Microsoft.Xrm.Sdk.Metadata;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
-    public class XrmOne2ManyRelationship : XrmConfigurationBase, IOne2ManyRelationshipMetadata
+    public class XrmMany2OneRelationship : XrmConfigurationBase, IOne2ManyRelationshipMetadata
     {
-        public string ReferencingEntity { get { return GetMetadata().ReferencingEntity; } }
+        public string ReferencingEntity { get; set; } 
         public string SchemaName { get; set; }
         public string ReferencedAttribute { get { return GetMetadata().ReferencedAttribute; } }
-        public string ReferencedEntity { get; set; }
+        public string ReferencedEntity { get { return GetMetadata().ReferencedEntity; } }
         public string ReferencingAttribute { get { return GetMetadata().ReferencingAttribute; } }
 
-        public XrmOne2ManyRelationship(string name, string referencedType, XrmService xrmService)
+        public XrmMany2OneRelationship(string name, string referencingType, XrmService xrmService)
             : base(xrmService)
         {
-            ReferencedEntity = referencedType;
+            ReferencingEntity = referencingType;
             SchemaName = name;
         }
 
         private OneToManyRelationshipMetadata GetMetadata()
         {
-            return XrmService.GetOneToManyRelationship(ReferencedEntity, SchemaName);
+            return XrmService.GetManyToOneRelationship(ReferencingEntity, SchemaName);
         }
 
         public int DisplayOrder

@@ -3470,6 +3470,17 @@ string recordType)
             return entity.ObjectTypeCode.Value;
         }
 
+        public OneToManyRelationshipMetadata GetManyToOneRelationship(string referencingRecordType, string relationshipName)
+        {
+            var relationships = GetEntityManyToOneRelationships(referencingRecordType);
+            if (relationships.Any(r => r.SchemaName == relationshipName))
+            {
+                return relationships.First(r => r.SchemaName == relationshipName);
+            }
+            throw new ArgumentOutOfRangeException("relationshipName",
+                "No Relationship Exists With The name: " + relationshipName);
+        }
+
         public OneToManyRelationshipMetadata GetOneToManyRelationship(string referencedRecordType, string relationshipName)
         {
             var relationships = GetEntityOneToManyRelationships(referencedRecordType);

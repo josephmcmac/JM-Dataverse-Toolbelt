@@ -12,6 +12,7 @@ using JosephM.CustomisationImporter;
 using JosephM.Deployment;
 using JosephM.InstanceComparer;
 using JosephM.RecordCounts;
+using JosephM.SolutionComponentExporter;
 using JosephM.ToolbeltTheme;
 using JosephM.Xrm.DataImportExport.Modules;
 using JosephM.Xrm.ExcelImport;
@@ -47,6 +48,7 @@ namespace JosephM.XrmDeveloperTool
             app.AddModule<MigrateRecordsModule>(); 
             app.AddModule<XrmTextSearchModule>();
             app.AddModule<CustomisationExporterModule>();
+            app.AddModule<SolutionComponentExporterModule>();
             app.AddModule<CustomisationImportModule>();
             app.AddModule<InstanceComparerModule>();
             app.AddModule<RecordCountsModule>();

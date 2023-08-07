@@ -20,10 +20,8 @@ namespace JosephM.Application.Desktop.Application
         public DesktopSettingsManager(IApplicationController applicationController)
         {
             ApplicationController = applicationController;
-            AppConfigManager = new AppConfigManager();
         }
 
-        private AppConfigManager AppConfigManager { get; set; }
         private IApplicationController ApplicationController { get; set; }
 
         public TSettingsObject Resolve<TSettingsObject>(Type settingsType = null) where TSettingsObject : new()
@@ -41,16 +39,6 @@ namespace JosephM.Application.Desktop.Application
                     ApplicationController.UserMessage(string.Format("Error Loading Settings From {0}\n{1}",
                         settingsFilename, ex.DisplayString()));
                 }
-            }
-            // else get it from app config
-            try
-            {
-                return AppConfigManager.Resolve<TSettingsObject>();
-            }
-            catch (Exception ex)
-            {
-                //ApplicationController.UserMessage(string.Format("Error Loading Settings. Settings Will Be Empty\n{0}",
-                //    ex.DisplayString()));
             }
             return new TSettingsObject();
         }

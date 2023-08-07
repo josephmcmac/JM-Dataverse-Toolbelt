@@ -755,12 +755,21 @@ namespace JosephM.Record.Xrm.XrmRecord
                 relationshipMetadata.RecordType2DisplayOrder);
         }
 
-        public IEnumerable<IOne2ManyRelationshipMetadata> GetOneToManyRelationships(string recordType)
+        public IEnumerable<IOne2ManyRelationshipMetadata> GetOneToManyRelationships(string recordType, bool onlyValidForAdvancedFind = true)
         {
             var relationships = _xrmService.GetEntityOneToManyRelationships(recordType);
             return relationships
-                .Where(r => r.IsValidForAdvancedFind.HasValue && r.IsValidForAdvancedFind.Value)
+                .Where(r => !onlyValidForAdvancedFind || r.IsValidForAdvancedFind.HasValue && r.IsValidForAdvancedFind.Value)
                 .Select(r => new XrmOne2ManyRelationship(r.SchemaName, r.ReferencedEntity, _xrmService))
+                .ToArray();
+        }
+
+        public IEnumerable<IOne2ManyRelationshipMetadata> GetManyToOneRelationships(string recordType, bool onlyValidForAdvancedFind = true)
+        {
+            var relationships = _xrmService.GetEntityManyToOneRelationships(recordType);
+            return relationships
+                .Where(r => !onlyValidForAdvancedFind || r.IsValidForAdvancedFind.HasValue && r.IsValidForAdvancedFind.Value)
+                .Select(r => new XrmMany2OneRelationship(r.SchemaName, r.ReferencingEntity, _xrmService))
                 .ToArray();
         }
 

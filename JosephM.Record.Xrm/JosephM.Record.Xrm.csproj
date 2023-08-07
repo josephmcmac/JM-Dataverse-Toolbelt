@@ -105,6 +105,7 @@
     <Compile Include="Mappers\StringFormatMapper.cs" />
     <Compile Include="XrmRecord\XrmFieldMetadata.cs" />
     <Compile Include="XrmRecord\XrmManyToManyRelationshipMetadata.cs" />
+    <Compile Include="XrmRecord\XrmMany2OneRelationship.cs" />
     <Compile Include="XrmRecord\XrmOne2ManyRelationship.cs" />
     <Compile Include="XrmRecord\XrmPicklistSet.cs" />
     <Compile Include="XrmRecord\XrmRecordConfiguration.cs" />

@@ -86,7 +86,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppConfig\CustomConfigurationSectiion.cs" />
     <Compile Include="AppConfig\Extentions.cs" />
     <Compile Include="AppConfig\IResolveObject.cs" />
     <Compile Include="AppConfig\IDependencyResolver.cs" />
@@ -186,7 +185,6 @@
     <Compile Include="Log\IUserInterface.cs" />
     <Compile Include="Utility\FileUtility.cs" />
     <Compile Include="Sql\QueryRow.cs" />
-    <Compile Include="AppConfig\AppConfigManager.cs" />
     <Compile Include="Log\LogController.cs" />
     <Compile Include="Utility\TaskEstimator.cs" />
     <Compile Include="Utility\VersionHelper.cs" />

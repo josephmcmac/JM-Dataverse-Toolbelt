@@ -1,14 +1,10 @@
-﻿#region
-
-using System;
+﻿using System;
 using JosephM.Core.Service;
 using JosephM.Record.Metadata;
 using JosephM.Core.Attributes;
 using System.Collections.Generic;
 using JosephM.Core.Extentions;
 using System.Linq;
-
-#endregion
 
 namespace JosephM.CustomisationImporter.Service
 {
