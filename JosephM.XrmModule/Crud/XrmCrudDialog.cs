@@ -77,6 +77,11 @@ namespace JosephM.XrmModule.Crud
             if (!fields.Contains(XrmRecordService.GetPrimaryKey(queryDefinition.RecordType)))
                 fields.Insert(0, XrmRecordService.GetPrimaryKey(queryDefinition.RecordType));
             queryDefinition.Fields = fields;
+            var lastSortExpression = QueryViewModel.DynamicGridViewModel.GetLastSortExpression();
+            if(lastSortExpression != null)
+            {
+                queryDefinition.Sorts = new List<Record.Query.SortExpression> { lastSortExpression };
+            }
             var fetchXml = FormatXml(XrmRecordService.ToFetchXml(queryDefinition));
             return fetchXml;
         }
