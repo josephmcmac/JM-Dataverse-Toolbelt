@@ -5,13 +5,11 @@ using JosephM.Record.Extentions;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
-using JosephM.SolutionComponentExporter.Type;
 using JosephM.Spreadsheet;
 using JosephM.Xrm.Schema;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace JosephM.SolutionComponentExporter
