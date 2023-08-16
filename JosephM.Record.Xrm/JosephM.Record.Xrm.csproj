@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JosephM.Record.Xrm</RootNamespace>
     <AssemblyName>JosephM.Record.Xrm</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SccProjectName>SAK</SccProjectName>
@@ -105,6 +105,7 @@
     <Compile Include="Mappers\StringFormatMapper.cs" />
     <Compile Include="XrmRecord\XrmFieldMetadata.cs" />
     <Compile Include="XrmRecord\XrmManyToManyRelationshipMetadata.cs" />
+    <Compile Include="XrmRecord\XrmMany2OneRelationship.cs" />
     <Compile Include="XrmRecord\XrmOne2ManyRelationship.cs" />
     <Compile Include="XrmRecord\XrmPicklistSet.cs" />
     <Compile Include="XrmRecord\XrmRecordConfiguration.cs" />
@@ -139,7 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies">
-      <Version>9.0.2.26</Version>
+      <Version>9.0.2.49</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

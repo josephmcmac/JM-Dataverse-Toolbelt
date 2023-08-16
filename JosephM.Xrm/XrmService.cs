@@ -2823,7 +2823,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             if (optionSet.Any())
             {
                 var existingOptions = GetPicklistKeyValues(recordType, fieldName);
-                var itemUpdated = false;
                 foreach (var option in existingOptions)
                 {
                     if (!optionSet.Any(o => o.Key == option.Key))
@@ -2835,7 +2834,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                             Value = option.Key
                         };
                         Execute(request);
-                        itemUpdated = true;
                     }
                     else if (optionSet.Any(o => o.Key == option.Key && o.Value != option.Value))
                     {
@@ -2848,7 +2846,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                             Label = new Label(newValue.Value, LanguageCode)
                         };
                         Execute(request);
-                        itemUpdated = true;
                     }
                 }
                 foreach (var option in optionSet)
@@ -2863,7 +2860,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                             Label = new Label(option.Value, LanguageCode)
                         };
                         Execute(request);
-                        itemUpdated = true;
                     }
                 }
             }
@@ -3470,6 +3466,17 @@ string recordType)
             return entity.ObjectTypeCode.Value;
         }
 
+        public OneToManyRelationshipMetadata GetManyToOneRelationship(string referencingRecordType, string relationshipName)
+        {
+            var relationships = GetEntityManyToOneRelationships(referencingRecordType);
+            if (relationships.Any(r => r.SchemaName == relationshipName))
+            {
+                return relationships.First(r => r.SchemaName == relationshipName);
+            }
+            throw new ArgumentOutOfRangeException("relationshipName",
+                "No Relationship Exists With The name: " + relationshipName);
+        }
+
         public OneToManyRelationshipMetadata GetOneToManyRelationship(string referencedRecordType, string relationshipName)
         {
             var relationships = GetEntityOneToManyRelationships(referencedRecordType);
@@ -3669,7 +3676,7 @@ string recordType)
                     }
                 }
                 // ReSharper disable once EmptyGeneralCatchClause
-                catch (Exception ex)
+                catch (Exception)
                 {
                 }
             }

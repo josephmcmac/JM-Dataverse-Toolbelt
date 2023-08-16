@@ -37,6 +37,8 @@ namespace JosephM.Record.Metadata
 
         public bool IsCustomRelationship { get; set; }
         public string MetadataId { get; set; }
+        public string ReferencingRecordType { get; set; }
+
 
         public string SchemaNameQualified
         {

@@ -755,12 +755,21 @@ namespace JosephM.Record.Xrm.XrmRecord
                 relationshipMetadata.RecordType2DisplayOrder);
         }
 
-        public IEnumerable<IOne2ManyRelationshipMetadata> GetOneToManyRelationships(string recordType)
+        public IEnumerable<IOne2ManyRelationshipMetadata> GetOneToManyRelationships(string recordType, bool onlyValidForAdvancedFind = true)
         {
             var relationships = _xrmService.GetEntityOneToManyRelationships(recordType);
             return relationships
-                .Where(r => r.IsValidForAdvancedFind.HasValue && r.IsValidForAdvancedFind.Value)
+                .Where(r => !onlyValidForAdvancedFind || r.IsValidForAdvancedFind.HasValue && r.IsValidForAdvancedFind.Value)
                 .Select(r => new XrmOne2ManyRelationship(r.SchemaName, r.ReferencedEntity, _xrmService))
+                .ToArray();
+        }
+
+        public IEnumerable<IOne2ManyRelationshipMetadata> GetManyToOneRelationships(string recordType, bool onlyValidForAdvancedFind = true)
+        {
+            var relationships = _xrmService.GetEntityManyToOneRelationships(recordType);
+            return relationships
+                .Where(r => !onlyValidForAdvancedFind || r.IsValidForAdvancedFind.HasValue && r.IsValidForAdvancedFind.Value)
+                .Select(r => new XrmMany2OneRelationship(r.SchemaName, r.ReferencingEntity, _xrmService))
                 .ToArray();
         }
 
@@ -843,12 +852,37 @@ namespace JosephM.Record.Xrm.XrmRecord
                                                 }
                                             }
                                         }
+                                        var sorts = new List<SortExpression>();
+                                        var fetchXmlString = query.GetStringField(Fields.savedquery_.fetchxml);
+                                        if (!string.IsNullOrWhiteSpace(fetchXmlString))
+                                        {
+                                            var fetchXml = new XmlDocument();
+                                            fetchXml.LoadXml(fetchXmlString);
+                                            var orderNodes = fetchXml.SelectNodes("//order");
+                                            if (orderNodes != null)
+                                            {
+                                                foreach (XmlNode item in orderNodes)
+                                                {
+                                                    if (item != null && item.Attributes != null)
+                                                    {
+                                                        //exclude where null or where a linked field
+                                                        //linked fields in view not implemented in UI
+                                                        if (item.Attributes["attribute"] == null
+                                                            || item.Attributes["attribute"].Value == null
+                                                            || item.Attributes["attribute"].Value.Contains(".")
+                                                            || !this.FieldExists(item.Attributes["attribute"].Value, recordType))
+                                                            continue;
+                                                        sorts.Add(new SortExpression(item.Attributes["attribute"].Value, item.Attributes["descending"] != null && item.Attributes["descending"].Value == "true" ? SortType.Descending : SortType.Ascending));
+                                                    }
+                                                }
+                                            }
+                                        }
                                         var viewType = ViewType.Unmatched;
                                         if (query.GetField(Fields.savedquery_.querytype) != null)
                                         {
                                             Enum.TryParse(query.GetInt(Fields.savedquery_.querytype).ToString(), out viewType);
                                         }
-                                        var view = new ViewMetadata(viewFields) { ViewType = viewType, Id = query.Id.ToString(), ViewName = query.GetStringField(Fields.savedquery_.name) };
+                                        var view = new ViewMetadata(viewFields, sorts) { ViewType = viewType, Id = query.Id.ToString(), ViewName = query.GetStringField(Fields.savedquery_.name)};
                                         view.RawQuery = query.GetStringField(Fields.savedquery_.fetchxml);
                                         viewMetadatas.Add(view);
                                     }

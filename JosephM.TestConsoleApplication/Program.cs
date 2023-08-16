@@ -30,7 +30,7 @@ namespace JosephM.TestConsoleApplication
                     throw new Exception("A Successful Connection Was Not Made By The Tooling Connector");
                 }
             }
-            catch(Exception ex)
+            catch(Exception)
             {
 
             }

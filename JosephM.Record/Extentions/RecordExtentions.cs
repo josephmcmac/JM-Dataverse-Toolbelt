@@ -174,7 +174,7 @@ namespace JosephM.Record.Extentions
                         }
                     }
                     // ReSharper disable once EmptyGeneralCatchClause
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                     }
                 }

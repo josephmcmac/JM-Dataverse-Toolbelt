@@ -31,5 +31,7 @@
         bool IsCustomRelationship { get; }
 
         string PicklistDisplay { get; }
+
+        string ReferencingRecordType { get; }
     }
 }

@@ -327,6 +327,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		Documentation\Dataverse Toolbelt User Guide.docx = Documentation\Dataverse Toolbelt User Guide.docx
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionComponentExporter", "SolutionComponentExporter", "{500C0086-B37F-4C83-AD91-DBD77757F0CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.SolutionComponentExporter", "JosephM.SolutionComponentExporter\JosephM.SolutionComponentExporter.csproj", "{623E78B2-835C-4C53-AA6F-0C0209B25018}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -2281,6 +2285,36 @@ Global
 		{CAE31F05-459B-473D-8584-625605C134FE}.Stage|Mixed Platforms.Build.0 = Stage|x86
 		{CAE31F05-459B-473D-8584-625605C134FE}.Stage|x86.ActiveCfg = Stage|x86
 		{CAE31F05-459B-473D-8584-625605C134FE}.Stage|x86.Build.0 = Stage|x86
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Debug|x86.Build.0 = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.LazyWeb|Any CPU.ActiveCfg = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.LazyWeb|Any CPU.Build.0 = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.LazyWeb|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.LazyWeb|Mixed Platforms.Build.0 = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.LazyWeb|x86.ActiveCfg = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.LazyWeb|x86.Build.0 = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Live|Any CPU.ActiveCfg = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Live|Any CPU.Build.0 = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Live|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Live|Mixed Platforms.Build.0 = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Live|x86.ActiveCfg = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Live|x86.Build.0 = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Release|Any CPU.Build.0 = Release|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Release|x86.ActiveCfg = Release|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Release|x86.Build.0 = Release|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Stage|Any CPU.ActiveCfg = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Stage|Any CPU.Build.0 = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Stage|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Stage|Mixed Platforms.Build.0 = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Stage|x86.ActiveCfg = Debug|Any CPU
+		{623E78B2-835C-4C53-AA6F-0C0209B25018}.Stage|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2387,10 +2421,12 @@ Global
 		{F303560E-2FD6-4198-BE27-3EAC2446103C} = {A2553310-F07E-4CD8-BCED-4075404A8C37}
 		{F67A5E77-92E7-4614-A05E-FBC2F7B0E443} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
 		{CAE31F05-459B-473D-8584-625605C134FE} = {F67A5E77-92E7-4614-A05E-FBC2F7B0E443}
+		{500C0086-B37F-4C83-AD91-DBD77757F0CD} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
+		{623E78B2-835C-4C53-AA6F-0C0209B25018} = {500C0086-B37F-4C83-AD91-DBD77757F0CD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		JosephM.Xrm.Vsix.Shared\JosephM.Xrm.Vsix.Shared.projitems*{2e3789be-94e7-4b9f-a096-dc112f4fb84e}*SharedItemsImports = 4

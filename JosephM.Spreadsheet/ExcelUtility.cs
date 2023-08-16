@@ -69,7 +69,10 @@ namespace JosephM.Spreadsheet
 
             foreach (var sheet in sheets)
             {
-                var typeToOutput = sheet.Value.GetType().GenericTypeArguments[0];
+                var enumerableType = sheet.Value.GetType();
+                var typeToOutput = enumerableType.IsArray
+                    ? enumerableType.GetElementType()
+                    : sheet.Value.GetType().GenericTypeArguments[0];
                 propertyNames.Add(sheet.Key, typeToOutput.GetReadableProperties().Select(s => s.Name).ToArray());
                 getLabels.Add(sheet.Key, (s) => typeToOutput.GetProperty(s).GetDisplayName());
                 getFields.Add(sheet.Key, (o, s) => o.GetPropertyValue(s)?.ToString());

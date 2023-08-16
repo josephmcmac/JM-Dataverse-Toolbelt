@@ -58,6 +58,29 @@ namespace JosephM.XrmModule.Crud
                                 ApplicationController.UserMessage("JavaScript Copied To Clipboard!");
                             });
                         });
+                    }, (g) => !QueryViewModel.IncludeNotIn),
+                new CustomGridFunction("PRIMARYFETCHFILTER", "Primary Filter", (g) =>
+                    {
+                        DoOnAsynchThread(() =>
+                        {
+                            var fetchXmlString = GetQueryFetchXml();
+                            var fetchXml = new XmlDocument();
+                            fetchXml.LoadXml(fetchXmlString);
+
+                            var attributeNodes = fetchXml.SelectNodes("//filter");
+                            if (attributeNodes == null && attributeNodes.Count == 0)
+                            {
+                                ApplicationController.UserMessage("No Filter Conditions Found");
+                            }
+                            else
+                            {
+                            DoOnMainThread(() =>
+                            {
+                                Clipboard.SetText(FormatXml(attributeNodes[0].OuterXml, "filter"));
+                                ApplicationController.UserMessage("Primary Filter Copied To Clipboard!");
+                            });
+                            }
+                        });
                     }, (g) => !QueryViewModel.IncludeNotIn)
             }));
             return extraFunctions;
@@ -77,7 +100,12 @@ namespace JosephM.XrmModule.Crud
             if (!fields.Contains(XrmRecordService.GetPrimaryKey(queryDefinition.RecordType)))
                 fields.Insert(0, XrmRecordService.GetPrimaryKey(queryDefinition.RecordType));
             queryDefinition.Fields = fields;
-            var fetchXml = FormatXml(XrmRecordService.ToFetchXml(queryDefinition));
+            var lastSortExpression = QueryViewModel.DynamicGridViewModel.GetLastSortExpression();
+            if(lastSortExpression != null)
+            {
+                queryDefinition.Sorts = new List<Record.Query.SortExpression> { lastSortExpression };
+            }
+            var fetchXml = FormatXml(XrmRecordService.ToFetchXml(queryDefinition), "fetch");
             return fetchXml;
         }
 
@@ -88,7 +116,7 @@ namespace JosephM.XrmModule.Crud
         /// </summary>
         /// <param name="inputXml">The input XML to format.</param>
         /// <returns></returns>
-        public static string FormatXml(string inputXml)
+        public static string FormatXml(string inputXml, string firstNodeName)
         {
             var document = new XmlDocument();
             document.Load(new StringReader(inputXml));
@@ -100,7 +128,7 @@ namespace JosephM.XrmModule.Crud
                 document.Save(writer);
             }
             var toString = builder.ToString();
-            return toString.Substring(toString.IndexOf("<fetch"));
+            return toString.Substring(toString.IndexOf($"<{firstNodeName}"));
         }
 
         private string WriteFetchToJavascript(string fetchXml)
