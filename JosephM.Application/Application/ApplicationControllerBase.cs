@@ -125,8 +125,8 @@ namespace JosephM.Application.Application
         {
             get
             {
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                    "JosephM Xrm", ApplicationName);
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "JM Software", ApplicationName);
             }
         }
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="JosephM.Xrm.Vsix.Joseph McGregor-Macdonald.fe02367b-50f8-4595-b855-3a2380a09e08" Version="3.1.4" Language="en-US" Publisher="Joseph McGregor-MacDonald" />
+        <Identity Id="JosephM.Xrm.Vsix.Joseph McGregor-Macdonald.fe02367b-50f8-4595-b855-3a2380a09e08" Version="3.1.5.0" Language="en-US" Publisher="JM Software" />
         <DisplayName>JM Dataverse Toolbelt Dev Kit</DisplayName>
         <Description xml:space="preserve">Visual studio extension for the Microsoft Dynamics for CE and Dataverse platforms</Description>
-        <MoreInfo>https://josephmcmac.wordpress.com/2017/12/20/dynamics-365-visual-studio-extention-josephm-xrm-vsix</MoreInfo>
+        <MoreInfo>https://jmsoftware.com.au/dev-kit</MoreInfo>
         <License>JosephM.Xrm.Vsix EULA.rtf</License>
         <Icon>jmdataversetoolbelt.png</Icon>
     </Metadata>

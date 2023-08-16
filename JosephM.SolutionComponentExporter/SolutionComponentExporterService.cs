@@ -253,6 +253,24 @@ namespace JosephM.SolutionComponentExporter
                                 }
                                 break;
                             }
+                        case OptionSets.Shared.ComponentType.EmailTemplate:
+                            {
+                                var template = Service.Get(Entities.template, solutionComponentOutput.ComponentId, new[] { Fields.template_.title });
+                                solutionComponentOutput.ComponentDisplayName = template.GetStringField(Fields.template_.title);
+                                break;
+                            }
+                        case OptionSets.Shared.ComponentType.FieldSecurityProfile:
+                            {
+                                var profile = Service.Get(Entities.fieldsecurityprofile, solutionComponentOutput.ComponentId, new[] { Fields.fieldsecurityprofile_.name });
+                                solutionComponentOutput.ComponentDisplayName = profile.GetStringField(Fields.fieldsecurityprofile_.name);
+                                break;
+                            }
+                        case OptionSets.Shared.ComponentType.SDKMessageProcessingStep:
+                            {
+                                var step = Service.Get(Entities.sdkmessageprocessingstep, solutionComponentOutput.ComponentId, new[] { Fields.sdkmessageprocessingstep_.name });
+                                solutionComponentOutput.ComponentDisplayName = step.GetStringField(Fields.sdkmessageprocessingstep_.name);
+                                break;
+                            }
                     }
                 }
             }

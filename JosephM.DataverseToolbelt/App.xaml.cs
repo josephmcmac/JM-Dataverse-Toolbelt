@@ -36,7 +36,7 @@ namespace JosephM.XrmDeveloperTool
         {
             base.OnStartup(e);
 
-            var app = DesktopApplication.Create("JM Dataverse Toolbelt");
+            var app = DesktopApplication.Create("JM Dataverse Toolbelt Utility App");
             app.AddModule<ToolbeltThemeModule>();
             app.AddModule<SavedXrmConnectionsModule>();
             app.AddModule<DevAppApplicationInsightsModule>();

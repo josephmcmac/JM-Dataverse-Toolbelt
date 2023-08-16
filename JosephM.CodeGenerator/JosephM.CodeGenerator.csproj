@@ -101,9 +101,6 @@
     <AssemblyOriginatorKeyFile>JosephM.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="microsoft.xrm.sdk">
-      <HintPath>..\Lib\microsoft.xrm.sdk.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />

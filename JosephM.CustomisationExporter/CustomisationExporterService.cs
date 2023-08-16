@@ -624,7 +624,7 @@ namespace JosephM.CustomisationExporter
                                         relationship.RecordType1UseCustomLabel, relationship.RecordType2UseCustomLabel,
                                         relationship.RecordType1CustomLabel, relationship.RecordType2CustomLabel
                                         , relationship.RecordType1DisplayOrder, relationship.RecordType2DisplayOrder, relationship.MetadataId
-                                        , null));
+                                        , null, relationship.ReferencingRecordType));
                                     manyToManyDone.Add(relationship.SchemaName);
                                 }
                                 if (relationship.RecordType2 == thisType
@@ -640,7 +640,7 @@ namespace JosephM.CustomisationExporter
                                         relationship.RecordType2UseCustomLabel, relationship.RecordType1UseCustomLabel,
                                         relationship.RecordType2CustomLabel, relationship.RecordType1CustomLabel
                                         , relationship.RecordType2DisplayOrder, relationship.RecordType1DisplayOrder
-                                        , relationship.MetadataId, null));
+                                        , relationship.MetadataId, null, relationship.ReferencingRecordType));
                                     manyToManyDone.Add(relationship.SchemaName);
                                 }
                             }
@@ -668,7 +668,7 @@ namespace JosephM.CustomisationExporter
                                         , null, relationship.ReferencingAttribute,
                                         RelationshipExport.RelationshipType.OneToMany, false, relationship.IsCustomLabel,
                                         null, relationship.GetRelationshipLabel
-                                        , 0, relationship.DisplayOrder, relationship.MetadataId, relationship.DeleteCascadeConfiguration));
+                                        , 0, relationship.DisplayOrder, relationship.MetadataId, relationship.DeleteCascadeConfiguration, relationship.ReferencingEntity));
                                 }
                                 catch (Exception ex)
                                 {
