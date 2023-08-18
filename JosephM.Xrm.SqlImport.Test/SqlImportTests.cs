@@ -1,7 +1,5 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.Desktop.Application;
-using JosephM.Application.Desktop.Console;
-using JosephM.Application.Desktop.Console.Test;
 using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Core.AppConfig;
 using JosephM.Core.FieldType;
@@ -143,7 +141,6 @@ namespace JosephM.Xrm.SqlImport.Test
 
             //run the synch
             var app = CreateAndLoadTestApplication<SqlImportModule>();
-            app.AddModule<ConsoleApplicationModule>();
 
             //navigate to the dialog
             var dialog = app.NavigateToDialog<SqlImportModule, SqlImportDialog>();
@@ -170,8 +167,7 @@ namespace JosephM.Xrm.SqlImport.Test
             entryViewmodel = app.GetSubObjectEntryViewModel(dialog);
             app.EnterObject(request, entryViewmodel);
 
-            //okay here we generate a saved request and get the command line for it
-            //to also run a console app after this second synch
+            //okay here we generate a saved request
             ClearSavedRequests(app, entryViewmodel);
             //trigger save request
             var saveRequestButton = entryViewmodel.GetButton("SAVEREQUEST");
@@ -192,23 +188,15 @@ namespace JosephM.Xrm.SqlImport.Test
             loadRequestButton.Invoke();
             var loadRequestForm = app.GetSubObjectEntryViewModel(entryViewmodel);
 
-            //verify there is a saved request and trigger the generate bat button
+            //verify there is a saved request
             var subGrid = loadRequestForm.GetEnumerableFieldViewModel(nameof(SavedSettings.SavedRequests));
             Assert.IsTrue(subGrid.GridRecords.Count() == 1);
-            subGrid.GridRecords.First().IsSelected = true;
 
-            var generateBatButton = subGrid.DynamicGridViewModel.GetButton("GENERATEBAT");
-            generateBatButton.Invoke();
-
-            var testFiles = FileUtility.GetFiles(TestingFolder);
-            Assert.AreEqual(1, testFiles.Count());
-            Assert.IsTrue(testFiles.First().EndsWith(".bat"));
-            var batContent = File.ReadAllText(testFiles.First());
             loadRequestForm.CancelButtonViewModel.Invoke();
             Assert.IsFalse(entryViewmodel.ChildForms.Any());
             Assert.IsFalse(entryViewmodel.LoadingViewModel.IsLoading);
 
-            //okay we now have the bat args for later so lets run the update synch in the app
+            //okay lets run the update synch in the app
             entryViewmodel.SaveButtonViewModel.Invoke();
             completionScreen = app.GetCompletionViewModel(dialog);
             importResponse = completionScreen.GetObject() as SqlImportResponse;
@@ -219,39 +207,6 @@ namespace JosephM.Xrm.SqlImport.Test
             var updatedRecords = XrmRecordService.RetrieveAll(Entities.jmcg_testentity, null);
             Assert.AreEqual(3, updatedRecords.Count());
             Assert.IsTrue(updatedRecords.All(r => r.GetLookupName(Fields.jmcg_testentity_.jmcg_account) == "3"));
-
-            //okay lets fake run it for the console app args generated
-            var args = ConsoleTestUtility.CommandLineToArgs(batContent)
-                .Skip(1)
-                .ToArray();
-
-            var arguments = ConsoleApplication.ParseCommandLineArguments(args);
-            var applicationName = arguments.ContainsKey("SettingsFolderName") ? arguments["SettingsFolderName"] : "Unknown Console Context";
-
-            //okay need to create app
-            var dependencyResolver = new DependencyContainer();
-            var controller = new ConsoleApplicationController(applicationName, dependencyResolver);
-            var settingsManager = new DesktopSettingsManager(controller);
-            var applicationOptions = new ApplicationOptionsViewModel(controller);
-            var consoleApp = new ConsoleApplication(controller, applicationOptions, settingsManager);
-            //load modules in folder path
-            consoleApp.LoadModulesInExecutionFolder();
-
-            var connection = GetSavedXrmRecordConfiguration();
-
-            SavedXrmConnectionsModule.RefreshXrmServices(GetXrmRecordConfiguration(), consoleApp.Controller);
-            consoleApp.Controller.RegisterInstance<ISavedXrmConnections>(new SavedXrmConnections
-            {
-                Connections = new[] { connection }
-            });
-
-            //run app
-            consoleApp.Run(args);
-
-            //email created for each synch
-            var emails = XrmRecordService.RetrieveAll(Entities.email, null);
-            Assert.AreEqual(3, emails.Count());
-            Assert.IsTrue(emails.All(e => e.GetOptionKey(Fields.email_.statecode) == OptionSets.Email.ActivityStatus.Completed.ToString()));
         }
     }
 }

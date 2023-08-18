@@ -21,6 +21,7 @@ namespace JosephM.Xrm.TextSearch
 
         private string[] ignoreErrorMessages = new[]
             {
+                "Feature flag for ",
                 "FeatureFCBNotEnabled",
                 "'RetrieveMultiple' method does not support entities of type",
                 "https://graph.microsoft.com is not allowed",

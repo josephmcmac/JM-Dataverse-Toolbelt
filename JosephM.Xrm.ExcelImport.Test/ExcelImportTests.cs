@@ -371,6 +371,7 @@ namespace JosephM.Deployment.Test
                 //this one is date only
                 Assert.AreEqual(new DateTime(1980, 11, 15), contact.GetDateTimeField(Fields.contact_.birthdate));
                 //this one is user local
+                //need to ensure user settings local timezone = 255
                 Assert.AreEqual(new DateTime(1980, 11, 15), contact.GetDateTimeField(Fields.contact_.lastonholdtime).Value.ToLocalTime());
             }
 

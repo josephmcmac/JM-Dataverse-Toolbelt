@@ -140,14 +140,6 @@
     <None Include="JosephM.snk" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\JosephM.Application.Desktop.Console.Test\JosephM.Application.Desktop.Console.Test.csproj">
-      <Project>{301b6cdf-dc9c-42ba-874a-eba0c05214a3}</Project>
-      <Name>JosephM.Application.Desktop.Console.Test</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JosephM.Application.Desktop.Console\JosephM.Application.Desktop.Console.csproj">
-      <Project>{2b9cdbf2-1bf3-4733-8494-2f2f35198345}</Project>
-      <Name>JosephM.Application.Desktop.Console</Name>
-    </ProjectReference>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
       <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
       <Name>JosephM.Application</Name>

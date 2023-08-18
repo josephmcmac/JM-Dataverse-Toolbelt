@@ -1,5 +1,4 @@
 ﻿using JosephM.Application.Desktop.Application;
-using JosephM.Application.Desktop.Console;
 using JosephM.Application.Desktop.Module.AboutModule;
 using JosephM.Application.Desktop.Module.ApplicationInsights;
 using JosephM.Application.Desktop.Module.OpenLink;
@@ -54,7 +53,6 @@ namespace JosephM.XrmDeveloperTool
             app.AddModule<RecordCountsModule>();
             app.AddModule<XrmCrudModule>();
             app.AddModule<SavedRequestModule>();
-            app.AddModule<ConsoleApplicationModule>();
             app.AddModule<XrmDeveloperToolAboutModule>();
             //app.AddModule<DevAppReleaseCheckModule>();
             app.AddModule<SavedConnectionAppConnectionModule>();

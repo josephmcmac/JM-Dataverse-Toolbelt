@@ -1,5 +1,4 @@
 ﻿using JosephM.Application.Desktop.Application;
-using JosephM.Application.Desktop.Console;
 using JosephM.Application.Desktop.Module.AboutModule;
 using JosephM.Application.Desktop.Module.SavedRequests;
 using JosephM.Application.Desktop.Module.Themes;
@@ -37,7 +36,6 @@ namespace JosephM.TestDesktopApplication
             app.AddModule<TestSettingsModule>();
             app.AddModule<TestCrudModule>();
             app.AddModule<SavedRequestModule>();
-            app.AddModule<ConsoleApplicationModule>();
             app.AddModule<TestGridEditModule>();
             app.AddModule<ColourThemeModule>();
             app.AddModule<AllPropertyTypesDialogModule>();

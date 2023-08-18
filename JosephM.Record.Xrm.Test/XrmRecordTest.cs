@@ -44,7 +44,7 @@ namespace JosephM.Record.Xrm.Test
             var publisher = XrmRecordService.GetFirst(JosephM.Xrm.Schema.Entities.publisher, JosephM.Xrm.Schema.Fields.publisher_.uniquename, "josephmcgregor");
             if (publisher == null)
             {
-                Assert.Fail($"Couldn't find josephmcgregor publiher");
+                Assert.Fail($"Couldn't find josephmcgregor publisher");
             }
 
             testSolution = XrmRecordService.NewRecord(JosephM.Xrm.Schema.Entities.solution);

@@ -2,7 +2,6 @@
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Xrm.Schema;
-using Microsoft.Xrm.Sdk;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 

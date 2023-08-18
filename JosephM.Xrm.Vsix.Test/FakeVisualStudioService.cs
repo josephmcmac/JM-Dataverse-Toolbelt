@@ -46,7 +46,7 @@ namespace JosephM.Xrm.Vsix.Test
 
         public static DirectoryInfo GetActualSolutionRootFolder()
         {
-            var rootFolderName = "XRM-Developer-Tool";
+            var rootFolderName = "JM-Dataverse-Toolbelt";
             var fileInfo = new FileInfo(Assembly.GetExecutingAssembly().CodeBase.Substring(8));
             var directory = fileInfo.Directory;
             while (directory.Name != rootFolderName)
