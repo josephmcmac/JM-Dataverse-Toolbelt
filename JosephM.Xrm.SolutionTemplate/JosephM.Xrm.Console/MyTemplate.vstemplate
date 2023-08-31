@@ -21,7 +21,7 @@
       <Folder Name="Properties" TargetFolderName="Properties">
         <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
       </Folder>
-      <ProjectItem ReplaceParameters="true" TargetFileName="XrmSetting.txt">XrmSetting.txt</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="XrmConfiguration.json">XrmConfiguration.json</ProjectItem>
     </Project>
   </TemplateContent>
 </VSTemplate>

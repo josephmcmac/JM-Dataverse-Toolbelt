@@ -22,7 +22,7 @@
         <Folder Name="Localisation" TargetFolderName="Localisation">
           <ProjectItem ReplaceParameters="true" TargetFileName="ILocalisationSettings.cs">ILocalisationSettings.cs</ProjectItem>
           <ProjectItem ReplaceParameters="true" TargetFileName="LocalisationService.cs">LocalisationService.cs</ProjectItem>
-          <ProjectItem ReplaceParameters="true" TargetFileName="LocalisationSettings.cs">LocalisationSettings.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="UserLocalisationSettings.cs">UserLocalisationSettings.cs</ProjectItem>
         </Folder>
       <Folder Name="Core" TargetFolderName="Core">
         <ProjectItem ReplaceParameters="true" TargetFileName="ConsoleSettings.cs">ConsoleSettings.cs</ProjectItem>
@@ -57,11 +57,8 @@
         <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$WorkflowActivity.cs">$ext_jmobjprefix$WorkflowActivity.cs</ProjectItem>
       </Folder>
       <Folder Name="Xrm" TargetFolderName="Xrm">
-        <ProjectItem ReplaceParameters="true" TargetFileName="DeviceIdManager.cs">DeviceIdManager.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="ExceptionExtentions.cs">ExceptionExtentions.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="IXrmConfiguration.cs">IXrmConfiguration.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="ToolingConnectorForm.xaml">ToolingConnectorForm.xaml</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="ToolingConnectorForm.xaml.cs">ToolingConnectorForm.xaml.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmConfiguration.cs">XrmConfiguration.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmConnection.cs">XrmConnection.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmAction.cs">XrmAction.cs</ProjectItem>
@@ -69,11 +66,9 @@
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmEntity.cs">XrmEntity.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmEntityPlugin.cs">XrmEntityPlugin.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmNNPlugin.cs">XrmNNPlugin.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="XrmOrganizationServiceFactory.cs">XrmOrganizationServiceFactory.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmPlugin.cs">XrmPlugin.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmPluginRegistration.cs">XrmPluginRegistration.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmService.cs">XrmService.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="XrmSetting.cs">XrmSetting.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmTraceController.cs">XrmTraceController.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmWorkflowActivityInstance.cs">XrmWorkflowActivityInstance.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmWorkflowActivityInstanceBase.cs">XrmWorkflowActivityInstanceBase.cs</ProjectItem>

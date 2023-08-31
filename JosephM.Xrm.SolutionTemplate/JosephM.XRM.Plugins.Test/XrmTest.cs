@@ -79,7 +79,7 @@ namespace $safeprojectname$
                 foreach (var prop in xrmConfig.GetType().GetReadWriteProperties())
                 {
                     var value = dictionary[prop.Name];
-                    if (value != null && prop.Name == nameof(XrmConfigurationAdmin.Password))
+                    if (value != null && prop.Name == nameof(XrmConfigurationAdmin.ClientSecret))
                         xrmConfig.SetPropertyByString(prop.Name, new Password(value).GetRawPassword());
                     else
                         xrmConfig.SetPropertyByString(prop.Name, value);

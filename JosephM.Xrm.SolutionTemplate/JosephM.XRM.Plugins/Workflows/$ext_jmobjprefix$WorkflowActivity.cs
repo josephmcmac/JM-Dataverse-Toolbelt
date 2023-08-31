@@ -38,7 +38,9 @@ namespace $safeprojectname$.Workflows
             get
             {
                 if (_localisationService == null)
-                    _localisationService = new LocalisationService(new LocalisationSettings());
+                {
+                    _localisationService = new LocalisationService(new UserLocalisationSettings(XrmService, InitiatingUserId));
+                }
                 return _localisationService;
             }
         }

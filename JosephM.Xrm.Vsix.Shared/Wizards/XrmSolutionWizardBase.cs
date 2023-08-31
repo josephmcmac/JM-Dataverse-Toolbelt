@@ -38,6 +38,10 @@ namespace JosephM.Xrm.Vsix.Wizards
                 {
                     new XrmPackageSettings.WebResourceProject(replacementsDictionary["$projectname$"] + ".WebResources")
                 };
+                XrmPackageSettings.DeployIntoFieldProjects = new[]
+                {
+                    new XrmPackageSettings.DeployIntoFieldProject("N/A")
+                };
             }
             var visualStudioService = new VisualStudioService(DTE);
             var container = new DependencyContainer();

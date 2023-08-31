@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
 
 namespace $safeprojectname$.Localisation
 {
@@ -15,11 +17,14 @@ namespace $safeprojectname$.Localisation
         {
             get
             {
-                var localNow = DateTime.Now;
-                var targetNow = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(localNow,
-                    LocalisationSettings.TargetTimeZoneId);
-                var difference = localNow - targetNow;
-                return targetNow.Date.Add(difference).ToUniversalTime();
+                var timeZoneId = LocalisationSettings.TargetTimeZoneId;
+                var utcNow = DateTime.UtcNow;
+                var targetNow = _utcNames.Contains(timeZoneId)
+                    ? utcNow
+                    : TimeZoneInfo.ConvertTimeFromUtc(utcNow, TimeZoneInfo.FindSystemTimeZoneById(
+                    LocalisationSettings.TargetTimeZoneId));
+                var today = targetNow.Date;
+                return today.ToUniversalTime();
             }
         }
 
@@ -37,16 +42,53 @@ namespace $safeprojectname$.Localisation
             }
         }
 
+        public string DecimalSeparator
+        {
+            get
+            {
+                return LocalisationSettings.DecimalSeparator;
+            }
+        }
+
+        public string DateFormatString
+        {
+            get
+            {
+                return LocalisationSettings.DateFormatString;
+            }
+        }
+
+        public string TimeFormatString
+        {
+            get
+            {
+                return LocalisationSettings.TimeFormatString;
+            }
+        }
+
+        public string DateTimeFormatString
+        {
+            get
+            {
+                return $"{DateFormatString} {TimeFormatString}";
+            }
+        }
+
         public DateTime ConvertToTargetTime(DateTime dateTime)
         {
-            return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(dateTime, LocalisationSettings.TargetTimeZoneId);
+            var timeZoneId = LocalisationSettings.TargetTimeZoneId;
+            return _utcNames.Contains(timeZoneId)
+                ? dateTime
+                : TimeZoneInfo.ConvertTimeBySystemTimeZoneId(dateTime, timeZoneId);
         }
 
         public DateTime ConvertToTargetDayUtc(DateTime day)
         {
+            var timeZoneId = LocalisationSettings.TargetTimeZoneId;
             var sourceDate = day.Date;
-            var targetDayTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(day,
-                LocalisationSettings.TargetTimeZoneId);
+            var targetDayTime = _utcNames.Contains(timeZoneId)
+                ? day
+                : TimeZoneInfo.ConvertTimeBySystemTimeZoneId(day, timeZoneId);
             var difference = sourceDate - targetDayTime;
             return sourceDate.Add(difference).ToUniversalTime();
         }
@@ -58,7 +100,30 @@ namespace $safeprojectname$.Localisation
 
         public DateTime ConvertTargetToUtc(DateTime date)
         {
-            return TimeZoneInfo.ConvertTimeToUtc(date, TimeZoneInfo.FindSystemTimeZoneById(LocalisationSettings.TargetTimeZoneId));
+            var timeZoneId = LocalisationSettings.TargetTimeZoneId;
+            return _utcNames.Contains(timeZoneId)
+                ? date
+                : TimeZoneInfo.ConvertTimeToUtc(date, TimeZoneInfo.FindSystemTimeZoneById(timeZoneId));
         }
+
+        public string ToDateDisplayString(DateTime dateTime)
+        {
+            return dateTime.ToString(LocalisationSettings.DateFormatString);
+        }
+
+        public string ToDateTimeDisplayString(DateTime dateTime)
+        {
+            return dateTime.ToString(DateTimeFormatString);
+        }
+
+        public NumberFormatInfo NumberFormatInfo
+        {
+            get
+            {
+                return LocalisationSettings.NumberFormatInfo ?? NumberFormatInfo.InvariantInfo;
+            }
+        }
+
+        private static string[] _utcNames = new[] { "Coordinated Universal Time", "UTC", "(GMT) Coordinated Universal Time" };
     }
 }

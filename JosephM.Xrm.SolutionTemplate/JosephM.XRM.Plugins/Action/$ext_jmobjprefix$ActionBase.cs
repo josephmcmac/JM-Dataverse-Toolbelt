@@ -34,7 +34,9 @@ namespace $safeprojectname$.Action
             get
             {
                 if (_localisationService == null)
-                    _localisationService = new LocalisationService(new LocalisationSettings());
+                {
+                    _localisationService = new LocalisationService(new UserLocalisationSettings(XrmService, Context.UserId));
+                }
                 return _localisationService;
             }
         }

@@ -46,7 +46,9 @@ namespace $safeprojectname$
             get
             {
                 if (_localisationService == null)
-                    _localisationService = new LocalisationService(new LocalisationSettings());
+                {
+                    _localisationService = new LocalisationService(new UserLocalisationSettings(XrmService, CurrentUserId));
+                }
                 return _localisationService;
             }
         }
