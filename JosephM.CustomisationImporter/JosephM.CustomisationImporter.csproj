@@ -176,7 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies">
-      <Version>9.0.2.49</Version>
+      <Version>9.0.2.50</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

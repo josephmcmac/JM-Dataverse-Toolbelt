@@ -646,12 +646,6 @@ namespace $safeprojectname$.Xrm
             return RetrieveFirst(BuildQuery(recordType, fields: fields));
         }
 
-        public Entity UpdateAndRetrieve(Entity entity, params string[] fieldsToUpdate)
-        {
-            Update(entity, fieldsToUpdate);
-            return Retrieve(entity.LogicalName, entity.Id);
-        }
-
         public QueryExpression BuildQuery(string entityType, IEnumerable<string> fields = null,
             IEnumerable<ConditionExpression> conditions = null, IEnumerable<OrderExpression> sorts = null)
         {

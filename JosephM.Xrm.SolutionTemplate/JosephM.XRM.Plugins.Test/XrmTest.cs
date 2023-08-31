@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using $ext_safeprojectname$.Plugins.Core;
+using $ext_safeprojectname$.Plugins.Localisation;
 using $ext_safeprojectname$.Plugins.Xrm;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -40,6 +41,19 @@ namespace $safeprojectname$
             get
             {
                 return XrmServiceAdmin;
+            }
+        }
+
+        private LocalisationService _localisationService;
+        public LocalisationService LocalisationService
+        {
+            get
+            {
+                if (_localisationService == null)
+                {
+                    _localisationService = new LocalisationService(new UserLocalisationSettings(XrmService, CurrentUserId));
+                }
+                return _localisationService;
             }
         }
 
@@ -90,33 +104,39 @@ namespace $safeprojectname$
 
         public Entity CreateContact(Entity account = null)
         {
-            var entity = new Entity(Entities.contact);
-            entity.SetField(Fields.contact_.firstname, "Test Script");
-            entity.SetField(Fields.contact_.lastname, DateTime.Now.ToFileTime().ToString());
-            entity.SetField(Fields.contact_.fax, "0999999999fax");
-            entity.SetField(Fields.contact_.emailaddress1, "testemail@example.com");
-            entity.SetField(Fields.contact_.address1_line1, "100 Collins St");
-            entity.SetField(Fields.contact_.address1_city, "Melbourne");
-            entity.SetField(Fields.contact_.address1_stateorprovince, "VIC");
-            entity.SetField(Fields.contact_.address1_postalcode, "3000");
-            if (account != null)
-                entity.SetLookupField(Fields.contact_.parentcustomerid, account);
-            return CreateAndRetrieve(entity);
+            var uniqueString = DateTime.UtcNow.ToFileTime().ToString();
+            return CreateTestRecord(Entities.contact, new Dictionary<string, object>
+                {
+                    { Fields.contact_.firstname, "Test Script" },
+                    { Fields.contact_.lastname, uniqueString },
+                    { Fields.contact_.emailaddress1, $"{uniqueString}@example.com" },
+                    { Fields.contact_.address1_line1, "1 Test St" },
+                    { Fields.contact_.address1_city, "Melbourne" },
+                    { Fields.contact_.address1_stateorprovince, "VIC" },
+                    { Fields.contact_.address1_postalcode, "3000" },
+                    { Fields.contact_.address1_postalcode, account == null  ? null : account.ToEntityReference() }
+                });
         }
 
-        public virtual Entity CreateAndRetrieve(Entity entity, XrmService xrmService = null)
+        protected Entity CreateAccount()
         {
-            if (xrmService == null)
-                xrmService = XrmService;
-            var primaryField = xrmService.GetPrimaryField(entity.LogicalName);
-            if (!entity.Contains(primaryField))
-                entity.SetField(primaryField, ("Test Scripted Record" + DateTime.UtcNow.ToFileTime()).Left(xrmService.GetMaxLength(primaryField, entity.LogicalName)));
-            if (entity.LogicalName == Entities.contact && !entity.Contains(Fields.contact_.firstname))
-                entity.SetField(Fields.contact_.firstname, "Test");
-            if (entity.LogicalName == Entities.lead && !entity.Contains(Fields.lead_.firstname))
-                entity.SetField(Fields.lead_.firstname, "Test");
-            var id = xrmService.Create(entity);
-            return xrmService.Retrieve(entity.LogicalName, id);
+            var uniqueString = DateTime.UtcNow.ToFileTime().ToString();
+            var contact = CreateContact();
+            var account = CreateTestRecord(Entities.account, new Dictionary<string, object>
+                    {
+                        { Fields.account_.name, $"Test Account - {uniqueString}".Left(XrmServiceAdmin.GetMaxLength(Fields.account_.name, Entities.account)) },
+                        { Fields.account_.emailaddress1, $"{uniqueString}@example.com" },
+                        { Fields.account_.address1_line1, "1 Test St" },
+                        { Fields.account_.address1_city, "Melbourne" },
+                        { Fields.account_.address1_stateorprovince, "VIC" },
+                        { Fields.account_.address1_postalcode, "3000" },
+                        { Fields.account_.primarycontactid,contact.ToEntityReference() },
+                    });
+            UpdateFieldsAndRetreive(contact, new Dictionary<string, object>
+                {
+                    { Fields.contact_.parentcustomerid, account.ToEntityReference() }
+                });
+            return account;
         }
 
         public Entity Refresh(Entity entity)
@@ -129,14 +149,31 @@ namespace $safeprojectname$
             XrmServiceAdmin.Delete(entity);
         }
 
+        private Guid? _currentUserId;
         public Guid CurrentUserId
         {
-            get { return XrmService.WhoAmI(); }
+            get
+            {
+                if (!_currentUserId.HasValue)
+                {
+                    _currentUserId = XrmService.WhoAmI();
+                }
+                return _currentUserId.Value;
+            }
         }
+
+        private Guid? _currentUserIdAdmin;
 
         public Guid CurrentUserIdAdmin
         {
-            get { return XrmServiceAdmin.WhoAmI(); }
+            get
+            {
+                if (!_currentUserIdAdmin.HasValue)
+                {
+                    _currentUserIdAdmin = XrmServiceAdmin.WhoAmI();
+                }
+                return _currentUserIdAdmin.Value;
+            }
         }
 
         public void DeleteMyToday()
@@ -195,15 +232,15 @@ namespace $safeprojectname$
                         var account = CreateAccount();
                         var contactId = account.GetLookupGuid(Fields.account_.primarycontactid);
                         if (!contactId.HasValue)
-                            throw new NullReferenceException();
+                        {
+                            Assert.Fail("Error creating TEST SCRIPT CONTACT");
+                        }
                         _testContact = XrmService.Retrieve(Entities.contact, contactId.Value);
-                        _testContact.SetField(Fields.contact_.firstname, "TEST SCRIPT");
-                        _testContact.SetField(Fields.contact_.lastname, "CONTACT");
-                        _testContact.SetField(Fields.contact_.salutation, "Mr");
-                        _testContact.SetField(Fields.contact_.nickname, "iTest");
-                        _testContact.SetField(Fields.contact_.birthdate, new DateTime(1080, 11, 15));
-                        _testContact.SetField(Fields.contact_.gendercode, new OptionSetValue(1));
-                        _testContact = UpdateFieldsAndRetreive(_testContact, Fields.contact_.firstname, Fields.contact_.lastname);
+                        _testContact = UpdateFieldsAndRetreive(_testContact, new Dictionary<string, object>
+                        {
+                            { Fields.contact_.firstname, "TEST SCRIPT" },
+                            { Fields.contact_.lastname, "CONTACT" },
+                        });
                     }
                 }
                 return _testContact;
@@ -223,9 +260,11 @@ namespace $safeprojectname$
                     if (_testContact2 == null)
                     {
                         _testContact2 = CreateContact(TestContactAccount);
-                        _testContact2.SetField(Fields.contact_.firstname, "TEST SCRIPT");
-                        _testContact2.SetField(Fields.contact_.lastname, "CONTACT 2");
-                        _testContact2 = UpdateFieldsAndRetreive(_testContact2, Fields.contact_.firstname, Fields.contact_.lastname);
+                        _testContact2 = UpdateFieldsAndRetreive(_testContact, new Dictionary<string, object>
+                        {
+                            { Fields.contact_.firstname, "TEST SCRIPT" },
+                            { Fields.contact_.lastname, "CONTACT 2" },
+                        });
                     }
                 }
                 return _testContact2;
@@ -243,7 +282,9 @@ namespace $safeprojectname$
                 {
                     var accountId = TestContact.GetLookupGuid(Fields.contact_.parentcustomerid);
                     if (!accountId.HasValue)
-                        throw new NullReferenceException();
+                    {
+                        Assert.Fail("Error getting TEST SCRIPT CONTACT account");
+                    }
                     _testContactAccount = XrmService.Retrieve(Entities.account, accountId.Value);
                 }
                 return _testContactAccount;
@@ -254,34 +295,9 @@ namespace $safeprojectname$
             }
         }
 
-        public virtual Entity UpdateFieldsAndRetreive(Entity entity, params string[] fieldsToUpdate)
-        {
-            return XrmService.UpdateAndRetrieve(entity, fieldsToUpdate);
-        }
-
-        protected Entity CreateAccount()
-        {
-            var entity = new Entity(Entities.account);
-            var maxNameLength = XrmService.GetMaxLength(Fields.account_.name, Entities.account);
-            entity.SetField(Fields.account_.name, "Test Account - " + DateTime.Now.ToLocalTime());
-            entity.SetField(Fields.account_.fax, "0999999999fax");
-            entity.SetField(Fields.account_.telephone1, "0999999999");
-            entity.SetField(Fields.account_.emailaddress1, "testfakeemail@example.com");
-            entity.SetField(Fields.account_.address1_line1, "100 Collins St");
-            entity.SetField(Fields.account_.address1_city, "Melbourne");
-            entity.SetField(Fields.account_.address1_stateorprovince, "VIC");
-            entity.SetField(Fields.account_.address1_postalcode, "3000");
-            Entity contact = CreateContact(null);
-            entity.SetLookupField(Fields.account_.primarycontactid, contact);
-
-            var account = CreateAndRetrieve(entity);
-            contact.SetLookupField(Fields.contact_.parentcustomerid, account);
-            XrmService.Update(contact, new[] { Fields.contact_.parentcustomerid });
-            return account;
-        }
-
         public Entity CreateTestRecord(string entityType, Dictionary<string, object> fields = null, XrmService xrmService = null)
         {
+            xrmService = xrmService ?? XrmService;
             var entity = new Entity(entityType);
             if (fields != null)
             {
@@ -290,7 +306,19 @@ namespace $safeprojectname$
                     entity.SetField(field.Key, field.Value);
                 }
             }
-            return CreateAndRetrieve(entity, xrmService);
+            entity.Id = xrmService.Create(entity);
+            return xrmService.Retrieve(entity.LogicalName, entity.Id);
+        }
+
+        public Entity UpdateFieldsAndRetreive(Entity entity, Dictionary<string, object> fieldsToUpdate, XrmService xrmService = null)
+        {
+            xrmService = xrmService ?? XrmService;
+            foreach (var fieldToUpdate in fieldsToUpdate)
+            {
+                entity.SetField(fieldToUpdate.Key, fieldToUpdate.Value);
+            }
+            xrmService.Update(entity, fieldsToUpdate.Keys.ToArray());
+            return xrmService.Retrieve(entity.LogicalName, entity.Id);
         }
 
         public T CreateWorkflowInstance<T>(Entity target = null)
@@ -316,11 +344,7 @@ namespace $safeprojectname$
         /// <param name="teamId">id of the team to set the test script user in</param>
         public void SetTestUserAsTeamMember(Guid teamId)
         {
-
-            var testUserId = XrmService.WhoAmI();
-            var adminUserId = XrmServiceAdmin.WhoAmI();
-            //if the same user for both the admin and standard connection then don't bother 
-            if (testUserId == adminUserId)
+            if (CurrentUserId == CurrentUserIdAdmin)
                 return;
 
             //get the non-default teams th4e test user a member of
@@ -328,7 +352,7 @@ namespace $safeprojectname$
                 fields: new string[0],
                 conditions: new[] { new ConditionExpression(Fields.team_.isdefault, ConditionOperator.NotEqual, true) });
             var memberJoin = teamQuery.AddLink(Relationships.team_.teammembership_association.EntityName, Fields.team_.teamid, Fields.team_.teamid);
-            memberJoin.LinkCriteria.AddCondition(new ConditionExpression(Fields.systemuser_.systemuserid, ConditionOperator.Equal, testUserId));
+            memberJoin.LinkCriteria.AddCondition(new ConditionExpression(Fields.systemuser_.systemuserid, ConditionOperator.Equal, CurrentUserId));
             var teamsMemberships = XrmServiceAdmin.RetrieveAll(teamQuery);
 
             //if they are already only a member of the team then return
@@ -342,7 +366,7 @@ namespace $safeprojectname$
                 {
                     var removeRequest = new RemoveMembersTeamRequest();
                     removeRequest.TeamId = team.Id;
-                    removeRequest.MemberIds = new[] { testUserId };
+                    removeRequest.MemberIds = new[] { CurrentUserId };
                     XrmService.Execute(removeRequest);
                 }
             }
@@ -350,7 +374,7 @@ namespace $safeprojectname$
             //add them to the team
             var addRequest = new AddMembersTeamRequest();
             addRequest.TeamId = teamId;
-            addRequest.MemberIds = new[] { testUserId };
+            addRequest.MemberIds = new[] { CurrentUserId };
             XrmService.Execute(addRequest);
         }
     }

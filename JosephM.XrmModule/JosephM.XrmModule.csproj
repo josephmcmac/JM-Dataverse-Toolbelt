@@ -165,13 +165,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies">
-      <Version>9.0.2.49</Version>
+      <Version>9.0.2.50</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CrmSdk.Deployment">
       <Version>9.0.2.26</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CrmSdk.Workflow">
-      <Version>9.0.2.49</Version>
+      <Version>9.0.2.50</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CrmSdk.XrmTooling.CoreAssembly">
       <Version>9.1.1.41</Version>
