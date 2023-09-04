@@ -52,6 +52,11 @@ namespace JosephM.Xrm.ExcelImport
         [RequiredProperty]
         public bool IgnoreEmptyCells { get; set; }
 
+        [Group(Sections.ImportOptions)]
+        [DisplayOrder(418)]
+        [RequiredProperty]
+        public bool OnlyFieldMatchActive { get; set; }
+
         [Group(Sections.CacheOptions)]
         [DisplayOrder(420)]
         [RequiredProperty]
