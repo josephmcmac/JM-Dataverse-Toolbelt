@@ -114,7 +114,7 @@ namespace $safeprojectname$
                     { Fields.contact_.address1_city, "Melbourne" },
                     { Fields.contact_.address1_stateorprovince, "VIC" },
                     { Fields.contact_.address1_postalcode, "3000" },
-                    { Fields.contact_.address1_postalcode, account == null  ? null : account.ToEntityReference() }
+                    { Fields.contact_.accountid, account == null  ? null : account.ToEntityReference() }
                 });
         }
 
