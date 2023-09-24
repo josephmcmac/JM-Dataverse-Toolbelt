@@ -219,6 +219,7 @@ namespace JosephM.Application.ViewModel.Query
                 Record.Query.ConditionType.Equal,
                 Record.Query.ConditionType.NotEqual,
                 Record.Query.ConditionType.Like,
+                Record.Query.ConditionType.NotLike,
                 Record.Query.ConditionType.LessEqual,
                 Record.Query.ConditionType.LessThan,
                 Record.Query.ConditionType.GreaterEqual,
