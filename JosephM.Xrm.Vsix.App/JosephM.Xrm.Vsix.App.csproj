@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JosephM.Xrm.Vsix.App</RootNamespace>
     <AssemblyName>JosephM.Xrm.Vsix.App</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
@@ -234,10 +234,6 @@
       <Project>{ED23E8EF-1623-491E-A30F-BA55C8F65CE7}</Project>
       <Name>JosephM.Wpf</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Xrm.Autonumber\JosephM.Xrm.Autonumber.csproj">
-      <Project>{021a835c-5674-4f77-8713-420a6cc1c854}</Project>
-      <Name>JosephM.Xrm.Autonumber</Name>
-    </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
       <Project>{7F69213D-3EFB-4736-9962-0151F92FA7D4}</Project>
       <Name>JosephM.Xrm</Name>
@@ -249,7 +245,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies">
-      <Version>9.0.2.26</Version>
+      <Version>9.0.2.50</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,0 +1,30 @@
+[
+  {
+    "Key": "Active",
+    "Value": "True"
+  },
+  {
+    "Key": "Name",
+    "Value": "Utility App Dev"
+  },
+  {
+    "Key": "ConnectionType",
+    "Value": "ClientSecret"
+  },
+  {
+    "Key": "ClientId",
+    "Value": "3f8b38cb-9f16-4d33-9151-fc5101479acd"
+  },
+  {
+    "Key": "ClientSecret",
+    "Value": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAn5s3vRoJVEmwlp3vV6CvdgAAAAACAAAAAAAQZgAAAAEAACAAAABhzrRA2n73sJUpEMHMDhfHcAoNZ0xf9Nb3Vg+ir54rwQAAAAAOgAAAAAIAACAAAADlfoz4V8T4HaNoFgPbrfQHdaPdDpZfRlBORNiYp6XGYGAAAABTjym0xERCYMSIoe942x2BHOyPQSzBjgL3YNdpDQSv+r\/B2MRF\/xKGrmBgXzm2qixDnAIGm64c1JSGgk1T9iX\/Z85DRiOyUuqDpLI8Bx039bkG7A9d823jcZJU3dkZRnBAAAAAtOkv1oyrBFoTUaVuOdLC1sKlf4g8wiR2EpItxomtXWM3BcB9WmapFZUI4STlZ9cNnIaI0ES6qclAvTNSqjzXDw=="
+  },
+  {
+    "Key": "WebUrl",
+    "Value": "https:\/\/utilityapp-dev.crm6.dynamics.com"
+  },
+  {
+    "Key": "ToolingConnectionId",
+    "Value": null
+  }
+]

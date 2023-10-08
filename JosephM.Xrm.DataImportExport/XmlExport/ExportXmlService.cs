@@ -414,9 +414,14 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
 
             var settings = new XmlWriterSettings { Indent = true };
 
+            var writeToXmlEntity = new Entity(entity.LogicalName) { Id = entity.Id };
+            foreach (var field in entity.Attributes)
+            {
+                writeToXmlEntity.SetField(field.Key, field.Value);
+            }
             using (var w = XmlWriter.Create(fileName, settings))
             {
-                lateBoundSerializer.WriteObject(w, entity);
+                lateBoundSerializer.WriteObject(w, writeToXmlEntity);
             }
         }
 

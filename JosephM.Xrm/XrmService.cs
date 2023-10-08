@@ -193,12 +193,18 @@ namespace JosephM.Xrm
                 if (_organisation == null)
                 {
                     if (XrmConfiguration == null)
+                    {
                         throw new NullReferenceException("Cannot get organisation as the connection is null");
+                    }
                     var verifyConnection = VerifyConnection();
                     if (!verifyConnection.IsValid)
+                    {
                         throw new Exception(verifyConnection.GetErrorString());
-                    if(_organisation == null)
+                    }
+                    if (_organisation == null)
+                    {
                         throw new NullReferenceException("Error loading organisation details. A connection was successfully made but the organisation details were not populated");
+                    }
                 }
                 return _organisation;
             }
@@ -1285,12 +1291,12 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                     }
                 case Entities.solution:
                     {
-                        result = string.Format("{0}/tools/solution/edit.aspx?id={1}", WebUrl, id);
+                        result = $"{WebUrl}/tools/solution/edit.aspx?id={id}";
                         break;
                     }
                 case Entities.fieldsecurityprofile:
                     {
-                        result = string.Format("{0}/biz/fieldsecurityprofiles/edit.aspx?id={1}", WebUrl, id);
+                        result = $"{WebUrl}/biz/fieldsecurityprofiles/edit.aspx?id={id}";
                         break;
                     }
                 case Entities.workflow:
@@ -1298,74 +1304,73 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
 
                         var workflow = entity ?? Retrieve(Entities.workflow, id, new[] { Fields.workflow_.category });
                         if (workflow.GetOptionSetValue(Fields.workflow_.category) == OptionSets.Process.Category.BusinessProcessFlow)
-                            result = string.Format("{0}/Tools/ProcessControl/bpfConfigurator.aspx?id={1}", WebUrl, id);
+                            result = $"{WebUrl}/Tools/ProcessControl/bpfConfigurator.aspx?id={id}";
                         else
-                            result = string.Format("{0}/sfa/workflow/edit.aspx?id={1}", WebUrl, id);
+                            result = $"{WebUrl}/sfa/workflow/edit.aspx?id={id}";
                         break;
                     }
                 case Entities.webresource:
                     {
-                        result = string.Format("{0}/main.aspx?etn={1}&id={2}&pagetype=webresourceedit", WebUrl, recordType, id);
+                        result = $"{WebUrl}/main.aspx?etn={recordType}&id={id}&pagetype=webresourceedit";
                         break;
                     }
                 case Entities.systemform:
                     {
                         var systemForm = entity ?? Retrieve(Entities.systemform, id, new[] { Fields.systemform_.type });
                         if (systemForm.GetOptionSetValue(Fields.systemform_.type) == OptionSets.SystemForm.FormType.Dashboard)
-                            result = string.Format("{0}/main.aspx?extraqs=%26formId%3d%7b{1}%7d%26dashboardType%3d1030&pagetype=dashboardeditor", WebUrl, id);
+                        {
+                            result = $"{WebUrl}/main.aspx?extraqs=%26formId%3d%7b{id}%7d%26dashboardType%3d1030&pagetype=dashboardeditor";
+                        }
                         else
-                            result = string.Format("{0}/main.aspx?etn={1}&extraqs=formtype%3dmain%26formId%3d{2}%26action%3d-1&pagetype=formeditor", WebUrl, recordType, id);
+                        {
+                            result = $"{WebUrl}/main.aspx?etn={recordType}&extraqs=formtype%3dmain%26formId%3d{id}%26action%3d-1&pagetype=formeditor";
+                        }
                         break;
-                        //main.aspx?appSolutionId=%7b06E9A3A9-FD45-E511-80D2-000C29634D55%7d&etc=10018&extraqs=formtype%3dmain%26formId%3dAD395571-0EC9-4AE2-BB86-BF6B00C087BD%26action%3d-1&pagetype=formeditor
-                        //http://qa2012/WorkflowScheduler/main.aspx?appSolutionId=%7bFD140AAF-4DF4-11DD-BD17-0019B9312238%7d&etc=1&extraqs=formtype%3dmain%26formId%3d8448B78F-8F42-454E-8E2A-F8196B0419AF%26action%3d-1&pagetype=formeditor
-                        //http://qa2012/WorkflowScheduler/main.aspx?appSolutionId=%7bFD140AAF-4DF4-11DD-BD17-0019B9312238%7d&etc=1&extraqs=formtype%3dquickCreate%26formId%3dC9E7EC2D-EFCA-4E4C-B3E3-F63C4BBA5E4B%26action%3d-1&pagetype=formeditor#211662733
-                        //http://qa2012/WorkflowScheduler/m/Console/EntityConfig.aspx?appSolutionId=%7bFD140AAF-4DF4-11DD-BD17-0019B9312238%7d&etn=account&formid=%7b20EC3318-E87E-4623-AFE5-CAC39CD090DE%7d
-                        //http://qa2012/WorkflowScheduler/main.aspx?appSolutionId=%7bFD140AAF-4DF4-11DD-BD17-0019B9312238%7d&etc=1&extraqs=formtype%3dquick%26formId%3dB028DB32-3619-48A5-AC51-CF3F947B0EF3%26action%3d-1&pagetype=formeditor#989634411
                     }
                 case Entities.savedquery:
                     {
-                        result = string.Format("{0}/tools/vieweditor/viewManager.aspx?id={1}", WebUrl, id);
+                        result = $"{WebUrl}/tools/vieweditor/viewManager.aspx?id={id}";
                         break;
                     }
                 case Entities.role:
                     {
-                        result = string.Format("{0}/biz/roles/edit.aspx?id={1}", WebUrl, id);
+                        result = $"{WebUrl}/biz/roles/edit.aspx?id={id}";
                         break;
                     }
                 case Entities.report:
                     {
-                        result = string.Format("{0}/CRMReports/reportproperty.aspx?id=%7b{1}%7d", WebUrl, id); 
+                        result = $"{WebUrl}/CRMReports/reportproperty.aspx?id=%7b{id}%7d"; 
                         break;
                     }
                 case Entities.appmodule:
                     {
-                        result = string.Format("{0}/designer/app/fd140aaf-4df4-11dd-bd17-0019b9312238/{1}#/AppDesignerCanvas/{1}", WebUrl, id);
+                        result = $"{WebUrl}/designer/app/fd140aaf-4df4-11dd-bd17-0019b9312238/{id}#/AppDesignerCanvas/{id}";
                         break;
                     }
                 case "entity":
                     {
-                        result = string.Format("{0}/tools/solution/edit.aspx?id={1}", WebUrl, DefaultSolutionId);
+                        result = $"{WebUrl}/tools/solution/edit.aspx?id={DefaultSolutionId}";
                         break;
                     }
                 case "field":
                     {
-                        result = string.Format("{0}/tools/systemcustomization/attributes/manageAttribute.aspx?attributeId={1}", WebUrl, id);
+                        result = $"{WebUrl}/tools/systemcustomization/attributes/manageAttribute.aspx?attributeId={id}";
                         break;
                     }
                 case "manytomanyrelationship":
                     {
-                        result = string.Format("{0}/tools/systemcustomization/relationships/manageRelationship.aspx?entityRelationshipId={1}&entityRole=many", WebUrl, id);
+                        result = $"{WebUrl}/tools/systemcustomization/relationships/manageRelationship.aspx?entityRelationshipId={id}&entityRole=many";
                         break;
                     }
                 case "sharedoptionset":
                     {
-                        result = string.Format("{0}/tools/systemcustomization/optionset/optionset.aspx?id={1}", WebUrl, id);
+                        result = $"{WebUrl}/tools/systemcustomization/optionset/optionset.aspx?id={id}";
                         break;
                     }
             }
             if (result == null)
             {
-                result = string.Format("{0}/main.aspx?etn={1}&id={2}&pagetype=entityrecord", WebUrl, recordType, id);
+                result = $"{WebUrl}/main.aspx?etn={recordType}&id={id}&pagetype=entityrecord";
             }
             if (result != null && additionalparams != null)
             {
@@ -2818,7 +2823,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             if (optionSet.Any())
             {
                 var existingOptions = GetPicklistKeyValues(recordType, fieldName);
-                var itemUpdated = false;
                 foreach (var option in existingOptions)
                 {
                     if (!optionSet.Any(o => o.Key == option.Key))
@@ -2830,7 +2834,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                             Value = option.Key
                         };
                         Execute(request);
-                        itemUpdated = true;
                     }
                     else if (optionSet.Any(o => o.Key == option.Key && o.Value != option.Value))
                     {
@@ -2843,7 +2846,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                             Label = new Label(newValue.Value, LanguageCode)
                         };
                         Execute(request);
-                        itemUpdated = true;
                     }
                 }
                 foreach (var option in optionSet)
@@ -2858,7 +2860,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                             Label = new Label(option.Value, LanguageCode)
                         };
                         Execute(request);
-                        itemUpdated = true;
                     }
                 }
             }
@@ -3465,9 +3466,15 @@ string recordType)
             return entity.ObjectTypeCode.Value;
         }
 
-        public string GetDatabaseName()
+        public OneToManyRelationshipMetadata GetManyToOneRelationship(string referencingRecordType, string relationshipName)
         {
-            return XrmConfiguration.OrganizationUniqueName + "_MSCRM";
+            var relationships = GetEntityManyToOneRelationships(referencingRecordType);
+            if (relationships.Any(r => r.SchemaName == relationshipName))
+            {
+                return relationships.First(r => r.SchemaName == relationshipName);
+            }
+            throw new ArgumentOutOfRangeException("relationshipName",
+                "No Relationship Exists With The name: " + relationshipName);
         }
 
         public OneToManyRelationshipMetadata GetOneToManyRelationship(string referencedRecordType, string relationshipName)
@@ -3669,7 +3676,7 @@ string recordType)
                     }
                 }
                 // ReSharper disable once EmptyGeneralCatchClause
-                catch (Exception ex)
+                catch (Exception)
                 {
                 }
             }

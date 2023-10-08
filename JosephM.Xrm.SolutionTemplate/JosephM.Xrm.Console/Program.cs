@@ -13,11 +13,11 @@ namespace $ext_safeprojectname$
             {
                 var settings = new ConsoleSettings(new[]
                 {
-                    new ConsoleSettings.SettingFile(typeof(XrmSetting)),
+                    new ConsoleSettings.SettingFile(typeof(XrmConfiguration)),
                 });
                 if (!settings.ConsoleArgs(args))
                 {
-                    var xrmSetting = settings.Resolve<XrmSetting>();
+                    var xrmSetting = settings.Resolve<XrmConfiguration>();
                     var controller = new LogController();
                     controller.AddUi(new ConsoleUserInterface(false));
                     var xrmService = new XrmService(xrmSetting, controller);

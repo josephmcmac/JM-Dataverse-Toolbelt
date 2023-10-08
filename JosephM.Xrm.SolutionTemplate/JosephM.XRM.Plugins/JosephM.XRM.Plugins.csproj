@@ -82,19 +82,14 @@
     <Compile Include="Core\TypeExtentions.cs" />
     <Compile Include="Localisation\ILocalisationSettings.cs" />
     <Compile Include="Localisation\LocalisationService.cs" />
-    <Compile Include="Localisation\LocalisationSettings.cs" />
+    <Compile Include="Localisation\UserLocalisationSettings.cs" />
     <Compile Include="Plugins\$ext_jmobjprefix$EntityPluginBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schema.cs" />
     <Compile Include="Services\$ext_jmobjprefix$Service.cs" />
     <Compile Include="Workflows\$ext_jmobjprefix$WorkflowActivity.cs" />
-    <Compile Include="Xrm\DeviceIdManager.cs" />
     <Compile Include="Xrm\ExceptionExtentions.cs" />
     <Compile Include="Xrm\IXrmConfiguration.cs" />
-    <Compile Include="Xrm\ToolingConnectorForm.xaml.cs">
-      <DependentUpon>ToolingConnectorForm.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Xrm\XrmOrganizationServiceFactory.cs" />
     <Compile Include="Xrm\XrmAction.cs" />
     <Compile Include="Xrm\XrmActionRegistration.cs" />
     <Compile Include="Xrm\XrmConfiguration.cs" />
@@ -105,36 +100,29 @@
     <Compile Include="Xrm\XrmPlugin.cs" />
     <Compile Include="Xrm\XrmPluginRegistration.cs" />
     <Compile Include="Xrm\XrmService.cs" />
-    <Compile Include="Xrm\XrmSetting.cs" />
     <Compile Include="Xrm\XrmTraceController.cs" />
     <Compile Include="Xrm\XrmWorkflowActivityInstance.cs" />
     <Compile Include="Xrm\XrmWorkflowActivityInstanceBase.cs" />
     <Compile Include="Xrm\XrmWorkflowActivityRegistration.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Xrm\ToolingConnectorForm.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies">
-      <Version>9.0.2.45</Version>
+      <Version>9.0.2.50</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CrmSdk.Deployment">
       <Version>9.0.2.34</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CrmSdk.Workflow">
-      <Version>9.0.2.45</Version>
+      <Version>9.0.2.50</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CrmSdk.XrmTooling.CoreAssembly">
-      <Version>9.1.1.1</Version>
+      <Version>9.1.1.41</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CrmSdk.XrmTooling.WpfControls">
-      <Version>9.1.1.1</Version>
+      <Version>9.1.1.41</Version>
     </PackageReference>
     <PackageReference Include="System.Net.Http">
       <Version>4.3.4</Version>

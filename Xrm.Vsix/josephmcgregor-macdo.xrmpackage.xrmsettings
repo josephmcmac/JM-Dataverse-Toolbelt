@@ -1,0 +1,40 @@
+{
+  "AddToSolution": true,
+  "Connections": [
+    {
+      "ClientId": "3f8b38cb-9f16-4d33-9151-fc5101479acd",
+      "ClientSecret": {
+        "_password": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAn5s3vRoJVEmwlp3vV6CvdgAAAAACAAAAAAAQZgAAAAEAACAAAABhzrRA2n73sJUpEMHMDhfHcAoNZ0xf9Nb3Vg+ir54rwQAAAAAOgAAAAAIAACAAAADlfoz4V8T4HaNoFgPbrfQHdaPdDpZfRlBORNiYp6XGYGAAAABTjym0xERCYMSIoe942x2BHOyPQSzBjgL3YNdpDQSv+r\/B2MRF\/xKGrmBgXzm2qixDnAIGm64c1JSGgk1T9iX\/Z85DRiOyUuqDpLI8Bx039bkG7A9d823jcZJU3dkZRnBAAAAAtOkv1oyrBFoTUaVuOdLC1sKlf4g8wiR2EpItxomtXWM3BcB9WmapFZUI4STlZ9cNnIaI0ES6qclAvTNSqjzXDw==",
+        "<EncryptPassword>k__BackingField": true
+      },
+      "ConnectionType": 0,
+      "Name": "Utility App Dev",
+      "ToolingConnectionId": null,
+      "WebUrl": "https:\/\/utilityapp-dev.crm6.dynamics.com",
+      "Active": true
+    }
+  ],
+  "DeployIntoFieldProjects": [
+    {
+      "ProjectName": "N\/A"
+    }
+  ],
+  "PluginProjects": [
+    {
+      "ProjectName": "N\/A",
+      "UsesILMergeMsBuildTask": false
+    }
+  ],
+  "Solution": {
+    "Id": "d280c2ae-2f3c-ee11-bdf5-002248933612",
+    "Name": "TestComponents",
+    "RecordType": "solution"
+  },
+  "SolutionDynamicsCrmPrefix": "jmcg",
+  "SolutionObjectPrefix": "JosephM",
+  "WebResourceProjects": [
+    {
+      "ProjectName": "N\/A"
+    }
+  ]
+}

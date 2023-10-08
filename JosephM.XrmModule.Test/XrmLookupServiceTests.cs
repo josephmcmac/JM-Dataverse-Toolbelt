@@ -27,7 +27,7 @@ namespace JosephM.XrmModule.Test
                 };
                 var classSelfMapper = new ClassSelfMapper();
                 var newConnection = classSelfMapper.Map(GetXrmRecordConfiguration());
-                newConnection.OrganizationUniqueName = "Foo";
+                newConnection.WebUrl = "Foo";
                 var newService = new XrmRecordService(newConnection, ServiceFactory);
                 var objectEntryViewModel = new ObjectEntryViewModel(null, null, testEntryObject, FakeFormController.CreateForObject(testEntryObject, new FakeApplicationController(), newService));
                 objectEntryViewModel.LoadFormSections();

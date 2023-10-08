@@ -1,4 +1,5 @@
 ﻿using JosephM.Core.Attributes;
+using JosephM.Core.Extentions;
 using JosephM.Record.Metadata;
 using JosephM.Xrm;
 using Microsoft.Xrm.Sdk.Metadata;
@@ -50,6 +51,14 @@ namespace JosephM.Record.Xrm.XrmRecord
             {
                 var id = GetMetadata().MetadataId;
                 return id != null ? id.ToString() : null;
+            }
+        }
+
+        public string ReferencingRecordType
+        {
+            get
+            {
+                return GetMetadata().Entity1LogicalName;
             }
         }
 

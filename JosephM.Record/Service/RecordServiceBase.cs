@@ -222,7 +222,7 @@ namespace JosephM.Record.Service
             return ((LookupFieldMetadata)this.GetFieldMetadata(field, recordType)).ReferencedRecordType;
         }
 
-        public virtual IEnumerable<IOne2ManyRelationshipMetadata> GetOneToManyRelationships(string recordType)
+        public virtual IEnumerable<IOne2ManyRelationshipMetadata> GetOneToManyRelationships(string recordType, bool onlyValidForAdvancedFind = true)
         {
             throw new NotImplementedException();
         }

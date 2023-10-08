@@ -6,8 +6,10 @@ namespace JosephM.Xrm
     {
         public virtual GetOrganisationConnectionResponse GetOrganisationConnection(IXrmConfiguration xrmConfiguration)
         {
-            if (xrmConfiguration.UseXrmToolingConnector)
-                throw new NotSupportedException($"{nameof(xrmConfiguration.UseXrmToolingConnector)} Is Not Supported By This {(nameof(IOrganizationConnectionFactory))}");
+            if (xrmConfiguration.ConnectionType != XrmConnectionType.ClientSecret)
+            {
+                throw new NotSupportedException($"Only {nameof(XrmConnectionType.ClientSecret)} connection type is supported by this {(nameof(IOrganizationConnectionFactory))}");
+            }
             var getConnection = new XrmConnection(xrmConfiguration).GetOrganisationConnection();
             return getConnection;
         }

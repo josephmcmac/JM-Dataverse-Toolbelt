@@ -16,7 +16,7 @@ namespace JosephM.Xrm.DataImportExport.Import
     public class DataImportContainer
     {
         private Dictionary<Entity, List<string>> _fieldsToRetry = new Dictionary<Entity, List<string>>();
-        public DataImportContainer(DataImportResponse response, XrmRecordService xrmRecordService, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary, IEnumerable<Entity> entities, ServiceRequestController controller, bool includeOwner, bool includeOverrideCreatedOn,bool maskEmails, MatchOption matchOption, bool updateOnly, bool containsExportedConfigFields, int executeMultipleSetSize, int targetCacheLimit)
+        public DataImportContainer(DataImportResponse response, XrmRecordService xrmRecordService, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary, IEnumerable<Entity> entities, ServiceRequestController controller, bool includeOwner, bool includeOverrideCreatedOn,bool maskEmails, MatchOption matchOption, bool updateOnly, bool containsExportedConfigFields, int executeMultipleSetSize, int targetCacheLimit, bool onlyFieldMatchActive)
         {
             Response = response;
             XrmRecordService = xrmRecordService;
@@ -26,6 +26,7 @@ namespace JosephM.Xrm.DataImportExport.Import
             IncludeOwner = includeOwner;
             IncludeOverrideCreatedOn = includeOverrideCreatedOn;
             MaskEmails = maskEmails;
+            OnlyFieldMatchActive = onlyFieldMatchActive;
             MatchOption = matchOption;
             UpdateOnly = updateOnly;
             ContainsExportedConfigFields = containsExportedConfigFields;
@@ -53,6 +54,7 @@ namespace JosephM.Xrm.DataImportExport.Import
         public bool IncludeOwner { get; }
         public bool IncludeOverrideCreatedOn { get; }
         public bool MaskEmails { get; }
+        public bool OnlyFieldMatchActive { get; }
         public MatchOption MatchOption { get; }
         public bool UpdateOnly { get; }
         public bool ContainsExportedConfigFields { get; }
@@ -452,16 +454,26 @@ namespace JosephM.Xrm.DataImportExport.Import
                             matchQuery.Criteria.Conditions.Add(new ConditionExpression(matchKeyField.Key, ConditionOperator.Equal, XrmService.ConvertToQueryValue(matchKeyField.Key, thisEntity.LogicalName, matchKeyField.Value)));
                         }
                     }
-
+                    if(OnlyFieldMatchActive)
+                    {
+                        matchQuery.Criteria.Conditions.Add(new ConditionExpression("statecode", ConditionOperator.Equal, 0));
+                    }
                 }
                 else if (MatchOption == MatchOption.PrimaryKeyThenName || thisTypesConfig != null)
                 {
                     matchQuery.Criteria.FilterOperator = LogicalOperator.Or;
-                    matchQuery.Criteria.Conditions.Add(
+                    var orFilter = matchQuery.Criteria.AddFilter(LogicalOperator.Or);
+                    orFilter.Conditions.Add(
                         new ConditionExpression(primaryKey, ConditionOperator.Equal, thisEntity.Id));
                     if (primaryName != null && thisEntity.GetStringField(primaryName) != null)
-                        matchQuery.Criteria.Conditions.Add(
+                    {
+                        orFilter.Conditions.Add(
                             new ConditionExpression(primaryName, ConditionOperator.Equal, thisEntity.GetStringField(primaryName)));
+                    }
+                    if (OnlyFieldMatchActive)
+                    {
+                        matchQuery.Criteria.Conditions.Add(new ConditionExpression("statecode", ConditionOperator.Equal, 0));
+                    }
                 }
                 else if (MatchOption == MatchOption.PrimaryKeyOnly)
                 {

@@ -1,34 +1,18 @@
 {
-  "AddToSolution": true,
+  "AddToSolution": false,
   "Connections": [
     {
-      "AuthenticationProviderType": 3,
-      "DiscoveryServiceAddress": null,
-      "Domain": null,
-      "Name": "CDX SDK",
-      "OrganizationUniqueName": null,
-      "Password": null,
-      "ToolingConnectionId": "JosephM.Xrm.Vsix_b0b24008-0c92-4bea-9e41-a26a85c8c266",
-      "UseXrmToolingConnector": true,
-      "Username": null,
-      "Active": false,
-      "HideActive": false
-    },
-    {
-      "AuthenticationProviderType": 3,
-      "DiscoveryServiceAddress": null,
-      "Domain": null,
-      "Name": "CDX",
-      "OrganizationUniqueName": "unqb818b5504734424f99db66cccc021",
-      "Password": {
-        "_password": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAA76nXVQmt0E+H4LNWUDgf3QAAAAACAAAAAAAQZgAAAAEAACAAAADTzOcUZBZcXHZMXfvB6wHeVDMeANGfHw55wixoEaL1LQAAAAAOgAAAAAIAACAAAABFRkLOJmGoTgHHfOJlFQfA9qiQucgY4Ve6f1x\/bq7N3CAAAAB+6dFECF7ySVrCf6VfnpviuCINvbDUfpGHUkYscOfQikAAAAA6wEot6gAMOBBnl0n3CtgzupDs1MaQIUb+Gx0TRpBDnfh0dwGueoMyGsGZPQx\/Bts0K9S3vIoviX8c1q15+WRh",
+      "ClientId": "fe63514e-8649-4f07-a20d-ac7ab0431525",
+      "ClientSecret": {
+        "_password": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAxX5xur\/dUUyxVTBz2cDRkQAAAAACAAAAAAAQZgAAAAEAACAAAAD83iwZJPQWQHzVOLGowflSOW1iY1VVWYSwSUDrUXr7eAAAAAAOgAAAAAIAACAAAAAk6+UhVQloKBxhUnXty+GPMgnuPZkf6l\/1aVUs7mJElGAAAAA1ur64kPHlGF9RG6WhxLsSLfZRA\/LzBz\/CC6CzWo+SjYED5Ujwlc6RNq1dwZLCG1q6zKkC\/4idJy0NoFmZpL7vKLHl872lhGi\/wX2AjeLtVmZK6crxt7wQvI4m0oJKWoBAAAAABsHneoRPzq+uTQuOLjQcbYAVIawwyeDCFe8gbGURxxGjkdPpFgFBztv9aNfSkMjGiRRQFuWNJ+6iyE2UvmM6yg==",
         "<EncryptPassword>k__BackingField": true
       },
+      "ConnectionType": 0,
+      "Name": "CDX",
       "ToolingConnectionId": null,
       "UseXrmToolingConnector": false,
-      "Username": "admin@CRM610662.onmicrosoft.com",
-      "Active": true,
-      "HideActive": false
+      "WebUrl": "https:\/\/crm292639.crm5.dynamics.com",
+      "Active": true
     }
   ],
   "DeployIntoFieldProjects": [
@@ -42,11 +26,7 @@
       "UsesILMergeMsBuildTask": false
     }
   ],
-  "Solution": {
-    "Id": "4592b91b-1e37-ed11-9db0-000d3a8565ca",
-    "Name": "TestComponents",
-    "RecordType": "solution"
-  },
+  "Solution": null,
   "SolutionDynamicsCrmPrefix": "jmcg",
   "SolutionObjectPrefix": "JosephM",
   "WebResourceProjects": [

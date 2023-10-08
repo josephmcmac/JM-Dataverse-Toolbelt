@@ -5,20 +5,18 @@ using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
 using $safeprojectname$.Core;
 using $safeprojectname$.Localisation;
+using Schema;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading;
-using Schema;
-using System.Text;
 
 namespace $safeprojectname$.Xrm
 {
     public class XrmService : IOrganizationService
     {
-        public static DateTime MinCrmDateTime = DateTime.SpecifyKind(new DateTime(1900, 1, 1), DateTimeKind.Utc);
-
         private readonly SortedDictionary<string, List<AttributeMetadata>>
             _entityFieldMetadata = new SortedDictionary<string, List<AttributeMetadata>>();
 
@@ -33,7 +31,6 @@ namespace $safeprojectname$.Xrm
             List<ManyToManyRelationshipMetadata>();
 
         private LogController _controller;
-
 
         /// <summary>
         ///     DONT USE CALL THE EXECUTE METHOD OR THE PROPERTY
@@ -51,7 +48,6 @@ namespace $safeprojectname$.Xrm
         public XrmService(IXrmConfiguration crmConfig, LogController controller)
         {
             XrmConfiguration = crmConfig;
-            _serviceFactory = new XrmOrganizationServiceFactory();
             _controller = controller;
         }
 
@@ -87,9 +83,46 @@ namespace $safeprojectname$.Xrm
             set { _controller = value; }
         }
 
-        private IXrmConfiguration XrmConfiguration { get; set; }
+        private Entity _organisationEntity;
+        private Entity OrganisationEntity
+        {
+            get
+            {
+                if (_organisationEntity == null)
+                {
+                    _organisationEntity = GetFirst(Entities.organization);
+                }
+                return _organisationEntity;
+            }
+        }
 
-        private readonly XrmOrganizationServiceFactory _serviceFactory;
+        public Guid BaseCurrencyId
+        {
+            get
+            {
+                var value = OrganisationEntity.GetLookupGuid(Fields.organization_.basecurrencyid);
+                if (!value.HasValue)
+                {
+                    throw new NullReferenceException($"Error getting the {GetFieldLabel(Fields.organization_.basecurrencyid, Entities.organization)} from the {GetEntityDisplayName(Entities.organization)} record");
+                }
+                return value.Value;
+            }
+        }
+
+        private Dictionary<Guid, Entity> _currencies = new Dictionary<Guid, Entity>();
+        private Entity GetCurrency(Guid currencyId)
+        {
+            lock (_lockObject)
+            {
+                if (!_currencies.ContainsKey(currencyId))
+                {
+                    _currencies.Add(currencyId, Retrieve(Entities.transactioncurrency, currencyId));
+                }
+                return _currencies[currencyId];
+            }
+        }
+
+        private IXrmConfiguration XrmConfiguration { get; set; }
 
         /// <summary>
         ///     DON'T USE CALL THE EXECUTE METHOD
@@ -103,9 +136,7 @@ namespace $safeprojectname$.Xrm
                     if (_service == null)
                     {
                         UIController.LogLiteral("Initialising Dynamics Connection");
-                        if (_serviceFactory == null)
-                            throw new NullReferenceException("Cannot create service as factory not populated");
-                        _service = _serviceFactory.GetOrganisationService(XrmConfiguration);
+                        _service = new XrmConnection(XrmConfiguration).GetOrganisationConnection();
                         UIController.LogLiteral("Dynamics Connection Created");
                     }
                 }
@@ -147,9 +178,7 @@ namespace $safeprojectname$.Xrm
                     if (XrmConfiguration != null)
                     {
                         _controller.LogLiteral("XrmConfiguration found attempting to reconnect");
-                        if (_serviceFactory == null)
-                            throw new NullReferenceException("Cannot create service as factory not populated");
-                        _service = _serviceFactory.GetOrganisationService(XrmConfiguration);
+                        _service = new XrmConnection(XrmConfiguration).GetOrganisationConnection();
                         UIController.LogLiteral("Dynamics Connection Created");
                         result = Service.Execute(request);
                         _controller.LogLiteral("Reconnected");
@@ -617,12 +646,6 @@ namespace $safeprojectname$.Xrm
             return RetrieveFirst(BuildQuery(recordType, fields: fields));
         }
 
-        public Entity UpdateAndRetrieve(Entity entity, params string[] fieldsToUpdate)
-        {
-            Update(entity, fieldsToUpdate);
-            return Retrieve(entity.LogicalName, entity.Id);
-        }
-
         public QueryExpression BuildQuery(string entityType, IEnumerable<string> fields = null,
             IEnumerable<ConditionExpression> conditions = null, IEnumerable<OrderExpression> sorts = null)
         {
@@ -832,258 +855,156 @@ namespace $safeprojectname$.Xrm
                    DateTimeFormat.DateAndTime;
         }
 
-        public string GenerateEmailContent(string emailTemplateResourceName, string emailTemplateTargetType, Guid emailTemplateTargetId, LocalisationService localisationService, Dictionary<string, string> explicitTokenDictionary = null)
-        {
-            string activityDescription = null;
-            var targetTokens = new List<string>();
-            var staticTokens = new Dictionary<string, List<string>>();
-            var ifTokens = new List<string>();
-            var staticIdentifier = "static|";
-            var ifIdentifier = "if|";
-            var endifIdentifier = "endif";
-
-            if (emailTemplateResourceName != null)
-            {
-                var resource = GetFirst(Entities.webresource, Fields.webresource_.name, emailTemplateResourceName);
-                if (resource == null)
-                    throw new NullReferenceException(string.Format("Could Not Find {0} With {1} '{2}'", GetEntityDisplayName(Entities.webresource), GetFieldLabel(Fields.webresource_.name, Entities.webresource), emailTemplateResourceName));
-                var encoded = resource.GetStringField(Fields.webresource_.content);
-                byte[] binary = Convert.FromBase64String(encoded);
-                activityDescription = Encoding.UTF8.GetString(binary);
-
-                if (explicitTokenDictionary != null)
-                {
-                    foreach (var item in explicitTokenDictionary)
-                    {
-                        activityDescription = activityDescription.Replace("[" + item.Key + "]", item.Value);
-                    }
-                }
-
-                //parse out all tokens inside [] chars to replace in the email
-
-                var i = 0;
-                while (i < activityDescription.Length)
-                {
-                    if (activityDescription[i] == '[')
-                    {
-                        var startIndex = i;
-                        while (i < activityDescription.Length)
-                        {
-                            if (activityDescription[i] == ']')
-                            {
-                                var endIndex = i;
-                                var token = activityDescription.Substring(startIndex + 1, endIndex - startIndex - 1);
-
-                                if (token.ToLower().StartsWith(ifIdentifier) || token.ToLower().StartsWith(endifIdentifier))
-                                {
-                                    ifTokens.Add(token);
-                                }
-                                else if (token.ToLower().StartsWith(staticIdentifier))
-                                {
-                                    token = token.Substring(staticIdentifier.Length);
-                                    var split = token.Split('.');
-                                    if (split.Count() != 2)
-                                        throw new Exception(string.Format("The static token {0} is not formatted as expected. It should be of the form type.field", token));
-                                    var staticType = split.First();
-                                    var staticField = split.ElementAt(1);
-                                    if (!staticTokens.ContainsKey(staticType))
-                                        staticTokens.Add(staticType, new List<string>());
-                                    staticTokens[staticType].Add(staticField);
-                                }
-
-                                else
-                                    targetTokens.Add(token);
-                                break;
-                            }
-                            i++;
-                        }
-                    }
-                    else
-                        i++;
-                }
-            }
-
-            //query to get all the fields for replacing tokens
-            var query = BuildSourceQuery(emailTemplateTargetType, targetTokens);
-            query.Criteria.AddCondition(new ConditionExpression(GetPrimaryKey(emailTemplateTargetType), ConditionOperator.Equal, emailTemplateTargetId));
-            var targetObject = RetrieveFirst(query);
-
-            //process all the ifs (clear where not)
-            while (ifTokens.Any())
-            {
-                var endIfTokenStackCount = 0;
-                var removeAll = false;
-                var token = ifTokens.First();
-                if (token.ToLower() != endifIdentifier)
-                {
-                    var tokenIndex = activityDescription.IndexOf(token);
-                    var indexOf = token.IndexOf("|");
-                    if (indexOf > -1)
-                    {
-                        var field = token.Substring(indexOf + 1);
-                        var fieldValue = targetObject.GetField(field);
-                        var endIfTokenStack = 1;
-                        var remainingTokens = ifTokens.Skip(1).ToList();
-                        while (true && remainingTokens.Any())
-                        {
-                            if (remainingTokens.First().ToLower() == endifIdentifier)
-                            {
-                                endIfTokenStack--;
-                                endIfTokenStackCount++;
-                            }
-                            else
-                            {
-                                endIfTokenStack++;
-                            }
-                            remainingTokens.RemoveAt(0);
-                            if (endIfTokenStack == 0)
-                                break;
-                        }
-                        //okay so starting at the current index need to find the end if
-                        //and remove the content or the tokens
-                        var currentStack = endIfTokenStackCount;
-                        var currentIndex = activityDescription.IndexOf(token);
-                        while (currentStack > 0)
-                        {
-                            var endIfIndex = activityDescription.IndexOf(endifIdentifier, currentIndex, StringComparison.OrdinalIgnoreCase);
-                            if (endIfIndex > -1)
-                            {
-                                currentIndex = endIfIndex;
-                                currentStack--;
-                            }
-                            else
-                                break;
-                        }
-                        removeAll = fieldValue == null;
-                        if (removeAll)
-                        {
-                            var startRemove = tokenIndex - 1;
-                            var endRemove = currentIndex + endifIdentifier.Length + 1;
-                            activityDescription = activityDescription.Substring(0, startRemove) + activityDescription.Substring(endRemove);
-                        }
-                        else
-                        {
-                            var startRemove = tokenIndex - 1;
-                            var endRemove = currentIndex - 1;
-                            activityDescription = activityDescription.Substring(0, startRemove)
-                                + activityDescription.Substring(startRemove + token.Length + 2, endRemove - startRemove - token.Length - 2)
-                                + activityDescription.Substring(endRemove + endifIdentifier.Length + 2);
-                        }
-                    }
-                }
-                ifTokens.RemoveRange(0, endIfTokenStackCount > 0 ? endIfTokenStackCount * 2 : 1);
-            }
-
-            //replace all the tokens
-            foreach (var token in targetTokens)
-            {
-                var sourceType = emailTemplateTargetType;
-                string displayString = GetDisplayStringForToken(targetObject, token, localisationService, isHtml: true);
-                activityDescription = activityDescription.Replace("[" + token + "]", displayString);
-            }
-
-            foreach (var staticTargetTokens in staticTokens)
-            {
-                var staticType = staticTargetTokens.Key;
-                var staticFields = staticTargetTokens.Value;
-
-                //query to get all the fields for replacing tokens
-                var staticQuery = BuildSourceQuery(staticType, staticFields);
-                var staticTarget = RetrieveFirst(staticQuery);
-
-                //replace all the tokens
-                foreach (var staticField in staticFields)
-                {
-                    string staticFunc = null;
-                    activityDescription = activityDescription.Replace("[static|" + string.Format("{0}.{1}", staticType, staticField) + "]", GetFieldAsDisplayString(staticType, staticField, staticTarget.GetField(staticField), localisationService, isHtml: true, func: staticFunc));
-                }
-            }
-            string removeThisFunkyChar = "\xFEFF";
-            if (activityDescription != null)
-                activityDescription = activityDescription.Replace(removeThisFunkyChar, "");
-            return activityDescription;
-        }
-
-        private string GetDisplayStringForToken(Entity targetObject, string token, LocalisationService localisationService, bool isHtml = false)
-        {
-            var fieldPaths = GetTypeFieldPath(token, targetObject.LogicalName);
-            var thisFieldType = fieldPaths.Last().Key;
-            var thisFieldName = fieldPaths.Last().Value;
-            string func = null;
-            var getFieldString = token.Replace("|", "_");
-            var splitFunc = getFieldString.Split(':');
-            if (splitFunc.Count() > 1)
-            {
-                func = splitFunc.First();
-                getFieldString = splitFunc.ElementAt(1);
-            }
-            var displayString = GetFieldAsDisplayString(thisFieldType, thisFieldName, targetObject.GetField(getFieldString), localisationService, isHtml: isHtml, func: func);
-            return displayString;
-        }
-
-        public string GetFieldAsDisplayString(string recordType, string fieldName, object value, LocalisationService localisationService, bool isHtml = false, string func = null)
+        public string GetFieldAsDisplayString(string recordType, string fieldName, object value, LocalisationService localisationService, bool isHtml = false, string formatString = null, Guid? currencyId = null)
         {
             if (value == null)
-                return "";
-            else if (value is string)
             {
-                if (isHtml)
-                    return ((string)value).Replace(Environment.NewLine, "<br />").Replace("\n", "<br />");
-                else
-                    return ((string)value);
+                return string.Empty;
             }
-            else if (value is EntityReference)
+            else if (value is string stringValue)
             {
-                return XrmEntity.GetLookupName(value);
+                return isHtml
+                    ? stringValue.Replace(Environment.NewLine, "<br />").Replace("\n", "<br />")
+                    : stringValue;
             }
-            else if (value is OptionSetValue)
+            else if (value is EntityReference entityReferenceValue)
             {
-                if (value is OptionSetValue)
-                    return GetOptionLabel(((OptionSetValue)value).Value, fieldName, recordType);
-                throw new Exception("Value Type Not Matched For OptionSetValue " + value.GetType().Name);
+                return entityReferenceValue.Name;
             }
-            else if (value is Money)
+            else if (value is OptionSetValue optionSetValue)
             {
-                return XrmEntity.GetMoneyValue(value).ToString("$##,###,###,###,##0.00");
+                return GetOptionLabel(optionSetValue.Value, fieldName, recordType);
             }
-            else if (value is DateTime)
+            else if (value is DateTime dateTimeValue)
             {
                 var dt = (DateTime)value;
                 if (dt.Kind == DateTimeKind.Utc)
+                {
                     dt = localisationService.ConvertToTargetTime(dt);
-                if (func == "year")
-                    return dt.ToString("yyyy");
+                }
+                if (!string.IsNullOrWhiteSpace(formatString))
+                {
+                    return dt.ToString(formatString);
+                }
                 if (GetDateFormat(fieldName, recordType) == DateTimeFormat.DateAndTime)
-                    return dt.ToString("dd/MM/yyyy hh:mm:ss tt");
-                return dt.Date.ToString("dd/MM/yyyy");
+                {
+                    return localisationService.ToDateTimeDisplayString(dt);
+                }
+                return localisationService.ToDateDisplayString(dt);
+            }
+            else if (value is int integerValue)
+            {
+                if (!string.IsNullOrWhiteSpace(formatString))
+                {
+                    return integerValue.ToString(formatString, localisationService.NumberFormatInfo);
+                }
+                else
+                {
+                    return integerValue.ToString("n0", localisationService.NumberFormatInfo);
+                }
+            }
+            else if (value is Money moneyValue)
+            {
+                var moneyNumberInfo = (NumberFormatInfo)localisationService.NumberFormatInfo.Clone();
+                var currencyEntity = GetCurrency(currencyId ?? BaseCurrencyId);
+                moneyNumberInfo.CurrencySymbol = GetCurrency(currencyId ?? BaseCurrencyId).GetStringField(Fields.transactioncurrency_.currencysymbol);
+                moneyNumberInfo.CurrencyDecimalDigits = GetCurrencyPrecision(currencyEntity.Id);
+                if (!string.IsNullOrWhiteSpace(formatString))
+                {
+                    return moneyValue.Value.ToString(formatString, moneyNumberInfo);
+                }
+                else
+                {
+                    return moneyValue.Value.ToString("c", moneyNumberInfo);
+                }
+            }
+            else if (value is decimal decimalValue)
+            {
+                if (!string.IsNullOrWhiteSpace(formatString))
+                {
+                    return decimalValue.ToString(formatString, localisationService.NumberFormatInfo);
+                }
+                else
+                {
+                    return decimalValue.ToString($"n{GetPrecision(fieldName, recordType)}");
+                }
+            }
+            else if (value is double doubleValue)
+            {
+                if (!string.IsNullOrWhiteSpace(formatString))
+                {
+                    return doubleValue.ToString(formatString, localisationService.NumberFormatInfo);
+                }
+                else
+                {
+                    return doubleValue.ToString($"n{GetPrecision(fieldName, recordType)}");
+                }
             }
             else if (IsActivityParty(fieldName, recordType))
             {
-                if (value is Entity[])
+                if (value is IEnumerable<Entity> entityEnumerableValue)
                 {
                     var namesToOutput = new List<string>();
-                    foreach (var party in (Entity[])value)
+                    foreach (var party in entityEnumerableValue)
                     {
                         namesToOutput.Add(XrmEntity.GetLookupName(party, "partyid"));
                     }
                     return string.Join(", ", namesToOutput.Where(f => !string.IsNullOrWhiteSpace(f)));
                 }
             }
-            else if (value is bool)
+            else if (value is bool booleanValue)
             {
                 var metadata = GetFieldMetadata(fieldName, recordType) as BooleanAttributeMetadata;
                 if (metadata != null)
                 {
-                    var boolValue = (bool)value;
-                    if (boolValue && metadata.OptionSet != null && metadata.OptionSet.TrueOption != null && metadata.OptionSet.TrueOption.Label != null)
+                    if (booleanValue && metadata.OptionSet != null && metadata.OptionSet.TrueOption != null && metadata.OptionSet.TrueOption.Label != null)
+                    {
                         return GetLabelDisplay(metadata.OptionSet.TrueOption.Label);
-                    if (!boolValue && metadata.OptionSet != null && metadata.OptionSet.FalseOption != null && metadata.OptionSet.FalseOption.Label != null)
+                    }
+                    if (!booleanValue && metadata.OptionSet != null && metadata.OptionSet.FalseOption != null && metadata.OptionSet.FalseOption.Label != null)
+                    {
                         return GetLabelDisplay(metadata.OptionSet.FalseOption.Label);
+                    }
                     return value.ToString();
+                }
+                return booleanValue.ToString();
+            }
+            else if (value is byte[] byteValue)
+            {
+                if (isHtml)
+                {
+                    return $"<img src='data:image/png;base64,{Convert.ToBase64String(byteValue)}' alt='Image' />";
+                }
+                else
+                {
+                    return "File";
                 }
             }
             return value.ToString();
         }
+
+        public int GetPrecision(string field, string entity)
+        {
+            var fieldType = GetFieldType(field, entity);
+            switch (fieldType)
+            {
+                case AttributeTypeCode.Decimal:
+                    {
+                        return ((DecimalAttributeMetadata)GetFieldMetadata(field, entity)).Precision ?? 0;
+                    }
+                case AttributeTypeCode.Double:
+                    {
+                        return ((DoubleAttributeMetadata)GetFieldMetadata(field, entity)).Precision ?? 0;
+                    }
+            }
+            throw new NotImplementedException($"Get precision not implemented for field of type {fieldType}");
+        }
+
+        public int GetCurrencyPrecision(Guid? currencyGuid)
+        {
+            return GetCurrency(currencyGuid ?? BaseCurrencyId).GetInt(Fields.transactioncurrency_.currencyprecision);
+        }
+
         private DateTimeFormat? GetDateFormat(string fieldName, string recordType)
         {
             var metadata = (DateTimeAttributeMetadata)GetFieldMetadata(fieldName, recordType);

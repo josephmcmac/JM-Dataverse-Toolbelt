@@ -39,29 +39,12 @@ namespace JosephM.XrmModule.Test
             connectionsGrid.DynamicGridViewModel.AddRowButton.Invoke();
             var connectionEntry = testApplication.GetSubObjectEntryViewModel(savedConnectionsEntryForm);
 
-            //verify autocompletes only display for those not reliant on existing values
-            Assert.IsNotNull(connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.DiscoveryServiceAddress)).AutocompleteViewModel);
-            Assert.IsNull(connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.Domain)).AutocompleteViewModel);
-            Assert.IsNull(connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.Username)).AutocompleteViewModel);
-            Assert.IsNotNull(connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.OrganizationUniqueName)).AutocompleteViewModel);
-
             //enter the connection
             connectionEntry.GetBooleanFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.Active)).Value = true;
             connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.Name)).Value = "Script Entry 1";
-            connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.DiscoveryServiceAddress)).SearchButton.Invoke();
-            Assert.IsTrue(connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.DiscoveryServiceAddress)).AutocompleteViewModel.DynamicGridViewModel.GridRecords.Any());
-            connectionEntry.GetPicklistFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.AuthenticationProviderType)).Value = connectionEntry.GetPicklistFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.AuthenticationProviderType)).ItemsSource.First(p => p == PicklistOption.EnumToPicklistOption(recordConnection.AuthenticationProviderType));
-            connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.DiscoveryServiceAddress)).Value = recordConnection.DiscoveryServiceAddress;
-            connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.Domain)).Value = recordConnection.Domain;
-            connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.Username)).Value = recordConnection.Username;
-            connectionEntry.GetFieldViewModel(nameof(SavedXrmRecordConfiguration.Password)).ValueObject = recordConnection.Password;
-
-            //including using autocomplete for the organisation unique name
-            connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.OrganizationUniqueName)).SearchButton.Invoke();
-            Assert.IsTrue(connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.OrganizationUniqueName)).AutocompleteViewModel.DynamicGridViewModel.GridRecords.Any());
-            connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.OrganizationUniqueName)).AutocompleteViewModel.DynamicGridViewModel.SelectedRow = connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.OrganizationUniqueName)).AutocompleteViewModel.DynamicGridViewModel.GridRecords.First(r => r.GetStringFieldFieldViewModel(nameof(Xrm.Organisation.UniqueName)).Value == recordConnection.OrganizationUniqueName);
-            connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.OrganizationUniqueName)).AutocompleteViewModel.SetToSelectedRow();
-            Assert.AreEqual(recordConnection.OrganizationUniqueName, connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.OrganizationUniqueName)).Value);
+            connectionEntry.GetPicklistFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.ConnectionType)).Value = connectionEntry.GetPicklistFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.ConnectionType)).ItemsSource.First(p => p == PicklistOption.EnumToPicklistOption(recordConnection.ConnectionType));
+            connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.ClientId)).Value = recordConnection.ClientId; connectionEntry.GetFieldViewModel(nameof(SavedXrmRecordConfiguration.ClientSecret)).ValueObject = recordConnection.ClientSecret;
+            connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.WebUrl)).Value = recordConnection.WebUrl;
 
             //save the connection and verify added to grid
             Assert.IsTrue(connectionEntry.Validate());
@@ -77,14 +60,6 @@ namespace JosephM.XrmModule.Test
             savedConnectionsEntryForm = savedConnectionsEntryForm = testApplication.GetSubObjectEntryViewModel(dialog, index: 1);
             connectionsGrid = savedConnectionsEntryForm.GetEnumerableFieldViewModel(nameof(SavedXrmConnections.SavedXrmConnections.Connections));
             Assert.AreEqual(1, connectionsGrid.GridRecords.Count);
-
-            //go to add another connection and verify username now has autocomplete due to existing value
-            connectionsGrid.DynamicGridViewModel.AddRowButton.Invoke();
-            connectionEntry = testApplication.GetSubObjectEntryViewModel(savedConnectionsEntryForm);
-            Assert.IsNotNull(connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.DiscoveryServiceAddress)).AutocompleteViewModel);
-            Assert.IsNotNull(connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.Username)).AutocompleteViewModel);
-            Assert.IsNotNull(connectionEntry.GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.OrganizationUniqueName)).AutocompleteViewModel);
-
         }
     }
 }

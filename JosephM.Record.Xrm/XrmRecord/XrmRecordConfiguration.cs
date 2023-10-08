@@ -1,137 +1,116 @@
 ﻿using JosephM.Core.Attributes;
-using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
-    [Instruction("Direct form entry for your login will fail if authentication requires multi factor authentication (MFA). If MFA is required click 'Use XRM Tooling Connector' and login using the Microsoft SDK connection dialog\n\nIf not using the XRM tooling option, connection is done with an SDK connection string, and your password will be encrypted locally by .NET assemblies protected at local user scope")]
+    [Group("Hidden_XrmRecordConfiguration", isHiddenSection: true)]
     [ServiceConnection(typeof(XrmRecordService))]
     public class XrmRecordConfiguration : IXrmRecordConfiguration, IValidatableObject
     {
         public XrmRecordConfiguration()
         {
-            AuthenticationProviderType = XrmRecordAuthenticationProviderType.LiveId;
         }
 
         [RequiredProperty]
         [GridField]
         [GridWidth(300)]
+        [EditableFormWidth(300)]
         [MyDescription("Name for your connection")]
-        [DisplayOrder(2)]
+        [DisplayOrder(10)]
         public string Name { get; set; }
 
         public override string ToString()
         {
-            return Name ?? OrganizationUniqueName;
+            return Name ?? WebUrl;
         }
 
-        [DisplayName("Use XRM Tooling Connector")]
+        [RequiredProperty]
         [GridField]
         [GridReadOnly]
-        [GridWidth(85)]
-        [DisplayOrder(15)]
-        [MyDescription("This connection option will use a dialog provided by the Microsoft SDK. It upports MFA and the connection will be managed by the Microsoft SDK assemblies")]
-        public bool UseXrmToolingConnector { get; set; }
-
-        [DisplayOrder(16)]
-        [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), true)]
-        [ReadOnlyWhenSet]
-        public string ToolingConnectionId { get; set; }
-
-        [EditableFormWidth(150)]
-        [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
-        [MyDescription("Identity provider type")]
+        [EditableFormWidth(125)]
+        [GridWidth(125)]
+        [MyDescription("Connect using an app user client and secret or use an XRM tooling option provided by Microsoft")]
         [DisplayOrder(20)]
-        [RequiredProperty]
-        [DisplayName("Authentication Type")]
-        public XrmRecordAuthenticationProviderType AuthenticationProviderType { get; set; }
+        public XrmRecordConfigurationConnectionType? ConnectionType { get; set; }
 
-        [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
-        [PropertyInContextByPropertyValues(nameof(AuthenticationProviderType),
-            new object[]
-            {
-                XrmRecordAuthenticationProviderType.ActiveDirectory, XrmRecordAuthenticationProviderType.Federation
-                , XrmRecordAuthenticationProviderType.OnlineFederation,
-                XrmRecordAuthenticationProviderType.None
-            })]
-        [MyDescription("Discovery service URL for the instance. Found in the Web UI at ettings -> Customizations -> Developer Resources")]
+        [EditableFormWidth(300)]
+        [MyDescription("Client Id used to login with client/secret")]
         [DisplayOrder(30)]
         [RequiredProperty]
-        public string DiscoveryServiceAddress { get; set; }
+        [PropertyInContextByPropertyValue(nameof(ConnectionType), XrmRecordConfigurationConnectionType.ClientSecret)]
+        public string ClientId { get; set; }
 
-        [EditableFormWidth(250)]
-        [GridField]
-        [GridReadOnly]
-        [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
-        [PropertyInContextByPropertyValue(nameof(AreDetailsForOrganisations), true)]
-        [MyDescription("Unique name of the instance. Found in the Web UI at ettings -> Customizations -> Developer Resources")]
-        [DisplayOrder(80)]
+        [EditableFormWidth(300)]
+        [MyDescription("Secret used to login with client/secret")]
+        [DisplayOrder(40)]
         [RequiredProperty]
-        [GridWidth(300)]
-        [DisplayName("Org Unique Name")]
-        public string OrganizationUniqueName { get; set; }
+        [PropertyInContextByPropertyValue(nameof(ConnectionType), XrmRecordConfigurationConnectionType.ClientSecret)]
+        public Password ClientSecret { get; set; }
 
-        [MyDescription("Domain of your login")]
+        private string _webUrl;
+        [EditableFormWidth(300)]
+        [PropertyInContextByPropertyValue(nameof(ConnectionType), XrmRecordConfigurationConnectionType.ClientSecret)]
+        [MyDescription("URL used to log into the instance")]
         [DisplayOrder(50)]
         [RequiredProperty]
-        [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
-        [PropertyInContextByPropertyValues(nameof(AuthenticationProviderType),
-            new object[]
-            {
-                XrmRecordAuthenticationProviderType.ActiveDirectory
-            })]
-        public string Domain { get; set; }
-
-        [EditableFormWidth(250)]
-        [GridField]
-        [GridReadOnly]
-        [GridWidth(400)]
-        [MyDescription("Username for your login")]
-        [DisplayOrder(60)]
-        [RequiredProperty]
-        [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
-        [PropertyInContextByPropertyValues(nameof(AuthenticationProviderType),
-            new object[]
-            {
-                XrmRecordAuthenticationProviderType.ActiveDirectory, XrmRecordAuthenticationProviderType.Federation
-                , XrmRecordAuthenticationProviderType.OnlineFederation,
-                XrmRecordAuthenticationProviderType.LiveId
-            })]
-        public string Username { get; set; }
-
-        [EditableFormWidth(285)]
-        [MyDescription("Password for your login")]
-        [DisplayOrder(70)]
-        [RequiredProperty]
-        [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
-        [PropertyInContextByPropertyValues(nameof(AuthenticationProviderType),
-            new object[]
-            {
-                XrmRecordAuthenticationProviderType.ActiveDirectory, XrmRecordAuthenticationProviderType.Federation
-                , XrmRecordAuthenticationProviderType.OnlineFederation,
-                XrmRecordAuthenticationProviderType.LiveId
-            })]
-        public Password Password { get; set; }
-
-        public IsValidResponse Validate()
-        {
-            if (UseXrmToolingConnector)
-                return new IsValidResponse();
-            return new XrmRecordService(this, new LogController(), null).VerifyConnection();
-        }
-
-        [Hidden]
-        public bool AreDetailsForOrganisations
+        public string WebUrl
         {
             get
             {
-                return (!string.IsNullOrWhiteSpace(DiscoveryServiceAddress) || AuthenticationProviderType == XrmRecordAuthenticationProviderType.LiveId)
-                    && (!this.IsInContext(nameof(Domain)) || !string.IsNullOrWhiteSpace(Domain))
-                    && (!this.IsInContext(nameof(Username)) || !string.IsNullOrWhiteSpace(Username))
-                    && (!this.IsInContext(nameof(Password)) || (Password != null && !string.IsNullOrWhiteSpace(Password.GetRawPassword())));
+                return _webUrl;
             }
+            set
+            {
+                _webUrl = value;
+                if (!string.IsNullOrWhiteSpace(_webUrl) && !ConnectionType.HasValue)
+                {
+                    ConnectionType = XrmRecordConfigurationConnectionType.ClientSecret;
+                }
+            }
+        }
+
+        [Group("Hidden_XrmRecordConfiguration")]
+        [GridField]
+        [GridWidth(300)]
+        [DisplayName("Web Url")]
+        [DisplayOrder(50)]
+        public string WebUrlGridDisplayOnly
+        {
+            get
+            {
+                return _webUrl;
+            }
+        }
+
+        private string _toolingConnectionId;
+        [DisplayOrder(30)]
+        [PropertyInContextByPropertyValue(nameof(ConnectionType), XrmRecordConfigurationConnectionType.XrmTooling)]
+        [ReadOnlyWhenSet]
+        public string ToolingConnectionId
+        {
+            get
+            {
+                return _toolingConnectionId;
+            }
+            set
+            {
+                _toolingConnectionId = value;
+                if(!string.IsNullOrWhiteSpace(_toolingConnectionId) && !ConnectionType.HasValue)
+                {
+                    ConnectionType = XrmRecordConfigurationConnectionType.XrmTooling;
+                }
+            }
+        }
+
+        public IsValidResponse Validate()
+        {
+            if (ConnectionType == XrmRecordConfigurationConnectionType.XrmTooling)
+            {
+                return new IsValidResponse();
+            }
+            return new XrmRecordService(this, new LogController(), null).VerifyConnection();
         }
     }
 }

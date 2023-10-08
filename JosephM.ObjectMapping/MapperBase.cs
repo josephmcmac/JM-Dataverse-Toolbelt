@@ -52,7 +52,10 @@ namespace JosephM.ObjectMapping
                 var mappedValue = fromValue;
                 if (fromValue != null)
                 {
-                    if (propertyTo.PropertyType == typeof (string))
+                    var toType = propertyTo.PropertyType;
+                    if (toType.Name == "Nullable`1")
+                        toType = toType.GetGenericArguments()[0];
+                    if (toType == typeof (string))
                     {
                         if (propertyFrom.PropertyType == typeof (Guid))
                             mappedValue = fromValue.Equals(Guid.Empty) ? "" : fromValue.ToString();
@@ -61,18 +64,18 @@ namespace JosephM.ObjectMapping
                         else
                             mappedValue = fromValue.ToString();
                     }
-                    else if (propertyTo.PropertyType.IsEnum)
+                    else if (toType.IsEnum)
                     {
-                        mappedValue = Enum.Parse(propertyTo.PropertyType, fromValue.ToString());
+                        mappedValue = Enum.Parse(toType, fromValue.ToString());
                     }
-                    else if (propertyTo.PropertyType == typeof (Guid))
+                    else if (toType == typeof (Guid))
                     {
                         var stringValue = mappedValue.ToString();
                         mappedValue = stringValue.IsNullOrWhiteSpace()
                             ? Guid.Empty
                             : new Guid(fromValue.ToString());
                     }
-                    else if (propertyTo.PropertyType == typeof (Password))
+                    else if (toType == typeof (Password))
                     {
                         if (propertyFrom.PropertyType == typeof (Password))
                         {
@@ -95,7 +98,7 @@ namespace JosephM.ObjectMapping
                         }
                         mappedValue = genericType.ToNewTypedEnumerable(objectList);
                     }
-                    else if (propertyTo.PropertyType.HasParameterlessConstructor())
+                    else if (toType.HasParameterlessConstructor())
                     {
                         var classSelfMapper = new ClassSelfMapper();
                         mappedValue = classSelfMapper.Map(fromValue);

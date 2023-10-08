@@ -9,7 +9,7 @@ namespace JosephM.Xrm.MigrateRecords
     [Instruction("Records will be queried from the source instance, then upserted into the target intance")]
     [AllowSaveAndLoad]
     [Group(Sections.Connections, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
-    [Group(Sections.RecordTypes, Group.DisplayLayoutEnum.VerticalList, order: 20)]
+    [Group(Sections.RecordTypes, Group.DisplayLayoutEnum.VerticalCentered, order: 20)]
     [Group(Sections.ImportOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30)]
     [Group(Sections.CacheOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 40)]
     public class MigrateRecordsRequest : ServiceRequestBase

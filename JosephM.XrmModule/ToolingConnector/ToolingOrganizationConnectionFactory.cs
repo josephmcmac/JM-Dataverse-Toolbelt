@@ -22,7 +22,11 @@ namespace JosephM.XrmModule.ToolingConnector
 
         public override GetOrganisationConnectionResponse GetOrganisationConnection(IXrmConfiguration xrmConfiguration)
         {
-            if (!xrmConfiguration.UseXrmToolingConnector)
+            if (!xrmConfiguration.ConnectionType.HasValue)
+            {
+                throw new Exception($"{nameof(IXrmConfiguration.ConnectionType)} is required");
+            }
+            if (xrmConfiguration.ConnectionType == XrmConnectionType.ClientSecret)
             {
                 return base.GetOrganisationConnection(xrmConfiguration);
             }
@@ -36,7 +40,7 @@ namespace JosephM.XrmModule.ToolingConnector
                     {
                         if (string.IsNullOrWhiteSpace(xrmConfiguration.ToolingConnectionId))
                         {
-                            throw new Exception($"{nameof(IXrmConfiguration.ToolingConnectionId)} Is Required On The {nameof(IXrmConfiguration)} When {nameof(IXrmConfiguration.UseXrmToolingConnector)} Is Set");
+                            throw new Exception($"{nameof(IXrmConfiguration.ToolingConnectionId)} Is Required On The {nameof(IXrmConfiguration)} when {nameof(IXrmConfiguration.ConnectionType)} is set to {nameof(XrmConnectionType.XrmTooling)}");
                         }
 
                         if (!_cachedToolingConnections.ContainsKey(xrmConfiguration.ToolingConnectionId))
@@ -57,7 +61,7 @@ namespace JosephM.XrmModule.ToolingConnector
                             }
                             else
                             {
-                                throw new Exception("A Successful Connection Was Not Made By The Tooling Connector");
+                                throw new Exception("A successful connection was not made by the tooling connector");
                             }
                         }
                         var service = _cachedToolingConnections[xrmConfiguration.ToolingConnectionId];

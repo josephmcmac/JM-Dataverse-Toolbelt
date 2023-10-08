@@ -181,7 +181,7 @@ namespace JosephM.Record.Service
                 Clone(GetRecordsOfType(matchType).Where(r => intersects.Select(i => i.GetStringField(matchField)).Contains(r.Id)), null);
         }
 
-        public override IEnumerable<IOne2ManyRelationshipMetadata> GetOneToManyRelationships(string recordType)
+        public override IEnumerable<IOne2ManyRelationshipMetadata> GetOneToManyRelationships(string recordType, bool onlyValidForAdvancedFind = true)
         {
             return One2ManyRelationships.Where(r => r.ReferencedEntity == recordType);
         }

@@ -1,5 +1,4 @@
 ﻿using JosephM.Application.Desktop.Application;
-using JosephM.Application.Desktop.Console;
 using JosephM.Application.Desktop.Module.AboutModule;
 using JosephM.Application.Desktop.Module.ApplicationInsights;
 using JosephM.Application.Desktop.Module.OpenLink;
@@ -12,8 +11,8 @@ using JosephM.CustomisationImporter;
 using JosephM.Deployment;
 using JosephM.InstanceComparer;
 using JosephM.RecordCounts;
+using JosephM.SolutionComponentExporter;
 using JosephM.ToolbeltTheme;
-using JosephM.Xrm.Autonumber;
 using JosephM.Xrm.DataImportExport.Modules;
 using JosephM.Xrm.ExcelImport;
 using JosephM.Xrm.MigrateInternal;
@@ -36,7 +35,7 @@ namespace JosephM.XrmDeveloperTool
         {
             base.OnStartup(e);
 
-            var app = DesktopApplication.Create("JM Dataverse Toolbelt");
+            var app = DesktopApplication.Create("JM Dataverse Toolbelt Utility App");
             app.AddModule<ToolbeltThemeModule>();
             app.AddModule<SavedXrmConnectionsModule>();
             app.AddModule<DevAppApplicationInsightsModule>();
@@ -48,16 +47,15 @@ namespace JosephM.XrmDeveloperTool
             app.AddModule<MigrateRecordsModule>(); 
             app.AddModule<XrmTextSearchModule>();
             app.AddModule<CustomisationExporterModule>();
+            app.AddModule<SolutionComponentExporterModule>();
             app.AddModule<CustomisationImportModule>();
             app.AddModule<InstanceComparerModule>();
             app.AddModule<RecordCountsModule>();
             app.AddModule<XrmCrudModule>();
             app.AddModule<SavedRequestModule>();
-            app.AddModule<ConsoleApplicationModule>();
             app.AddModule<XrmDeveloperToolAboutModule>();
             //app.AddModule<DevAppReleaseCheckModule>();
             app.AddModule<SavedConnectionAppConnectionModule>();
-            app.AddModule<AutonumberModule>();
             app.AddModule<ColourThemeModule>();
             app.AddModule<DevAppApplicationInsightsModule>();
             app.AddModule<DonateModule>();

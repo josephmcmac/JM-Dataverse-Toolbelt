@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JosephM.DataverseToolbelt</RootNamespace>
     <AssemblyName>JosephM.DataverseToolbelt</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -176,10 +176,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\JosephM.Application.Desktop.Console\JosephM.Application.Desktop.Console.csproj">
-      <Project>{69B9950E-85BE-4AA4-9D8F-FE21639F124F}</Project>
-      <Name>JosephM.Application.Desktop.Console</Name>
-    </ProjectReference>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
       <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
       <Name>JosephM.Application</Name>
@@ -211,6 +207,10 @@
     <ProjectReference Include="..\JosephM.Application.Desktop\JosephM.Application.Desktop.csproj">
       <Project>{18e53d06-7b26-4314-8b4e-454f78e53f8b}</Project>
       <Name>JosephM.Application.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.SolutionComponentExporter\JosephM.SolutionComponentExporter.csproj">
+      <Project>{623e78b2-835c-4c53-aa6f-0c0209b25018}</Project>
+      <Name>JosephM.SolutionComponentExporter</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.ToolbeltTheme\JosephM.ToolbeltTheme.csproj">
       <Project>{cae31f05-459b-473d-8584-625605c134fe}</Project>
@@ -259,10 +259,6 @@
     <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
       <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
       <Name>JosephM.Record</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JosephM.Xrm.Autonumber\JosephM.Xrm.Autonumber.csproj">
-      <Project>{021a835c-5674-4f77-8713-420a6cc1c854}</Project>
-      <Name>JosephM.Xrm.Autonumber</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

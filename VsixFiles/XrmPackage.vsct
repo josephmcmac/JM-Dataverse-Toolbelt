@@ -295,12 +295,6 @@
           <ButtonText>Add Portal Code</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="ConfigureAutoNumberCommandId" priority="0x0102" type="Button">
-        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
-        <Strings>
-          <ButtonText>Configure Autonumber</ButtonText>
-        </Strings>
-      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->

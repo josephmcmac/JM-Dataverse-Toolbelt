@@ -142,7 +142,7 @@ namespace $safeprojectname$.Core
 
             public string FileName
             {
-                get { return Type.Name + (Name == null ? "" : "_" + Name) + ".txt"; }
+                get { return Type.Name + (Name == null ? "" : "_" + Name) + ".json"; }
             }
         }
     }

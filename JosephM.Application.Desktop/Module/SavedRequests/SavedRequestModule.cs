@@ -44,9 +44,9 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
         /// </summary>
         private void AddSavedRequestsFormFunctions()
         {
-            var customFormFunction = new CustomFormFunction("SAVEREQUEST", "Save Input", SaveObject, IsAllowSaveAndLoad, description: "Save The Input For Future Use.");
+            var customFormFunction = new CustomFormFunction("SAVEREQUEST", "Save Input", SaveObject, IsAllowSaveAndLoad, description: "Save input for future use");
             this.AddCustomFormFunction(customFormFunction, typeof(IAllowSaveAndLoad));
-            customFormFunction = new CustomFormFunction("LOADREQUEST", LoadButtonLabel, LoadObject, AreSavedRequests, description: "Load Saved Input Into The Form, Edit Saved Inputs, Or Generate A Bat Executable To Automate Process Execution");
+            customFormFunction = new CustomFormFunction("LOADREQUEST", LoadButtonLabel, LoadObject, AreSavedRequests, description: "Load or edit saved details into the form");
             this.AddCustomFormFunction(customFormFunction, typeof(IAllowSaveAndLoad));
             LoadRequestButtons();
         }
@@ -291,7 +291,7 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
                         //reload the form and notify
                         viewModel.ClearChildForms();
                         viewModel.LoadCustomFunctions();
-                        viewModel.ApplicationController.UserMessage($"You input has been saved. To load or edit a saved inoput click the '{LoadButtonLabel}' button");
+                        viewModel.ApplicationController.UserMessage($"Your input has been saved. To load or edit your saved details click the '{LoadButtonLabel}' button");
                     };
 
                     //load the entry form

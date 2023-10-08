@@ -37,7 +37,7 @@ namespace JosephM.XrmModule.AppConnection
                             return;
                     }
                     var xrmRecordService = dialog.ApplicationController.ResolveType<XrmRecordService>();
-                    if(xrmRecordService.XrmRecordConfiguration.UseXrmToolingConnector)
+                    if(xrmRecordService.XrmRecordConfiguration.ConnectionType == XrmRecordConfigurationConnectionType.XrmTooling)
                     {
                         var connectToolingDialog = new ConnectToolingDialog(xrmRecordService, dialog);
                         var subDialogList = new List<DialogViewModel>();
@@ -45,7 +45,7 @@ namespace JosephM.XrmModule.AppConnection
                         subDialogList.AddRange(dialog.SubDialogs);
                         dialog.SubDialogs = subDialogList;
                     }
-                    else if (string.IsNullOrWhiteSpace(xrmRecordService.XrmRecordConfiguration.OrganizationUniqueName))
+                    else if (!xrmRecordService.XrmRecordConfiguration.ConnectionType.HasValue)
                     {
                         //if there was no connection then lets redirect to the connection entry first
                         var connectionEntryDialog = CreateRedirectDialog(dialog, xrmRecordService);
@@ -59,7 +59,7 @@ namespace JosephM.XrmModule.AppConnection
                         subDialogList.Add(connectionEntryDialog);
                         subDialogList.AddRange(dialog.SubDialogs);
                         dialog.SubDialogs = subDialogList;
-                        ApplicationController.LogEvent("Injected Connection Entry To Dialog", new Dictionary<string, string>
+                        ApplicationController.LogEvent("Xrm Tooling Connection", new Dictionary<string, string>
                         {
                             { "Is Completed Event", true.ToString() },
                             { "Dialog Type", dialog.GetType().Name }

@@ -105,7 +105,7 @@ namespace JosephM.Core.Sql
                 {
                     return stringValue.ParseEnum<T>();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     var items = new List<string>();
                     foreach(var item in typeof(T).GetEnumValues())

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using JosephM.Core.Attributes;
 using JosephM.Record.Metadata;
 using JosephM.Xrm;
 using Microsoft.Xrm.Sdk.Metadata;
-using JosephM.Core.Attributes;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {

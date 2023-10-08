@@ -54,16 +54,14 @@ namespace JosephM.XrmModule.Test
         public SavedXrmRecordConfiguration GetSavedXrmRecordConfiguration()
         {
             var xrmConfig = XrmConfiguration;
-            var enumMapper = new EnumMapper<XrmRecordAuthenticationProviderType, AuthenticationProviderType>();
+            var enumMapper = new EnumMapper<XrmRecordConfigurationConnectionType, XrmConnectionType>();
             var savedConfig = new SavedXrmRecordConfiguration()
             {
                 Active = true,
-                AuthenticationProviderType = enumMapper.Map(xrmConfig.AuthenticationProviderType),
-                DiscoveryServiceAddress = xrmConfig.DiscoveryServiceAddress,
-                Domain = xrmConfig.Domain,
-                OrganizationUniqueName = OverrideOrganisation ?? xrmConfig.OrganizationUniqueName,
-                Password = new Password(xrmConfig.Password, false, true),
-                Username = xrmConfig.Username,
+                ConnectionType = XrmRecordConfigurationConnectionType.ClientSecret,
+                ClientId = xrmConfig.ClientId,
+                ClientSecret = new Password(xrmConfig.ClientSecret, false, true),
+                WebUrl = OverrideOrganisation ?? xrmConfig.WebUrl,
                 Name = "TESTSCRIPTCONNECTION"
             };
             return savedConfig;
@@ -71,12 +69,8 @@ namespace JosephM.XrmModule.Test
 
         public SavedXrmRecordConfiguration GetAltSavedXrmRecordConfiguration()
         {
-            var altConnection = GetSavedXrmRecordConfiguration();
-            var altOrgName = "CRMAuto";
-            altConnection.OrganizationUniqueName = altOrgName;
-            if (!altConnection.Validate().IsValid)
-                Assert.Inconclusive($"Could not connect to alt organisation named {altOrgName} for comparison ");
-            return altConnection;
+            Assert.Inconclusive($"Could not connect to alt organisation for comparison");
+            return null;
         }
 
         public XrmRecordConfiguration GetXrmRecordConfiguration()
@@ -84,12 +78,10 @@ namespace JosephM.XrmModule.Test
             var saved = GetSavedXrmRecordConfiguration();
             return new XrmRecordConfiguration()
             {
-                AuthenticationProviderType = saved.AuthenticationProviderType,
-                DiscoveryServiceAddress = saved.DiscoveryServiceAddress,
-                Domain = saved.Domain,
-                OrganizationUniqueName = OverrideOrganisation ?? saved.OrganizationUniqueName,
-                Password = saved.Password,
-                Username = saved.Username,
+                ConnectionType = XrmRecordConfigurationConnectionType.ClientSecret,
+                ClientId = saved.ClientId,
+                ClientSecret = saved.ClientSecret,
+                WebUrl = OverrideOrganisation ?? saved.WebUrl,
                 Name = "TESTSCRIPTCONNECTION"
             };
         }

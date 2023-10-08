@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using $ext_safeprojectname$.Plugins.Localisation;
 using $ext_safeprojectname$.Plugins.Services;
 
 namespace $safeprojectname$
@@ -37,17 +36,6 @@ namespace $safeprojectname$
                 if (_service == null)
                     _service = new $ext_jmobjprefix$Service(XrmService, $ext_jmobjprefix$Settings);
                 return _service;
-            }
-        }
-
-        private LocalisationService _localisationService;
-        public LocalisationService LocalisationService
-        {
-            get
-            {
-                if (_localisationService == null)
-                    _localisationService = new LocalisationService(new LocalisationSettings());
-                return _localisationService;
             }
         }
     }

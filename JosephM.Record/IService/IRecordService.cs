@@ -26,7 +26,7 @@ namespace JosephM.Record.IService
         /// <summary>
         ///     Gets All One To Many Relationships To Records Of The Type In The Data Store
         /// </summary>
-        IEnumerable<IOne2ManyRelationshipMetadata> GetOneToManyRelationships(string recordType);
+        IEnumerable<IOne2ManyRelationshipMetadata> GetOneToManyRelationships(string recordType, bool onlyValidForAdvancedFind = true);
         int GetCurrencyPrecision(string currencyId);
 
         /// <summary>

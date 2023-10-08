@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JosephM.XrmModule.Test</RootNamespace>
     <AssemblyName>JosephM.XrmModule.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -78,10 +78,6 @@
     <Compile Include="XrmModuleTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\JosephM.Application.Desktop.Console\JosephM.Application.Desktop.Console.csproj">
-      <Project>{69B9950E-85BE-4AA4-9D8F-FE21639F124F}</Project>
-      <Name>JosephM.Application.Desktop.Console</Name>
-    </ProjectReference>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
       <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
       <Name>JosephM.Application</Name>
@@ -145,13 +141,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies">
-      <Version>9.0.2.26</Version>
+      <Version>9.0.2.50</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
-      <Version>2.2.10</Version>
+      <Version>3.1.1</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestFramework">
-      <Version>2.2.10</Version>
+      <Version>3.1.1</Version>
     </PackageReference>
   </ItemGroup>
   <Choose>

@@ -42,11 +42,13 @@ namespace JosephM.Core.Extentions
             var type = instance.GetType();
             var property = type.GetProperty(propertyName);
             if (property == null)
-                throw new NullReferenceException(string.Format("Class {0} Does Not Have A Property Named {1}", type.Name,
-                    propertyName));
+            {
+                throw new NullReferenceException($"Class {type.Name} Does Not Have A Property Named {propertyName}");
+            }
             if (!property.CanRead)
-                throw new MemberAccessException(string.Format("Property {0} Does Not Have Read Access In {1} Class",
-                    propertyName, type.Name));
+            {
+                throw new MemberAccessException($"Property {propertyName} Does Not Have Read Access In {type.Name} Class");
+            }
             return property
                 .GetGetMethod()
                 .Invoke(instance, new object[] { });
@@ -57,11 +59,13 @@ namespace JosephM.Core.Extentions
             var type = instance.GetType();
             var property = type.GetProperty(propertyName);
             if (property == null)
-                throw new NullReferenceException(string.Format("Class {0} Does Not Have A Property Named {1}", type.Name,
-                    propertyName));
+            {
+                throw new NullReferenceException($"Class {type.Name} Does Not Have A Property Named {propertyName}");
+            }
             if (!property.CanWrite)
-                throw new MemberAccessException(string.Format("Property {0} Does Not Have Write Access In {1} Class",
-                    propertyName, type.Name));
+            {
+                throw new MemberAccessException($"Property {propertyName} Does Not Have Write Access In {type.Name} Class");
+            }
             return property
                 .GetSetMethod()
                 .Invoke(instance, new object[] { value });
@@ -125,20 +129,35 @@ namespace JosephM.Core.Extentions
 
             var property = theObject.GetType().GetProperty(propertyName);
             var propertyType = property.PropertyType;
-            object newValue = null;
-
+            if (propertyType.Name == "Nullable`1")
+            {
+                propertyType = propertyType.GetGenericArguments()[0];
+            }
+            object newValue;
             if (propertyType == typeof(bool))
+            {
                 newValue = rawConfigString == "1" || rawConfigString.ToLower() == "true";
+            }
             else if (propertyType.IsEnum)
+            {
                 newValue = Enum.Parse(propertyType, rawConfigString);
+            }
             else if (propertyType == typeof(IEnumerable<string>))
+            {
                 newValue = rawConfigString.Split(',');
+            }
             else if (propertyType == typeof(int))
+            {
                 newValue = int.Parse(rawConfigString);
+            }
             else if (propertyType.HasStringConstructor())
+            {
                 newValue = propertyType.CreateFromStringConstructor(rawConfigString);
+            }
             else
+            {
                 newValue = rawConfigString;
+            }
 
             theObject.SetPropertyValue(propertyName, newValue);
         }

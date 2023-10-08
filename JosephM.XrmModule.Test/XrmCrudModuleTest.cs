@@ -513,12 +513,10 @@ namespace JosephM.XrmModule.Test
 
             var connectionEntryViewModel = dialog.Controller.UiItems[0] as ObjectEntryViewModel;
             var newConnection = connectionEntryViewModel.GetObject() as SavedXrmRecordConfiguration;
-            newConnection.AuthenticationProviderType = originalConnection.AuthenticationProviderType;
-            newConnection.DiscoveryServiceAddress = originalConnection.DiscoveryServiceAddress;
-            newConnection.OrganizationUniqueName = originalConnection.OrganizationUniqueName;
-            newConnection.Domain = originalConnection.Domain;
-            newConnection.Username = originalConnection.Username;
-            newConnection.Password = originalConnection.Password;
+            newConnection.ConnectionType = originalConnection.ConnectionType;
+            newConnection.ClientId = originalConnection.ClientId;
+            newConnection.ClientSecret = originalConnection.ClientSecret;
+            newConnection.WebUrl = originalConnection.WebUrl;
             newConnection.Name = "RedirectScriptEntered";
             connectionEntryViewModel.SaveButtonViewModel.Invoke();
 

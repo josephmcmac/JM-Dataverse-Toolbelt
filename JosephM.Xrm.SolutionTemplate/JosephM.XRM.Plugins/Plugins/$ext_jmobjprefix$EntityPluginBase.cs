@@ -1,4 +1,5 @@
-﻿using $safeprojectname$.Services;
+﻿using System;
+using $safeprojectname$.Services;
 using $safeprojectname$.Xrm;
 using $safeprojectname$.Localisation;
 
@@ -37,7 +38,26 @@ namespace $safeprojectname$.Plugins
             get
             {
                 if (_localisationService == null)
-                    _localisationService = new LocalisationService(new LocalisationSettings());
+                {
+                    Guid? userId = null;
+                    if (IsMessage(PluginMessage.Create))
+                    {
+                        userId = GetLookupGuid("createdonbehalfby");
+                        if (!userId.HasValue)
+                        {
+                            userId = GetLookupGuid("createdby");
+                        }
+                    }
+                    else if (IsMessage(PluginMessage.Update))
+                    {
+                        userId = GetLookupGuid("modifiedby");
+                    }
+                    if (!userId.HasValue)
+                    {
+                        userId = Context.InitiatingUserId;
+                    }
+                    _localisationService = new LocalisationService(new UserLocalisationSettings(XrmService, userId.Value));
+                }
                 return _localisationService;
             }
         }

@@ -4,43 +4,31 @@
     "Value": "True"
   },
   {
-    "Key": "HideActive",
-    "Value": "False"
-  },
-  {
     "Key": "Name",
     "Value": "CDX"
   },
   {
-    "Key": "UseXrmToolingConnector",
-    "Value": "False"
+    "Key": "ConnectionType",
+    "Value": "ClientSecret"
+  },
+  {
+    "Key": "ClientId",
+    "Value": "fe63514e-8649-4f07-a20d-ac7ab0431525"
+  },
+  {
+    "Key": "ClientSecret",
+    "Value": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAxX5xur\/dUUyxVTBz2cDRkQAAAAACAAAAAAAQZgAAAAEAACAAAAD83iwZJPQWQHzVOLGowflSOW1iY1VVWYSwSUDrUXr7eAAAAAAOgAAAAAIAACAAAAAk6+UhVQloKBxhUnXty+GPMgnuPZkf6l\/1aVUs7mJElGAAAAA1ur64kPHlGF9RG6WhxLsSLfZRA\/LzBz\/CC6CzWo+SjYED5Ujwlc6RNq1dwZLCG1q6zKkC\/4idJy0NoFmZpL7vKLHl872lhGi\/wX2AjeLtVmZK6crxt7wQvI4m0oJKWoBAAAAABsHneoRPzq+uTQuOLjQcbYAVIawwyeDCFe8gbGURxxGjkdPpFgFBztv9aNfSkMjGiRRQFuWNJ+6iyE2UvmM6yg=="
+  },
+  {
+    "Key": "WebUrl",
+    "Value": "https:\/\/crm292639.crm5.dynamics.com"
   },
   {
     "Key": "ToolingConnectionId",
     "Value": null
   },
   {
-    "Key": "AuthenticationProviderType",
-    "Value": "LiveId"
-  },
-  {
-    "Key": "DiscoveryServiceAddress",
-    "Value": null
-  },
-  {
-    "Key": "OrganizationUniqueName",
-    "Value": "unqb818b5504734424f99db66cccc021"
-  },
-  {
-    "Key": "Domain",
-    "Value": null
-  },
-  {
-    "Key": "Username",
-    "Value": "admin@CRM610662.onmicrosoft.com"
-  },
-  {
-    "Key": "Password",
-    "Value": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAA76nXVQmt0E+H4LNWUDgf3QAAAAACAAAAAAAQZgAAAAEAACAAAADTzOcUZBZcXHZMXfvB6wHeVDMeANGfHw55wixoEaL1LQAAAAAOgAAAAAIAACAAAABFRkLOJmGoTgHHfOJlFQfA9qiQucgY4Ve6f1x\/bq7N3CAAAAB+6dFECF7ySVrCf6VfnpviuCINvbDUfpGHUkYscOfQikAAAAA6wEot6gAMOBBnl0n3CtgzupDs1MaQIUb+Gx0TRpBDnfh0dwGueoMyGsGZPQx\/Bts0K9S3vIoviX8c1q15+WRh"
+    "Key": "UseXrmToolingConnector",
+    "Value": "False"
   }
 ]
