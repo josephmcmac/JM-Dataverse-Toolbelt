@@ -1393,6 +1393,22 @@ namespace JosephM.Record.Xrm.XrmRecord
             return join;
         }
 
+        public string OrganisationId
+        {
+            get
+            {
+                return XrmService.OrganisationId.ToString();
+            }
+        }
+
+        public string EnvironmentId
+        {
+            get
+            {
+                return XrmService.EnvironmentId;
+            }
+        }
+
         public string WebUrl
         {
             get

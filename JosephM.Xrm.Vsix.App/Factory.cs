@@ -9,6 +9,7 @@ using JosephM.RecordCounts;
 using JosephM.ToolbeltTheme;
 using JosephM.Xrm.DataImportExport.Modules;
 using JosephM.Xrm.TextSearch;
+using JosephM.Xrm.Vsix.App.Module.Web;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module;
 using JosephM.Xrm.Vsix.Module.AddPortalCode;
@@ -69,6 +70,7 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<ColourThemeModule>();
             app.AddModule<XrmPackageApplicationInsightsModule>();
             app.AddModule<ExportDataUsabilityModule>();
+            app.AddModule<OpenWebSettingsModule>();
             return app;
         }
 

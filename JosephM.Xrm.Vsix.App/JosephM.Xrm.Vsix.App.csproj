@@ -111,6 +111,8 @@
     <Compile Include="Module\Web\OpenSolutionDialog.cs" />
     <Compile Include="Module\Web\OpenDefaultSolutionModule.cs" />
     <Compile Include="Module\Web\OpenWebDialog.cs" />
+    <Compile Include="Module\Web\OpenWebSettingsModule.cs" />
+    <Compile Include="Module\Web\OpenWebSettings.cs" />
     <Compile Include="Module\XrmPackageSettings\PackageSettingsAppConnectionModule.cs" />
     <Compile Include="Module\ClearCacheModule.cs" />
     <Compile Include="Module\Connection\ConnectionEntryDialog.cs" />

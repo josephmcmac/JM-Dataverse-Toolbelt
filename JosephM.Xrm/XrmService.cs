@@ -218,6 +218,22 @@ namespace JosephM.Xrm
             }
         }
 
+        public Guid OrganisationId
+        {
+            get
+            {
+                return OrganisationEntity.Id;
+            }
+        }
+
+        public string EnvironmentId
+        {
+            get
+            {
+                return GetOrganisation().EnvironmentId;
+            }
+        }
+
         public string WebUrl
         {
             get
