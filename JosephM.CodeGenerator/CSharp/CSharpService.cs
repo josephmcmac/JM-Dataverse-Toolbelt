@@ -75,15 +75,14 @@ namespace JosephM.CodeGenerator.CSharp
             var types = GetRecordTypesToImport(request);
             var countToDo = types.Count();
             var countDone = 0;
-            stringBuilder.AppendLine(string.Format("\tpublic static class {0}", "Entities"));
+            stringBuilder.AppendLine("\tpublic static class Entities");
             stringBuilder.AppendLine("\t{");
             foreach (var recordType in types.OrderBy(t => t))
             {
                 controller.UpdateProgress(countDone, countToDo, "Processing Entities");
 
                 if (!string.IsNullOrWhiteSpace(recordType))
-                    stringBuilder.AppendLine(string.Format("\t\tpublic const string {0} = \"{1}\";", recordType,
-                        recordType));
+                    stringBuilder.AppendLine($"\t\tpublic const string {CreateCodeLabel(recordType)} = \"{recordType}\";");
                 countDone++;
             }
             stringBuilder.AppendLine("\t}");
@@ -258,16 +257,17 @@ namespace JosephM.CodeGenerator.CSharp
                                 }
                             }
                         }
-                        stringBuilder.AppendLine(string.Format("\t\tpublic static class {0}", actionName));
+                        stringBuilder.AppendLine($"\t\tpublic static class {actionName}");
                         stringBuilder.AppendLine("\t\t{");
-                        stringBuilder.AppendLine(string.Format("\t\t\tpublic const string Name = \"{0}\";", actionName));
+                        stringBuilder.AppendLine($"\t\t\tpublic const string Name = \"{actionName}\";");
                         if (inArguments.Any())
                         {
                             stringBuilder.AppendLine("\t\t\tpublic static class In");
                             stringBuilder.AppendLine("\t\t\t{");
                             foreach (var item in inArguments.Distinct())
                             {
-                                stringBuilder.AppendLine(string.Format("\t\t\t\tpublic const string {0} = \"{0}\";", CreateCodeLabel(item), item));
+                                var codeLabel = item == "In" ? "In_" : CreateCodeLabel(item);
+                                stringBuilder.AppendLine($"\t\t\t\tpublic const string {codeLabel} = \"{item}\";");
                             }
                             stringBuilder.AppendLine("\t\t\t}");
                         }
@@ -277,7 +277,8 @@ namespace JosephM.CodeGenerator.CSharp
                             stringBuilder.AppendLine("\t\t\t{");
                             foreach (var item in outArguments.Distinct())
                             {
-                                stringBuilder.AppendLine(string.Format("\t\t\t\tpublic const string {0} = \"{0}\";", CreateCodeLabel(item), item));
+                                var codeLabel = item == "Out" ? "Out_" : CreateCodeLabel(item);
+                                stringBuilder.AppendLine($"\t\t\t\tpublic const string {codeLabel} = \"{item}\";");
                             }
                             stringBuilder.AppendLine("\t\t\t}");
 
