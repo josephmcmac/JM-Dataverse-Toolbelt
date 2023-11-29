@@ -5,21 +5,17 @@ namespace JosephM.Xrm
 {
     public class Organisation
     {
-        public Organisation(OrganizationDetail organisation)
-            : this(organisation.UniqueName, organisation.FriendlyName, organisation.OrganizationVersion, organisation.Endpoints)
-        {
-        }
-
         public Organisation(CrmServiceClient serviceClient)
-    :       this(serviceClient.ConnectedOrgUniqueName, serviceClient.ConnectedOrgFriendlyName, serviceClient.ConnectedOrgVersion?.ToString(), serviceClient.ConnectedOrgPublishedEndpoints)
+    :       this(serviceClient.ConnectedOrgUniqueName, serviceClient.ConnectedOrgFriendlyName, serviceClient.ConnectedOrgVersion?.ToString(), serviceClient.EnvironmentId, serviceClient.ConnectedOrgPublishedEndpoints)
         {
         }
 
-        public Organisation(string uniqueName, string friendlyName, string version, EndpointCollection endPoints)
+        private Organisation(string uniqueName, string friendlyName, string version, string environmentId, EndpointCollection endPoints)
         {
             UniqueName = uniqueName;
             FriendlyName = friendlyName;
             Version = version;
+            EnvironmentId = environmentId;
             if (endPoints.ContainsKey(EndpointType.WebApplication))
             {
                 WebUrl = endPoints[EndpointType.WebApplication];
@@ -34,13 +30,6 @@ namespace JosephM.Xrm
             }
         }
 
-        public Organisation(string uniqueName, string friendlyName, string version, string webUrl)
-        {
-            UniqueName = uniqueName;
-            FriendlyName = friendlyName;
-            Version = version;
-            WebUrl = webUrl;
-        }
 
         public string UniqueName { get; }
 
@@ -51,5 +40,7 @@ namespace JosephM.Xrm
         public string WebUrl { get; }
 
         public string OrganisationServiceUri { get; }
+
+        public string EnvironmentId { get; }
     }
 }
