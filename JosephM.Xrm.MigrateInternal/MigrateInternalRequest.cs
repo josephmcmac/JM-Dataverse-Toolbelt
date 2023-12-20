@@ -35,6 +35,11 @@ namespace JosephM.Xrm.MigrateInternal
         public bool RetainPrimaryKey { get; set; }
 
         [Group(Sections.ImportOptions)]
+        [DisplayOrder(417)]
+        [RequiredProperty]
+        public bool SubmitUnchangedFields { get; set; }
+
+        [Group(Sections.ImportOptions)]
         [DisplayOrder(420)]
         [RequiredProperty]
         [MinimumIntValue(1)]
