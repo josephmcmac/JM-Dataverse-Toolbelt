@@ -4,6 +4,7 @@ using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Xrm.Schema;
 using System.Collections.Generic;
+using JosephM.Xrm.DataImportExport.Import;
 
 namespace JosephM.Xrm.DataImportExport.XmlImport
 {
@@ -11,7 +12,7 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
     [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
     [Group(Sections.Fields, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 15)]
     [Group(Sections.Fetch, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20)]
-    public class ExportRecordType
+    public partial class ExportRecordType
     {
         public ExportRecordType()
         {
@@ -94,49 +95,6 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
             public const string Main = "Export Type Details";
             public const string Fields = "Fields To Include";
             public const string Fetch = "Fetch XML - Note Attributes in The Entered XML Will Be Ignored. All fields Will Be Included Apart From Those Selected For Exclusion";
-        }
-
-        [Group(Sections.FieldUpdate, Group.DisplayLayoutEnum.VerticalCentered, 20)]
-        [DoNotAllowGridEdit]
-        public class ExplicitFieldValues
-        {
-            public override string ToString()
-            {
-                return
-                    FieldToSet == null
-                    ? base.ToString()
-                    : FieldToSet.Value + " = " + (ClearValue ? "(null)" : ValueToSet?.ToString());
-            }
-
-            [MyDescription("Field to set the explicit value in")]
-            [Group(Sections.FieldUpdate)]
-            [DisplayOrder(10)]
-            [RequiredProperty]
-            [RecordFieldFor(nameof(ValueToSet))]
-            public RecordField FieldToSet { get; set; }
-
-            [MyDescription("If set the field will be cleared rather than populated with a specific value")]
-            [GridWidth(100)]
-            [Group(Sections.FieldUpdate)]
-            [DisplayOrder(20)]
-            [RequiredProperty]
-            [PropertyInContextByPropertyNotNull(nameof(FieldToSet))]
-            [DisplayName("Set Value Null")]
-            public bool ClearValue { get; set; }
-
-            [MyDescription("The value to be set in the field")]
-            [GridWidth(300)]
-            [Group(Sections.FieldUpdate)]
-            [DisplayOrder(30)]
-            [RequiredProperty]
-            [PropertyInContextByPropertyNotNull(nameof(FieldToSet))]
-            [PropertyInContextByPropertyValue(nameof(ClearValue), false)]
-            public object ValueToSet { get; set; }
-
-            private static class Sections
-            {
-                public const string FieldUpdate = "Field Value To Set";
-            }
         }
     }
 }

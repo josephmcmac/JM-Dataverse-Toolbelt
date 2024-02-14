@@ -3,6 +3,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
+using JosephM.Xrm.DataImportExport.Import;
 using JosephM.Xrm.DataImportExport.XmlImport;
 using JosephM.Xrm.MigrateRecords;
 using JosephM.Xrm.Schema;
@@ -39,8 +40,8 @@ namespace JosephM.Deployment.Test
                     IncludeOnlyTheseFields = new [] { new FieldSetting() { RecordField = new RecordField(Fields.account_.createdby, Fields.account_.createdby) }},
                     ExplicitValuesToSet = new []
                     {
-                        new ExportRecordType.ExplicitFieldValues() { FieldToSet = new RecordField(Fields.account_.address1_line1, Fields.account_.address1_line1), ClearValue = true},
-                        new ExportRecordType.ExplicitFieldValues() { FieldToSet = new RecordField(Fields.account_.address1_line2, Fields.account_.address1_line1), ValueToSet = "explicitValue" },
+                        new ExplicitFieldValues() { FieldToSet = new RecordField(Fields.account_.address1_line1, Fields.account_.address1_line1), ClearValue = true},
+                        new ExplicitFieldValues() { FieldToSet = new RecordField(Fields.account_.address1_line2, Fields.account_.address1_line1), ValueToSet = "explicitValue" },
                     }
                 }
             };

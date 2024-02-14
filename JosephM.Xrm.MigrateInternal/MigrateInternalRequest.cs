@@ -7,6 +7,7 @@ using JosephM.Record.Attributes;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
+using JosephM.Xrm.DataImportExport.Import;
 using JosephM.Xrm.DataImportExport.MappedImport;
 using System.Collections.Generic;
 
@@ -64,7 +65,7 @@ namespace JosephM.Xrm.MigrateInternal
 
         private static class Sections
         {
-            public const string ImportOptions = "Import Options";
+            public const string ImportOptions = "Options";
         }
 
         [DoNotAllowGridOpen]
@@ -117,6 +118,7 @@ namespace JosephM.Xrm.MigrateInternal
             [IncludeManyToManyIntersects]
             [RecordTypeFor(nameof(FieldMappings) + "." + nameof(MigrateInternalFieldMapping.TargetField))]
             [RecordTypeFor(nameof(AltMatchKeys) + "." + nameof(MigrateInternalMatchKey.TargetField))]
+            [RecordTypeFor(nameof(ExplicitValuesToSet) + "." + nameof(ExplicitFieldValues.FieldToSet))]
             public RecordType TargetType { get; set; }
 
             [GridWidth(160)]
@@ -149,6 +151,14 @@ namespace JosephM.Xrm.MigrateInternal
             [RequiredProperty]
             [PropertyInContextByPropertyValue(nameof(SourceDatasetType), SourceDatasetType.FetchXml)]
             public string FetchXml { get; set; }
+
+            [MyDescription("This Allows Setting A Specific Value For A Field In All Mapped Records")]
+            [GridWidth(200)]
+            [DisplayOrder(110)]
+            [FormEntry]
+            [AllowNestedGridEdit]
+            [PropertyInContextByPropertyNotNull(nameof(TargetType))]
+            public IEnumerable<ExplicitFieldValues> ExplicitValuesToSet { get; set; }
 
             string IMapSourceImport.SourceType => SourceType?.Key;
             string IMapSourceImport.TargetType => TargetType?.Key;

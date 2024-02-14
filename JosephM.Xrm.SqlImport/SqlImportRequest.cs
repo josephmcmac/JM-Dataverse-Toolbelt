@@ -2,6 +2,7 @@
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Record.Sql;
+using JosephM.Xrm.DataImportExport.Import;
 using JosephM.Xrm.DataImportExport.MappedImport;
 using JosephM.Xrm.Schema;
 using System.Collections.Generic;
@@ -147,6 +148,8 @@ namespace JosephM.Xrm.SqlImport
             [PropertyInContextByPropertyNotNull(nameof(SourceTable))]
             [PropertyInContextByPropertyNotNull(nameof(TargetType))]
             public IEnumerable<SqlImportFieldMapping> Mappings { get; set; }
+
+            public IEnumerable<ExplicitFieldValues> ExplicitValuesToSet => new ExplicitFieldValues[0];
 
             string IMapSourceImport.SourceType => SourceTable?.Key;
             string IMapSourceImport.TargetType => TargetType?.Key;

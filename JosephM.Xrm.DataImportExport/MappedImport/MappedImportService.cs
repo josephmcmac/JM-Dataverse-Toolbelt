@@ -7,6 +7,7 @@ using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.DataImportExport.Import;
+using JosephM.Xrm.DataImportExport.XmlImport;
 using JosephM.Xrm.Schema;
 using Microsoft.Xrm.Sdk;
 using System;
@@ -76,7 +77,19 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
             var response = new ParseIntoEntitiesResponse();
             foreach (var mapping in mappings)
             {
-                response.AddEntities(MapToEntities(mapping.Value, mapping.Key, response, logController, useAmericanDates, ignoreNullValues: ignoreNullValues));
+                var mappedToTargetEntities = MapToEntities(mapping.Value, mapping.Key, response, logController, useAmericanDates, ignoreNullValues: ignoreNullValues);
+                if(mapping.Key.ExplicitValuesToSet != null)
+                {
+                    foreach (var explicitValueToSet in mapping.Key.ExplicitValuesToSet)
+                    {
+                        var parseFieldValue = XrmRecordService.ToEntityValue(explicitValueToSet.ClearValue ? null : explicitValueToSet.ValueToSet);
+                        foreach (var entity in mappedToTargetEntities)
+                        {
+                            entity.SetField(explicitValueToSet.FieldToSet.Key, parseFieldValue, XrmRecordService.XrmService);
+                        }
+                    }
+                }
+                response.AddEntities(mappedToTargetEntities);
             }
             var entities = response.GetParsedEntities();
             PopulateEmptyNameFields(entities);
