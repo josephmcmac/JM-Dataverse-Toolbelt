@@ -11,18 +11,11 @@ namespace $ext_safeprojectname$
         {
             try
             {
-                var settings = new ConsoleSettings(new[]
-                {
-                    new ConsoleSettings.SettingFile(typeof(XrmConfiguration)),
-                });
-                if (!settings.ConsoleArgs(args))
-                {
-                    var xrmSetting = settings.Resolve<XrmConfiguration>();
-                    var controller = new LogController();
-                    controller.AddUi(new ConsoleUserInterface(false));
-                    var xrmService = new XrmService(xrmSetting, controller);
-                    var me = xrmService.WhoAmI();
-            }
+                var xrmConfiguration = new VsixActiveXrmConnection();
+                var controller = new LogController();
+                controller.AddUi(new ConsoleUserInterface(false));
+                var xrmService = new XrmService(xrmConfiguration, controller);
+                var me = xrmService.WhoAmI();
             }
             catch (Exception ex)
             {

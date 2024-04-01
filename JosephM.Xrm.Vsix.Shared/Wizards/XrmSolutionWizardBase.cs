@@ -136,36 +136,6 @@ namespace JosephM.Xrm.Vsix.Wizards
                 if (DestinationDirectory.EndsWith(SafeProjectName + Path.DirectorySeparatorChar + SafeProjectName))
                     DestinationDirectory = DestinationDirectory.Substring(0, DestinationDirectory.Length - (Path.DirectorySeparatorChar + SafeProjectName).Length);
 
-                //okay so lets update the encrypt connection bat and the xrmsetting.txt files in the console project
-                var consoleProjectPath = DestinationDirectory + Path.DirectorySeparatorChar + SafeProjectName + ".Console";
-                var encryptBatFileName = consoleProjectPath + Path.DirectorySeparatorChar + "Encrypt XRM Connection.bat";
-                if (File.Exists(encryptBatFileName))
-                {
-                    var read = File.ReadAllText(encryptBatFileName);
-                    read = read.Replace("$ext_safeprojectname$", SafeProjectName);
-                    File.WriteAllText(encryptBatFileName, read);
-                }
-                var consoleConnectionFileName = consoleProjectPath + Path.DirectorySeparatorChar + "XrmSetting.txt";
-                if (File.Exists(consoleConnectionFileName))
-                {
-                    if (XrmPackageSettings != null && XrmPackageSettings.Connections != null && XrmPackageSettings.Connections.Any())
-                    {
-                        try
-                        {
-                            var connection = GetActiveConnectionToSave();
-                            if (connection != null)
-                            {
-                                var serialise = ObjectToJsonString(connection);
-                                File.WriteAllText(consoleConnectionFileName, serialise);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show("Error setting console application connection: " + ex.DisplayString());
-                        }
-                    }
-                }
-
                 var visualStudioService = new VisualStudioService(DTE, useSolutionDirectory: DestinationDirectory);
                 //add xrm connection and package settings to solution items
                 var vsixSettingsManager = new VsixSettingsManager(visualStudioService, null);

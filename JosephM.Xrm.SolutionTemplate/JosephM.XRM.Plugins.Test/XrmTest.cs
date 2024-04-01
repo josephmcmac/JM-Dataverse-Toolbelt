@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using $ext_safeprojectname$.Plugins.Core;
@@ -11,7 +10,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Schema;
-using System.Reflection;
 
 namespace $safeprojectname$
 {
@@ -66,39 +64,7 @@ namespace $safeprojectname$
         {
             get
             {
-            var assemblyLocation = Assembly.GetExecutingAssembly().CodeBase;
-            var fileInfo = new FileInfo(assemblyLocation.Substring(8));
-            var carryDirectory = fileInfo.Directory;
-            while (carryDirectory.Parent != null)
-            {
-                if (carryDirectory
-                    .Parent
-                    .GetDirectories()
-                    .Any(d => d.Name == "Xrm.Vsix"))
-                {
-                    carryDirectory = carryDirectory.Parent;
-                    break;
-                }
-                carryDirectory = carryDirectory.Parent;
-            }
-            if (carryDirectory.Parent == null)
-                throw new Exception("Error resolving connection file");
-            var fileName = Path.Combine(carryDirectory.FullName, "Xrm.Vsix", Environment.UserName + ".solution.xrmconnection");
-            var readEncryptedConfig = File.ReadAllText(fileName);
-            var dictionary =
-                    (Dictionary<string, string>)
-                        JsonHelper.JsonStringToObject(readEncryptedConfig, typeof(Dictionary<string, string>));
-
-                var xrmConfig = new XrmConfiguration();
-                foreach (var prop in xrmConfig.GetType().GetReadWriteProperties())
-                {
-                    var value = dictionary[prop.Name];
-                    if (value != null && prop.Name == nameof(XrmConfigurationAdmin.ClientSecret))
-                        xrmConfig.SetPropertyByString(prop.Name, new Password(value).GetRawPassword());
-                    else
-                        xrmConfig.SetPropertyByString(prop.Name, value);
-                }
-                return xrmConfig;
+                return new VsixActiveXrmConnection();
             }
         }
 

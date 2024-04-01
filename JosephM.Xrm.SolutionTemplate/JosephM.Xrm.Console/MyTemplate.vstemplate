@@ -16,12 +16,10 @@
   <TemplateContent>
     <Project TargetFileName="JosephM.Xrm.Console.csproj" File="JosephM.Xrm.Console.csproj" ReplaceParameters="true">
       <ProjectItem ReplaceParameters="true" TargetFileName="App.config">App.config</ProjectItem>
-      <ProjectItem ReplaceParameters="false" TargetFileName="Encrypt XRM Connection.bat">Encrypt XRM Connection.bat</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Program.cs">Program.cs</ProjectItem>
       <Folder Name="Properties" TargetFolderName="Properties">
         <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
       </Folder>
-      <ProjectItem ReplaceParameters="true" TargetFileName="XrmConfiguration.json">XrmConfiguration.json</ProjectItem>
     </Project>
   </TemplateContent>
 </VSTemplate>
