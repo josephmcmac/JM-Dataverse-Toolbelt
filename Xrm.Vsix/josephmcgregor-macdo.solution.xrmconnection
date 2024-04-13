@@ -5,7 +5,7 @@
   },
   {
     "Key": "Name",
-    "Value": "Utility App Dev"
+    "Value": "CDX"
   },
   {
     "Key": "ConnectionType",
@@ -13,15 +13,15 @@
   },
   {
     "Key": "ClientId",
-    "Value": "3f8b38cb-9f16-4d33-9151-fc5101479acd"
+    "Value": "d8f27f89-13a4-4f7d-b2ef-29b831d1d300"
   },
   {
     "Key": "ClientSecret",
-    "Value": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAn5s3vRoJVEmwlp3vV6CvdgAAAAACAAAAAAAQZgAAAAEAACAAAABhzrRA2n73sJUpEMHMDhfHcAoNZ0xf9Nb3Vg+ir54rwQAAAAAOgAAAAAIAACAAAADlfoz4V8T4HaNoFgPbrfQHdaPdDpZfRlBORNiYp6XGYGAAAABTjym0xERCYMSIoe942x2BHOyPQSzBjgL3YNdpDQSv+r\/B2MRF\/xKGrmBgXzm2qixDnAIGm64c1JSGgk1T9iX\/Z85DRiOyUuqDpLI8Bx039bkG7A9d823jcZJU3dkZRnBAAAAAtOkv1oyrBFoTUaVuOdLC1sKlf4g8wiR2EpItxomtXWM3BcB9WmapFZUI4STlZ9cNnIaI0ES6qclAvTNSqjzXDw=="
+    "Value": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAGiTmDYTi0UuVihjAsv7aWgAAAAACAAAAAAAQZgAAAAEAACAAAACgcbeaya+qs2\/e8odd+Gpqob4CZt\/zTbBssR+zyR7TQAAAAAAOgAAAAAIAACAAAAAn\/88e+J+ljwBQGBPXMNwt+0zrMApUy0Vah\/nkZ9RDzmAAAAD2SP0loe+9ucI7BU9wjHN7ED1iNRMhWya8OImhIm8FQfwD01cqm1G7mF6Oz6ju1hTD\/2f26G4RnICIZ3Qn1INdr4jlqa9t0coOK+7+OGTx22ZfSxMtXLEZX0ws709Phn1AAAAAC+sW4npdXEOGoJoiRqA8jQCgxuQEyksd\/bgA9jrkGTRn4metLP0u3DKZRDcr6xEiJRs5TEQFSmE7utXy3Eeo+w=="
   },
   {
     "Key": "WebUrl",
-    "Value": "https:\/\/utilityapp-dev.crm6.dynamics.com"
+    "Value": "https:\/\/crm368461.crm5.dynamics.com"
   },
   {
     "Key": "ToolingConnectionId",
