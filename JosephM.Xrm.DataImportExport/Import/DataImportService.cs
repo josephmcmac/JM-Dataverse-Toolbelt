@@ -34,7 +34,7 @@ namespace JosephM.Xrm.DataImportExport.Import
 
         private Dictionary<string, Dictionary<string, Dictionary<string, List<Entity>>>> _cachedRecords = new Dictionary<string, Dictionary<string, Dictionary<string, List<Entity>>>>();
 
-        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary = null, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary = null, bool updateOnly = false, bool includeOwner = false, bool includeOverrideCreatedOn = false, bool containsExportedConfigFields = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null, bool onlyFieldMatchActive = false) 
+        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary = null, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary = null, bool updateOnly = false, bool includeOwner = false, bool includeOverrideCreatedOn = false, bool containsExportedConfigFields = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null, bool onlyFieldMatchActive = false, bool submitUnchangedFields = false) 
         {
             var response = new DataImportResponse(entities, loadExistingErrorsIntoSummary);
             controller.AddObjectToUi(response);
@@ -55,7 +55,8 @@ namespace JosephM.Xrm.DataImportExport.Import
                     containsExportedConfigFields,
                     executeMultipleSetSize ?? 1,
                     targetCacheLimit ?? 1000,
-                    onlyFieldMatchActive);
+                    onlyFieldMatchActive,
+                    submitUnchangedFields);
 
                 ImportEntities(dataImportContainer);
 
@@ -441,7 +442,9 @@ namespace JosephM.Xrm.DataImportExport.Import
                             else
                             {
                                 var existingRecord = matchDictionary[entity];
-                                var fieldsToSetWhichAreChanged = fieldsToSet.Where(f =>
+                                var fieldsToSubmit = dataImportContainer.SubmitUnchangedFields
+                                    ? fieldsToSet.ToArray()
+                                    : fieldsToSet.Where(f =>
                                 {
                                     if(f == "overriddencreatedon")
                                     {
@@ -457,11 +460,11 @@ namespace JosephM.Xrm.DataImportExport.Import
                                     else
                                         return !XrmEntity.FieldsEqual(existingRecord.GetField(f), entity.GetField(f));
                                 }).ToArray();
-                                if (fieldsToSetWhichAreChanged.Any())
+                                if (fieldsToSubmit.Any())
                                 {
                                     var copyEntity = XrmEntity.ReplicateToNewEntity(entity);
                                     copyEntity.Id = entity.Id;
-                                    copyEntity.RemoveFields(copyEntity.GetFieldsInEntity().Except(fieldsToSetWhichAreChanged));
+                                    copyEntity.RemoveFields(copyEntity.GetFieldsInEntity().Except(fieldsToSubmit));
                                     forUpdateEntitiesCopy.Add(copyEntity, entity);
                                 }
                                 else

@@ -25,7 +25,7 @@ namespace JosephM.Xrm.MigrateInternal
             base.RegisterTypes();
             var configManager = Resolve<ISettingsManager>();
             configManager.ProcessNamespaceChange(GetType().Namespace, "JosephM.Deployment.MigrateInternal");
-            AddGenerateMappingsWhenTypesSelected();
+            AddGenerateMappingsButton();
             AddFieldMapsButtons();
         }
 
@@ -60,6 +60,7 @@ namespace JosephM.Xrm.MigrateInternal
             this.AddCustomGridFunction(new CustomGridFunction("CLEARUNMAPPED", "Clear Unmapped", (g) =>
             {
                 clearMaps(true, g);
+                g.RefreshGridButtons();
             }, (g) =>
             {
                 return g.GridRecords != null && g.GridRecords.Any();
@@ -67,39 +68,55 @@ namespace JosephM.Xrm.MigrateInternal
             this.AddCustomGridFunction(new CustomGridFunction("CLEARALLMAPSMAPPED", "Clear All Maps", (g) =>
             {
                 clearMaps(false, g);
+                g.RefreshGridButtons();
             }, (g) =>
             {
                 return g.GridRecords != null && g.GridRecords.Any();
             }), typeof(MigrateInternalRequest.MigrateInternalTypeMapping.MigrateInternalFieldMapping));
         }
 
-        private void AddGenerateMappingsWhenTypesSelected()
+        public void AddGenerateMappingsButton()
         {
-            var customFunction = new OnChangeFunction((RecordEntryViewModelBase revm, string changedField) =>
+            Action<bool, DynamicGridViewModel> generateMaps = (onlyClearUnmapped, g) =>
             {
-                switch (changedField)
+                try
                 {
-                    case nameof(MigrateInternalRequest.MigrateInternalTypeMapping.SourceType):
-                    case nameof(MigrateInternalRequest.MigrateInternalTypeMapping.TargetType):
+                    var parentForm = g.ParentForm;
+                    if (parentForm == null)
+                        throw new NullReferenceException("Could Not Load The Form. The ParentForm Is Null");
+
+                    var objectRecord = parentForm.GetRecord();
+                    var sourceType = objectRecord.GetField(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.SourceType)) as RecordType;
+                    var targetType = objectRecord.GetField(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.TargetType)) as RecordType;
+
+                    if (sourceType?.Key != null
+                        && targetType?.Key != null)
+                    {
+                        var mappings = parentForm.GetEnumerableFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.FieldMappings));
+                        if (mappings.Enumerable == null
+                            || !mappings.Enumerable.GetEnumerator().MoveNext())
                         {
-                            if (revm.GetFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.SourceType)).ValueObject != null
-                                && revm.GetFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.TargetType)).ValueObject != null)
-                            {
-                                var mappings = revm.GetEnumerableFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.FieldMappings));
-                                if (mappings.Enumerable == null
-                                    || !mappings.Enumerable.GetEnumerator().MoveNext())
-                                {
-                                    GenerateMappings(revm);
-                                }
-                            }
-                            break;
+                            GenerateMappings(parentForm, sourceType.Key, targetType.Key);
                         }
+                    }
                 }
-            });
-            this.AddOnChangeFunction(customFunction, typeof(MigrateInternalRequest.MigrateInternalTypeMapping));
+                catch (Exception ex)
+                {
+                    g.ApplicationController.ThrowException(ex);
+                }
+            };
+
+            this.AddCustomGridFunction(new CustomGridFunction("GENERATEMAPS", "Generate Maps", (g) =>
+            {
+                generateMaps(true, g);
+                g.RefreshGridButtons();
+            }, (g) =>
+            {
+                return g.GridRecords != null && !g.GridRecords.Any();
+            }), typeof(MigrateInternalRequest.MigrateInternalTypeMapping.MigrateInternalFieldMapping));
         }
 
-        private void GenerateMappings(RecordEntryViewModelBase revm)
+        private void GenerateMappings(RecordEntryViewModelBase revm, string sourceType, string targetType)
         {
             revm.ApplicationController.DoOnAsyncThread(() =>
             {
@@ -113,10 +130,7 @@ namespace JosephM.Xrm.MigrateInternal
                     r.LoadingViewModel.IsLoading = true;
                     try
                     {
-                            //if the name matches with a target type then we will auto populate the target
-                            var sourceType = revm.GetRecordTypeFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.SourceType)).Value?.Key;
-                        var targetType = revm.GetRecordTypeFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.TargetType)).Value?.Key;
-
+                        //if the name matches with a target type then we will auto populate the target
                         var targetLookupService = r.RecordService.GetLookupService(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.TargetType), nameof(MigrateInternalRequest.MigrateInternalTypeMapping), nameof(MigrateInternalRequest.MigrateInternalTypeMapping), revm.GetRecord());
 
                         if (targetLookupService != null

@@ -7,6 +7,7 @@ using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.DataImportExport.Import;
+using JosephM.Xrm.DataImportExport.XmlImport;
 using JosephM.Xrm.Schema;
 using Microsoft.Xrm.Sdk;
 using System;
@@ -27,7 +28,7 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
         public XrmRecordService XrmRecordService { get; }
         public IApplicationController ApplicationController { get; }
 
-        public MappedImportResponse DoImport(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, bool updateOnly, ServiceRequestController controller, int? executeMultipleSetSize = null, bool useAmericanDates = false, int? targetCacheLimit = null, bool ignoreNullValues = false, bool onlyFieldMatchActive = false)
+        public MappedImportResponse DoImport(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, bool updateOnly, ServiceRequestController controller, int? executeMultipleSetSize = null, bool useAmericanDates = false, int? targetCacheLimit = null, bool ignoreNullValues = false, bool onlyFieldMatchActive = false, bool submitUnchangedFields = false)
         {
             var response = new MappedImportResponse();
             var parseResponse = ParseIntoEntities(mappings, controller.Controller, useAmericanDates: useAmericanDates, ignoreNullValues: ignoreNullValues);
@@ -67,7 +68,7 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
                     }
                 }
             }
-            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? MatchOption.PrimaryKeyThenName : MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems, altMatchKeyDictionary: matchKeyDictionary, altLookupMatchKeyDictionary: lookupKeyDictionary, updateOnly: updateOnly, includeOwner: true, includeOverrideCreatedOn: true, containsExportedConfigFields: false, executeMultipleSetSize: executeMultipleSetSize, targetCacheLimit: targetCacheLimit, onlyFieldMatchActive: onlyFieldMatchActive));
+            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? MatchOption.PrimaryKeyThenName : MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems, altMatchKeyDictionary: matchKeyDictionary, altLookupMatchKeyDictionary: lookupKeyDictionary, updateOnly: updateOnly, includeOwner: true, includeOverrideCreatedOn: true, containsExportedConfigFields: false, executeMultipleSetSize: executeMultipleSetSize, targetCacheLimit: targetCacheLimit, onlyFieldMatchActive: onlyFieldMatchActive, submitUnchangedFields: submitUnchangedFields));
             return response;
         }
 
@@ -76,7 +77,19 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
             var response = new ParseIntoEntitiesResponse();
             foreach (var mapping in mappings)
             {
-                response.AddEntities(MapToEntities(mapping.Value, mapping.Key, response, logController, useAmericanDates, ignoreNullValues: ignoreNullValues));
+                var mappedToTargetEntities = MapToEntities(mapping.Value, mapping.Key, response, logController, useAmericanDates, ignoreNullValues: ignoreNullValues);
+                if(mapping.Key.ExplicitValuesToSet != null)
+                {
+                    foreach (var explicitValueToSet in mapping.Key.ExplicitValuesToSet)
+                    {
+                        var parseFieldValue = XrmRecordService.ToEntityValue(explicitValueToSet.ClearValue ? null : explicitValueToSet.ValueToSet);
+                        foreach (var entity in mappedToTargetEntities)
+                        {
+                            entity.SetField(explicitValueToSet.FieldToSet.Key, parseFieldValue, XrmRecordService.XrmService);
+                        }
+                    }
+                }
+                response.AddEntities(mappedToTargetEntities);
             }
             var entities = response.GetParsedEntities();
             PopulateEmptyNameFields(entities);

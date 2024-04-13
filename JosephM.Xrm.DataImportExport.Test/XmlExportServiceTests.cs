@@ -10,6 +10,7 @@ using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.Query;
+using JosephM.Xrm.DataImportExport.Import;
 using JosephM.Xrm.DataImportExport.XmlExport;
 using JosephM.Xrm.DataImportExport.XmlImport;
 using JosephM.Xrm.Schema;
@@ -293,29 +294,29 @@ namespace JosephM.Xrm.DataImportExport.Test
             Assert.IsNotNull(specificValueEntry);
             specificValueEntry.LoadFormSections();
 
-            var fieldSelectionViewModel = specificValueEntry.GetRecordFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.FieldToSet));
-            var clearValueViewModel = specificValueEntry.GetBooleanFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ClearValue));
+            var fieldSelectionViewModel = specificValueEntry.GetRecordFieldFieldViewModel(nameof(ExplicitFieldValues.FieldToSet));
+            var clearValueViewModel = specificValueEntry.GetBooleanFieldFieldViewModel(nameof(ExplicitFieldValues.ClearValue));
 
             //select several field types and verify the field control changes to the correct type for that field
             fieldSelectionViewModel.Value = fieldSelectionViewModel.ItemsSource.First(f => f.Key == Fields.account_.customertypecode);
-            Assert.IsTrue(specificValueEntry.GetFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet)) is PicklistFieldViewModel);
-            Assert.IsTrue(specificValueEntry.GetPicklistFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet)).ItemsSource.Any());
+            Assert.IsTrue(specificValueEntry.GetFieldViewModel(nameof(ExplicitFieldValues.ValueToSet)) is PicklistFieldViewModel);
+            Assert.IsTrue(specificValueEntry.GetPicklistFieldFieldViewModel(nameof(ExplicitFieldValues.ValueToSet)).ItemsSource.Any());
 
             fieldSelectionViewModel.Value = fieldSelectionViewModel.ItemsSource.First(f => f.Key == Fields.account_.primarycontactid);
-            Assert.IsTrue(specificValueEntry.GetFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet)) is LookupFieldViewModel);
-            specificValueEntry.GetLookupFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet)).Search();
-            Assert.IsTrue(specificValueEntry.GetLookupFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet)).LookupGridViewModel.DynamicGridViewModel.GridRecords.Any());
+            Assert.IsTrue(specificValueEntry.GetFieldViewModel(nameof(ExplicitFieldValues.ValueToSet)) is LookupFieldViewModel);
+            specificValueEntry.GetLookupFieldFieldViewModel(nameof(ExplicitFieldValues.ValueToSet)).Search();
+            Assert.IsTrue(specificValueEntry.GetLookupFieldFieldViewModel(nameof(ExplicitFieldValues.ValueToSet)).LookupGridViewModel.DynamicGridViewModel.GridRecords.Any());
 
             //verify the field value hidden if we select to clear the value
             clearValueViewModel.Value = true;
-            Assert.IsFalse(specificValueEntry.GetFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet)).IsVisible);
+            Assert.IsFalse(specificValueEntry.GetFieldViewModel(nameof(ExplicitFieldValues.ValueToSet)).IsVisible);
             clearValueViewModel.Value = false;
 
             //okay so this is the specific field and value we will set
             var fakeExplicitExportValue = "fakeExplicitExportValue";
             fieldSelectionViewModel.Value = fieldSelectionViewModel.ItemsSource.First(f => f.Key == Fields.account_.address1_line1);
-            Assert.IsTrue(specificValueEntry.GetFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet)) is StringFieldViewModel);
-            var descriptionViewModel = specificValueEntry.GetStringFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet));
+            Assert.IsTrue(specificValueEntry.GetFieldViewModel(nameof(ExplicitFieldValues.ValueToSet)) is StringFieldViewModel);
+            var descriptionViewModel = specificValueEntry.GetStringFieldFieldViewModel(nameof(ExplicitFieldValues.ValueToSet));
             descriptionViewModel.Value = fakeExplicitExportValue;
 
             Assert.IsTrue(specificValueEntry.Validate());
@@ -329,9 +330,9 @@ namespace JosephM.Xrm.DataImportExport.Test
             Assert.IsNotNull(specificValueEntry);
             specificValueEntry.LoadFormSections();
 
-            fieldSelectionViewModel = specificValueEntry.GetRecordFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.FieldToSet));
+            fieldSelectionViewModel = specificValueEntry.GetRecordFieldFieldViewModel(nameof(ExplicitFieldValues.FieldToSet));
             fieldSelectionViewModel.Value = fieldSelectionViewModel.ItemsSource.First(f => f.Key == Fields.account_.primarycontactid);
-            var lookupFieldViewModel = specificValueEntry.GetLookupFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet));
+            var lookupFieldViewModel = specificValueEntry.GetLookupFieldFieldViewModel(nameof(ExplicitFieldValues.ValueToSet));
             lookupFieldViewModel.Search();
             Assert.IsTrue(lookupFieldViewModel.LookupGridViewModel.DynamicGridViewModel.GridRecords.Any());
             lookupFieldViewModel.LookupGridViewModel.DynamicGridViewModel.SelectedRow = lookupFieldViewModel.LookupGridViewModel.DynamicGridViewModel.GridRecords.First();
@@ -348,9 +349,9 @@ namespace JosephM.Xrm.DataImportExport.Test
             Assert.IsNotNull(specificValueEntry);
             specificValueEntry.LoadFormSections();
 
-            fieldSelectionViewModel = specificValueEntry.GetRecordFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.FieldToSet));
+            fieldSelectionViewModel = specificValueEntry.GetRecordFieldFieldViewModel(nameof(ExplicitFieldValues.FieldToSet));
             fieldSelectionViewModel.Value = fieldSelectionViewModel.ItemsSource.First(f => f.Key == Fields.account_.customertypecode);
-            var picklistFieldViewModel = specificValueEntry.GetPicklistFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet));
+            var picklistFieldViewModel = specificValueEntry.GetPicklistFieldFieldViewModel(nameof(ExplicitFieldValues.ValueToSet));
             Assert.IsTrue(picklistFieldViewModel.ItemsSource.Any());
             picklistFieldViewModel.Value = picklistFieldViewModel.ItemsSource.First();
 

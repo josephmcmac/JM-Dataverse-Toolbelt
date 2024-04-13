@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using JosephM.Xrm.DataImportExport.Import;
+using System.Collections.Generic;
 
 namespace JosephM.Xrm.DataImportExport.MappedImport
 {
@@ -10,5 +11,6 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
         string TargetTypeLabel { get; }
         IEnumerable<IMapSourceField> FieldMappings { get; }
         IEnumerable<IMapSourceMatchKey> AltMatchKeys { get; }
+        IEnumerable<ExplicitFieldValues> ExplicitValuesToSet { get; }
     }
 }

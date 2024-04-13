@@ -25,7 +25,6 @@
           <ProjectItem ReplaceParameters="true" TargetFileName="UserLocalisationSettings.cs">UserLocalisationSettings.cs</ProjectItem>
         </Folder>
       <Folder Name="Core" TargetFolderName="Core">
-        <ProjectItem ReplaceParameters="true" TargetFileName="ConsoleSettings.cs">ConsoleSettings.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="ConsoleUserInterface.cs">ConsoleUserInterface.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="CsvUtility.cs">CsvUtility.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="ExceptionExtentions.cs">ExceptionExtentions.cs</ProjectItem>
@@ -59,6 +58,7 @@
       <Folder Name="Xrm" TargetFolderName="Xrm">
         <ProjectItem ReplaceParameters="true" TargetFileName="ExceptionExtentions.cs">ExceptionExtentions.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="IXrmConfiguration.cs">IXrmConfiguration.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="VsixActiveXrmConnection.cs">VsixActiveXrmConnection.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmConfiguration.cs">XrmConfiguration.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmConnection.cs">XrmConnection.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmAction.cs">XrmAction.cs</ProjectItem>

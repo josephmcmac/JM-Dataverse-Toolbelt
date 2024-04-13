@@ -5,6 +5,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Record.Excel;
 using JosephM.Record.Metadata;
+using JosephM.Xrm.DataImportExport.Import;
 using JosephM.Xrm.DataImportExport.MappedImport;
 using System.Collections.Generic;
 
@@ -126,6 +127,8 @@ namespace JosephM.Xrm.ExcelImport
             [PropertyInContextByPropertyNotNull(nameof(SourceTab))]
             [PropertyInContextByPropertyNotNull(nameof(TargetType))]
             public IEnumerable<ExcelImportFieldMapping> Mappings { get; set; }
+
+            public IEnumerable<ExplicitFieldValues> ExplicitValuesToSet => new ExplicitFieldValues[0];
 
             string IMapSourceImport.SourceType => SourceTab?.Key;
             string IMapSourceImport.TargetType => TargetType?.Key;
