@@ -149,7 +149,7 @@ namespace JosephM.Xrm.SqlImport
             [PropertyInContextByPropertyNotNull(nameof(TargetType))]
             public IEnumerable<SqlImportFieldMapping> Mappings { get; set; }
 
-            public IEnumerable<ExplicitFieldValues> ExplicitValuesToSet => new ExplicitFieldValues[0];
+            public IEnumerable<ExplicitFieldValues> ExplicitValuesToSet { get; set; } = new ExplicitFieldValues[0];
 
             string IMapSourceImport.SourceType => SourceTable?.Key;
             string IMapSourceImport.TargetType => TargetType?.Key;
