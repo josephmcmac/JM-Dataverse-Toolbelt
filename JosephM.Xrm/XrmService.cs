@@ -2697,23 +2697,66 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
 
                 SetCommon(metadata, schemaName, displayName, description, isRequired, audit, searchable);
 
+                var referencedRecordTypes = referencedEntityType
+                    .Split(',')
+                    .Select(s => s?.Trim()?.ToLower())
+                    .Where(s => !string.IsNullOrWhiteSpace(s))
+                    .ToArray();
+
+                var indexOf_ = schemaName.IndexOf("_");
+                if (indexOf_ == -1)
+                    throw new Exception("Could not determine prefix of field for new relationship name");
+                var prefix = indexOf_ == -1
+                    ? "new"
+                    : schemaName.Substring(0, indexOf_ + 1);
+                var usePrefix = !recordType.StartsWith(prefix);
+                Func<string, OneToManyRelationshipMetadata> createRelationship = (reffedType) =>
+                {
+                    return new OneToManyRelationshipMetadata
+                    {
+                        SchemaName = string.Format("{0}{1}_{2}_{3}", usePrefix ? prefix : "", recordType, reffedType, schemaName),
+                        AssociatedMenuConfiguration = new AssociatedMenuConfiguration
+                        {
+                            Behavior = displayInRelated ? AssociatedMenuBehavior.UseCollectionName : AssociatedMenuBehavior.DoNotDisplay
+                        },
+                        ReferencingEntity = recordType,
+                        ReferencedEntity = reffedType
+                    };
+                };
+
                 if (FieldExists(schemaName, recordType))
                 {
                     CreateOrUpdateAttribute(schemaName, recordType, metadata);
-                    var relationship = GetRelationshipFor(schemaName, recordType);
-                    if (relationship.IsCustomizable != null && relationship.IsCustomizable.Value)
+                    var relationships = GetRelationshipsFor(schemaName, recordType);
+                    foreach (var relationship in relationships)
                     {
-                        var newBehaviour = displayInRelated
-                            ? AssociatedMenuBehavior.UseCollectionName
-                            : AssociatedMenuBehavior.DoNotDisplay;
-                        if (newBehaviour != relationship.AssociatedMenuConfiguration.Behavior)
+                        if (relationship.IsCustomizable != null && relationship.IsCustomizable.Value)
                         {
-                            relationship.AssociatedMenuConfiguration.Behavior = displayInRelated
+                            var newBehaviour = displayInRelated
                                 ? AssociatedMenuBehavior.UseCollectionName
                                 : AssociatedMenuBehavior.DoNotDisplay;
-                            var request = new UpdateRelationshipRequest()
+                            if (newBehaviour != relationship.AssociatedMenuConfiguration.Behavior)
                             {
-                                Relationship = relationship
+                                relationship.AssociatedMenuConfiguration.Behavior = displayInRelated
+                                    ? AssociatedMenuBehavior.UseCollectionName
+                                    : AssociatedMenuBehavior.DoNotDisplay;
+                                var request = new UpdateRelationshipRequest()
+                                {
+                                    Relationship = relationship
+                                };
+                                Execute(request);
+                            }
+                        }
+                    }
+                    foreach(var referencedRecordType in referencedRecordTypes)
+                    {
+                        if(!relationships.Any(r => r.ReferencedEntity == referencedRecordType))
+                        {
+                            var newPolymorphicRelationship = createRelationship(referencedRecordType);
+                            var request = new CreateOneToManyRequest
+                            {
+                                 OneToManyRelationship = newPolymorphicRelationship,
+                                 Lookup = metadata
                             };
                             Execute(request);
                         }
@@ -2721,28 +2764,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 }
                 else
                 {
-                    var referencedRecordTypes = referencedEntityType.Split(',');
-
-                    var indexOf_ = schemaName.IndexOf("_");
-                    if (indexOf_ == -1)
-                        throw new Exception("Could not determine prefix of field for new relationship name");
-                    var prefix = schemaName.Substring(0, indexOf_ + 1);
-                    var usePrefix = !recordType.StartsWith(prefix);
-
-
-                    Func<string, OneToManyRelationshipMetadata> createRelationship = (reffedType) =>
-                    {
-                        return new OneToManyRelationshipMetadata
-                        {
-                            SchemaName = string.Format("{0}{1}_{2}_{3}", usePrefix ? prefix : "", recordType, reffedType, schemaName),
-                            AssociatedMenuConfiguration = new AssociatedMenuConfiguration
-                            {
-                                Behavior = displayInRelated ? AssociatedMenuBehavior.UseCollectionName : AssociatedMenuBehavior.DoNotDisplay
-                            },
-                            ReferencingEntity = recordType,
-                            ReferencedEntity = reffedType
-                        };
-                    };
                     if (referencedRecordTypes.Count() == 1)
                     {
                         var request = new CreateOneToManyRequest
@@ -2763,12 +2784,11 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             }
         }
 
-        private OneToManyRelationshipMetadata GetRelationshipFor(string fieldName, string entityType)
+        private IEnumerable<OneToManyRelationshipMetadata> GetRelationshipsFor(string fieldName, string entityType)
         {
-            var relationships =
-                GetEntityManyToOneRelationships(entityType);
-            var relationship = relationships.First(r => r.ReferencingAttribute.ToLower() == fieldName);
-            return relationship;
+            return GetEntityManyToOneRelationships(entityType)
+                .Where(r => r.ReferencingAttribute.ToLower() == fieldName)
+                .ToArray();
         }
 
         /// <summary>
