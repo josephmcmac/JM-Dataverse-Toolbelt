@@ -1317,12 +1317,26 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                     }
                 case Entities.workflow:
                     {
-
                         var workflow = entity ?? Retrieve(Entities.workflow, id, new[] { Fields.workflow_.category });
-                        if (workflow.GetOptionSetValue(Fields.workflow_.category) == OptionSets.Process.Category.BusinessProcessFlow)
-                            result = $"{WebUrl}/Tools/ProcessControl/bpfConfigurator.aspx?id={id}";
-                        else
-                            result = $"{WebUrl}/sfa/workflow/edit.aspx?id={id}";
+                        var workflowCategory = workflow.GetOptionSetValue(Fields.workflow_.category);
+                        switch (workflowCategory)
+                        {
+                            case OptionSets.Process.Category.BusinessProcessFlow:
+                                {
+                                    result = $"{WebUrl}/Tools/ProcessControl/bpfConfigurator.aspx?id={id}";
+                                    break;
+                                }
+                            case OptionSets.Process.Category.BusinessRule:
+                                {
+                                    result = $"{WebUrl}/tools/systemcustomization/businessrules/businessRulesDesigner.aspx?BRlaunchpoint=BRGrid&id={id}";
+                                    break;
+                                }
+                            default:
+                                {
+                                    result = $"{WebUrl}/sfa/workflow/edit.aspx?id={id}";
+                                    break;
+                                }
+                        }
                         break;
                     }
                 case Entities.webresource:
