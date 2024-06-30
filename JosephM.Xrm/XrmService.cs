@@ -324,6 +324,17 @@ namespace JosephM.Xrm
                     }
                 }
             }
+            catch (NullReferenceException ex)
+            {
+                if(_service is CrmServiceClient crmServiceClient)
+                {
+                    throw new Exception($"Error executing request: {crmServiceClient.LastCrmError}", ex);
+                }
+                else
+                {
+                    throw;
+                }
+            }
             return result;
         }
 
