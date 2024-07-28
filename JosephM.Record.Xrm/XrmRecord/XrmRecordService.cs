@@ -1269,7 +1269,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             throw new NotImplementedException();
         }
 
-        public object ConvertToQueryValue(string fieldName, string entityType, object value)
+        public object[] ConvertToQueryValue(string fieldName, string entityType, object value)
         {
             var temp = ToEntityValue(value);
             var parsedValue = temp;
@@ -1280,13 +1280,23 @@ namespace JosephM.Record.Xrm.XrmRecord
                     entityType,
                     parsedValue);
             }
-            if (parsedValue is EntityReference)
-                parsedValue = ((EntityReference)parsedValue).Id;
-            else if (parsedValue is OptionSetValue)
-                parsedValue = ((OptionSetValue)parsedValue).Value;
-            else if (parsedValue is Microsoft.Xrm.Sdk.Money)
-                parsedValue = ((Microsoft.Xrm.Sdk.Money)parsedValue).Value;
-            return parsedValue;
+            if (parsedValue is EntityReference er)
+            {
+                parsedValue = er.Id;
+            }
+            else if (parsedValue is OptionSetValue osv)
+            {
+                parsedValue = osv.Value;
+            }
+            else if (parsedValue is Microsoft.Xrm.Sdk.Money money)
+            {
+                parsedValue = money.Value;
+            }
+            else if (parsedValue is OptionSetValueCollection osvc)
+            {
+                return osvc.Select(osvi => osvi.Value).Cast<object>().ToArray();
+            }
+            return new[] { parsedValue };
         }
 
         /// <summary>

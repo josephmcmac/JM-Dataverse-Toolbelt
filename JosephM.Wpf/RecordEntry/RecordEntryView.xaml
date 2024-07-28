@@ -42,8 +42,7 @@
                 <RowDefinition Height="{Binding MainFormInContext, Converter={StaticResource BoolToStar}, Mode=OneWay}" />
                 <RowDefinition Height="{Binding MainFormInContext, Converter={StaticResource BooleanToZeroOrStar}, Mode=OneWay}"  />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0"
-              Visibility="{Binding MainFormInContext, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <Grid Grid.Row="0" Visibility="{Binding MainFormInContext, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -126,11 +125,11 @@
                 </Grid>
             </Grid>
             <Grid Grid.Row="1" >
-            <ItemsControl
+                <ItemsControl
                 Name="DialogPanel"
                 ItemTemplateSelector="{StaticResource DialogTemplateSelector}"
                 ItemsSource="{Binding ChildForms}" />
-        </Grid>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

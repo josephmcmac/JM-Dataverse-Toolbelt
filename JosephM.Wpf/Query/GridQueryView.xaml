@@ -36,10 +36,10 @@
             <Grid Grid.Row="1"
               Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto"  />
+                    <RowDefinition Height="{Binding MainFormInContext, Converter={StaticResource BoolToStar}, Mode=OneWay}" />
+                    <RowDefinition Height="{Binding MainFormInContext, Converter={StaticResource BooleanToZeroOrStar}, Mode=OneWay}"  />
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0"  Visibility="{Binding MainFormInContext, Converter={StaticResource BoolToVis}}">
+                <Grid Grid.Row="0" Visibility="{Binding MainFormInContext, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*"  />

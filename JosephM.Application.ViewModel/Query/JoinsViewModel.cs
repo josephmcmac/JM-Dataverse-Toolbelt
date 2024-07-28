@@ -10,11 +10,14 @@ namespace JosephM.Application.ViewModel.Query
 {
     public class JoinsViewModel : ViewModelBase
     {
-        public JoinsViewModel(string recordType, IRecordService recordService, IApplicationController controller, Action onConditionSelectedChanged, LoadingViewModel loadingViewModel)
+        private readonly QueryViewModel _queryViewModel;
+
+        public JoinsViewModel(string recordType, IRecordService recordService, IApplicationController controller, Action onConditionSelectedChanged, LoadingViewModel loadingViewModel, QueryViewModel queryViewModel)
             : base(controller)
         {
             OnConditionSelectedChanged = onConditionSelectedChanged;
             LoadingViewModel = loadingViewModel;
+            _queryViewModel = queryViewModel;
             RecordType = recordType;
             RecordService = recordService;
             Joins = new ObservableCollection<JoinViewModel>();
@@ -29,7 +32,7 @@ namespace JosephM.Application.ViewModel.Query
 
         private void AddNewJoin()
         {
-            var join = new JoinViewModel(RecordType, RecordService, ApplicationController, AddNewJoin, j => Joins.Remove(j), OnConditionSelectedChanged, LoadingViewModel);
+            var join = new JoinViewModel(RecordType, RecordService, ApplicationController, AddNewJoin, j => Joins.Remove(j), OnConditionSelectedChanged, LoadingViewModel, _queryViewModel);
             Joins.Add(join);
         }
 

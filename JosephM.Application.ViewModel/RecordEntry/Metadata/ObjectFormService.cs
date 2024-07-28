@@ -3,7 +3,6 @@ using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Application.ViewModel.Shared;
 using JosephM.Application.ViewModel.Validation;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
@@ -719,6 +718,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                             else if (fieldType == RecordFieldType.Integer)
                                             {
                                                 dependencyString += "|" + lookupService.GetIntegerFormat(selectedFieldName, selectedFieldRecordType);
+                                            }
+                                            else if (fieldType == RecordFieldType.Picklist)
+                                            {
+                                                dependencyString += "|" + lookupService.GetFieldMetadata(selectedFieldName, selectedFieldRecordType).IsMultiSelect;
                                             }
                                             var picklistOptions = ObjectRecordService.GetPicklistKeyValues(picklistFieldViewModel.FieldName, picklistFieldViewModel.GetRecordTypeOfThisField(), dependencyString, picklistFieldViewModel.RecordEntryViewModel.GetRecord());
                                             if (clearValue)

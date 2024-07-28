@@ -20,10 +20,11 @@ namespace JosephM.Application.ViewModel.Query
 {
     public class ConditionViewModel : RecordEntryViewModelBase
     {
-        public ConditionViewModel(QueryCondition conditionObject, string recordType, IRecordService recordService, IApplicationController controller)
+        public ConditionViewModel(QueryCondition conditionObject, string recordType, IRecordService recordService, IApplicationController controller, QueryViewModel queryViewModel)
             : base(FormController.CreateForObject(conditionObject, controller, recordService, optionSetLimitedvalues: new Dictionary<string, IEnumerable<string>> { { nameof(QueryCondition.FieldName), GetValidFields(recordType, recordService) } }))
         {
             _queryCondition = conditionObject;
+            _queryViewModel = queryViewModel;
             _queryConditionRecord = new ObjectRecord(conditionObject);
 
             var metadata = FormService.GetFormMetadata(GetRecord().Type, RecordService);
@@ -81,6 +82,11 @@ namespace JosephM.Application.ViewModel.Query
             get { return null; }
         }
 
+        public QueryViewModel ParentArea
+        {
+            get { return _queryViewModel; }
+        }
+
         internal override string ParentFormReference
         {
             get { return null; }
@@ -111,6 +117,8 @@ namespace JosephM.Application.ViewModel.Query
 
 
         private QueryCondition _queryCondition;
+        private readonly QueryViewModel _queryViewModel;
+
         public QueryCondition QueryConditionObject
         {
             get { return _queryCondition; }
@@ -231,7 +239,8 @@ namespace JosephM.Application.ViewModel.Query
                 Record.Query.ConditionType.OnOrAfter,
                 Record.Query.ConditionType.NotOn,
                 Record.Query.ConditionType.DoesNotBeginWith,
-                Record.Query.ConditionType.DoesNotEndWith,})]
+                Record.Query.ConditionType.DoesNotEndWith,
+                Record.Query.ConditionType.ContainValues,})]
             public object Value { get; set; }
 
             [MinimumIntValue(1)]

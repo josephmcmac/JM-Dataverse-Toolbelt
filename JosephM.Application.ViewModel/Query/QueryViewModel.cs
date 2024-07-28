@@ -386,12 +386,12 @@ namespace JosephM.Application.ViewModel.Query
 
         private FilterConditionsViewModel CreateFilterCondition(bool isNotIn = false)
         {
-            return new FilterConditionsViewModel(RecordType, RecordService, ApplicationController, () => RefreshConditionButtons(isNotIn: isNotIn));
+            return new FilterConditionsViewModel(RecordType, RecordService, ApplicationController, () => RefreshConditionButtons(isNotIn: isNotIn), this);
         }
 
         private JoinsViewModel CreateJoins(bool isNotIn = false)
         {
-            return new JoinsViewModel(RecordType, RecordService, ApplicationController, () => RefreshConditionButtons(isNotIn: isNotIn), LoadingViewModel);
+            return new JoinsViewModel(RecordType, RecordService, ApplicationController, () => RefreshConditionButtons(isNotIn: isNotIn), LoadingViewModel, this);
         }
 
         private void GroupSelected(FilterOperator filterOperator, bool isNotIn = false)
