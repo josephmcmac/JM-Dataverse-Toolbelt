@@ -1,4 +1,4 @@
-﻿
+﻿using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Record.Attributes;
@@ -85,6 +85,11 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
         [Group(Sections.OtherSolutionOptions)]
         [MyDescription("Specify if you want to only display portal code / deploy into field options for specific projects")]
         public IEnumerable<DeployIntoFieldProject> DeployIntoFieldProjects { get; set; }
+
+        [DisplayOrder(350)]
+        [Group(Sections.OtherSolutionOptions)]
+        [MyDescription("Specify if you want to limit types for the Refresh Schema feature")]
+        public IEnumerable<RecordTypeSetting> TypesForSchemaGeneration { get; set; }
 
         [DisplayOrder(210)]
         [FormEntry]
