@@ -15,7 +15,7 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
     [Group(Sections.Solution, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
     [Group(Sections.ObjectPrefixes, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20, displayLabel: false)]
     [Group(Sections.ConnectionInstances, Group.DisplayLayoutEnum.VerticalCentered, order: 30)]
-    [Group(Sections.OtherSolutionOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 40)]
+    [Group(Sections.OtherSolutionOptions, Group.DisplayLayoutEnum.VerticalCentered, order: 40)]
     public class XrmPackageSettings : ISavedXrmConnections
     {
         [DisplayOrder(10)]
@@ -68,15 +68,20 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
 
         [DisplayOrder(310)]
         [Group(Sections.OtherSolutionOptions)]
-        [MyDescription("Specify if you want to only display plugin assembly options for specific projects")]
-        public IEnumerable<PluginProject> PluginProjects { get; set; }
-
-        [DisplayOrder(320)]
-        [Group(Sections.OtherSolutionOptions)]
         [MyDescription("Specify if you want to only display deploy web resource options for specific projects")]
         public IEnumerable<WebResourceProject> WebResourceProjects { get; set; }
 
         [DisplayOrder(320)]
+        [Group(Sections.OtherSolutionOptions)]
+        [MyDescription("Specify if you want to only display plugin assembly options for specific projects")]
+        public IEnumerable<PluginProject> PluginProjects { get; set; }
+
+        [DisplayOrder(330)]
+        [Group(Sections.OtherSolutionOptions)]
+        [MyDescription("Specify if you want to only display plugin package options for specific projects")]
+        public IEnumerable<PluginPackageProject> PluginPackageProjects { get; set; }
+
+        [DisplayOrder(340)]
         [Group(Sections.OtherSolutionOptions)]
         [MyDescription("Specify if you want to only display portal code / deploy into field options for specific projects")]
         public IEnumerable<DeployIntoFieldProject> DeployIntoFieldProjects { get; set; }
@@ -91,6 +96,12 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
             return PluginProjects != null
                 && PluginProjects.Any(pp => pp.ProjectName?.ToLower() == projectName?.ToLower())
                 && PluginProjects.First(pp => pp.ProjectName?.ToLower() == projectName?.ToLower()).UsesILMergeMsBuildTask;
+        }
+
+        public bool IsPluginPackageProject(string projectName)
+        {
+            return PluginPackageProjects != null
+                && PluginPackageProjects.Any(pp => pp.ProjectName?.ToLower() == projectName?.ToLower());
         }
 
         [DoNotAllowGridOpen]
@@ -110,11 +121,39 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
             [RequiredProperty]
             public string ProjectName { get; set; }
 
-            [GridWidth(150)]
+            [GridWidth(160)]
+            [RequiredProperty]
+            [MyDescription("Prevent deploy assembly button from displaying in right-click menu")]
+            public bool DisableAssemblyDeploy { get; set; }
+
+            [GridWidth(170)]
+            [RequiredProperty]
+            [MyDescription("Prevent update assembly button from displaying in right-click menu")]
+            public bool DisableAssemblyUpdate { get; set; }
+
+            [GridWidth(180)]
             [RequiredProperty]
             [DisplayName("Uses ILMerge-MSBuild-Task")]
             [MyDescription("ILMerge-MSBuild-Task output will be used for this project if this flag is checked, but is only supported for the standard ILMerge output path and where an ILMergeConfig.json file is used to limit the dlls included (rather than the default CopyAll)")]
             public bool UsesILMergeMsBuildTask { get; set; }
+        }
+
+        [DoNotAllowGridOpen]
+        public class PluginPackageProject
+        {
+            public PluginPackageProject()
+            {
+
+            }
+
+            public PluginPackageProject(string projectName)
+            {
+                ProjectName = projectName;
+            }
+
+            [GridWidth(330)]
+            [RequiredProperty]
+            public string ProjectName { get; set; }
         }
 
         [DoNotAllowGridOpen]

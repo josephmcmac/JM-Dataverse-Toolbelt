@@ -135,7 +135,7 @@
           <ButtonText>Deploy Web Resource</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="DeployPluginAssemblyCommandId" priority="0x0100" type="Button">
+      <Button guid="guidXrmPackageCmdSet" id="DeployPluginAssemblyCommandId" priority="0x0102" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -151,12 +151,20 @@
           <ButtonText>Update Plugin Assembly (Assembly Only)</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="ManagePluginTriggersCommandId" priority="0x0100" type="Button">
+      <Button guid="guidXrmPackageCmdSet" id="ManagePluginTriggersCommandId" priority="0x0101" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <ButtonText>Manage Plugin Triggers</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="DeployPluginPackageCommandId" priority="0x0102" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Deploy Plugin Package</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="DonateCommandId" priority="0x0100" type="Button">
@@ -351,8 +359,8 @@
       <IDSymbol name="ConfigureAutoNumberCommandId" value="0x011D" />
       <IDSymbol name="ExtentionSettingsCommandId" value="0x011E" />
       <IDSymbol name="DonateCommandId" value="0x0220" />
+      <IDSymbol name="DeployPluginPackageCommandId" value="0x0122" />
     </GuidSymbol>
-
     <GuidSymbol name="guidImages" value="{0ffc84a8-7e82-4192-8298-0774b6163391}" >
       <IDSymbol name="bmpPic1" value="1" />
       <IDSymbol name="bmpPic2" value="2" />

@@ -26,6 +26,7 @@ using JosephM.Xrm.Vsix.Module.PackageSettings;
 using JosephM.Xrm.Vsix.Module.PluginTriggers;
 using JosephM.Xrm.Vsix.Module.RefreshSchema;
 using JosephM.Xrm.Vsix.Module.UpdateAssembly;
+using JosephM.Xrm.Vsix.Module.DeployPluginPackage;
 using JosephM.Xrm.Vsix.Module.Web;
 using JosephM.XrmModule.Crud;
 using System;
@@ -47,6 +48,7 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<UpdateAssemblyModule>(0x0105);
             app.AddModule<XrmPackageSettingsModule>(0x0106);
             app.AddModule<DeployAssemblyModule>(0x0103);
+            app.AddModule<DeployPluginPackageModule>(0x0122);
             app.AddModule<ManagePluginTriggersModule>(0x0104);
             app.AddModule<VsixCustomisationImportModule>(0x010A);
             app.AddModule<VsixCreatePackageModule>(0x010E);
