@@ -404,7 +404,7 @@ namespace JosephM.Record.Service
                             if (lookupService == null)
                                 return new RecordType[0];
                             var recordTypes = lookupService.GetAllRecordTypes();
-                            var includeExplicit = new[] {  "subject", "uom", "productpricelevel", "activitymimeattachment", "activityparty" };
+                            var includeExplicit = new[] {  "subject", "uom", "productpricelevel", "activitymimeattachment", "activityparty", "organization", "timezonedefinition", "usersettings", "calendar", "calendarrule" };
                             var options = recordTypes
                                 .Select(rt => lookupService.GetRecordTypeMetadata(rt))
                                 .Where(mt => mt.Searchable || includeExplicit.Contains(mt.SchemaName))

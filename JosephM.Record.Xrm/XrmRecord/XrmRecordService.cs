@@ -1500,7 +1500,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                 var matchFields =
                     records.Select(r => r.GetField(matchField))
                             .Where(f => f != null)
-                            .Select(f => ConvertToQueryValue(matchField, type, f))
+                            .Select(f => ConvertToQueryValue(matchField, type, f).First())
                             .ToArray();
 
                 var matchingRecords = !matchFields.Any()
