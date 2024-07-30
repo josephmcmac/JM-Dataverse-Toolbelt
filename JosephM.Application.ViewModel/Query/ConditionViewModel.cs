@@ -240,7 +240,8 @@ namespace JosephM.Application.ViewModel.Query
                 Record.Query.ConditionType.NotOn,
                 Record.Query.ConditionType.DoesNotBeginWith,
                 Record.Query.ConditionType.DoesNotEndWith,
-                Record.Query.ConditionType.ContainValues,})]
+                Record.Query.ConditionType.ContainValues,
+                Record.Query.ConditionType.DoesNotContainValues})]
             public object Value { get; set; }
 
             [MinimumIntValue(1)]
