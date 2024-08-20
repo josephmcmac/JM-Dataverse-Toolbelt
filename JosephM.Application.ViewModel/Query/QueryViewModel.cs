@@ -204,10 +204,6 @@ namespace JosephM.Application.ViewModel.Query
                                     RecordService.LoadViewsFor(targetTypesForLookupField, new LogController());
                                     new[] { createOrUpdateRecord }.PopulateEmptyLookups(RecordService, null);
                                     var newForm = new CreateOrUpdateViewModel(createOrUpdateRecord, formController, onSave, ClearChildForm);
-                                    //var suffixMessage = fieldsForType.Count() > 50
-                                    //    ? "\n\nPlease wait this may take a while and temporarilly freeze due to the volume of fields to render"
-                                    //    : string.Empty;
-                                    //LoadingViewModel.LoadingMessage = $"Loading {RecordService.GetDisplayName(RecordType)} for editing{suffixMessage}";
                                     Thread.Sleep(100);
                                     ClearNotInIds();
                                     LoadChildForm(newForm);
@@ -672,6 +668,23 @@ namespace JosephM.Application.ViewModel.Query
             {
                 query.Fields = fields;
             }
+            else if(DynamicGridViewModel != null && DynamicGridViewModel.FieldMetadata != null)
+            {
+                var fieldsToGet = new List<string>
+                {
+                    RecordService.GetPrimaryKey(RecordType)
+                };
+                var primaryField = RecordService.GetPrimaryField(RecordType);
+                if (!string.IsNullOrWhiteSpace(primaryField))
+                {
+                    fieldsToGet.Add(primaryField);
+                }
+                fieldsToGet.AddRange(DynamicGridViewModel.FieldMetadata
+                    .Where(fm => string.IsNullOrWhiteSpace(fm.AltRecordType))
+                    .Select(fm => fm.FieldName));
+                query.Fields = fieldsToGet;
+            }
+
 
             var notInList = new HashSet<string>();
             if (IncludeNotIn)
