@@ -4,6 +4,7 @@ using JosephM.CodeGenerator.CSharp;
 using JosephM.Core.FieldType;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.IO;
@@ -45,6 +46,8 @@ namespace JosephM.Xrm.Vsix.Module.RefreshSchema
             }
             FileInfo fileInfo = new FileInfo(selectedItems.First());
 
+            var packageSettings = ApplicationController.ResolveType(typeof(XrmPackageSettings)) as XrmPackageSettings;
+
             var request = new CSharpRequest()
             {
                 Folder = new Folder(fileInfo.DirectoryName),
@@ -58,6 +61,11 @@ namespace JosephM.Xrm.Vsix.Module.RefreshSchema
                 SharedOptions = true,
                 IncludeAllRecordTypes = true
             };
+            if(packageSettings.TypesForSchemaGeneration != null && packageSettings.TypesForSchemaGeneration.Any())
+            {
+                request.IncludeAllRecordTypes = false;
+                request.RecordTypes = packageSettings.TypesForSchemaGeneration.ToArray();
+            }
 
             var uriQuery = new UriQuery();
             uriQuery.AddObject(nameof(CSharpDialog.Request), request);

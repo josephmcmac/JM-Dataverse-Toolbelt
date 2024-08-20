@@ -13,10 +13,11 @@ namespace JosephM.Application.ViewModel.Query
 {
     public class JoinViewModel : ViewModelBase
     {
-        public JoinViewModel(string recordType, IRecordService recordService, IApplicationController controller, Action onPopulated, Action<JoinViewModel> remove, Action onConditionSelectedChanged, LoadingViewModel loadingViewModel)
+        public JoinViewModel(string recordType, IRecordService recordService, IApplicationController controller, Action onPopulated, Action<JoinViewModel> remove, Action onConditionSelectedChanged, LoadingViewModel loadingViewModel, QueryViewModel queryViewModel)
             : base(controller)
         {
             LoadingViewModel = loadingViewModel;
+            _queryViewModel = queryViewModel;
             OnConditionSelectedChanged = onConditionSelectedChanged;
             RecordType = recordType;
             RecordService = recordService;
@@ -149,7 +150,7 @@ namespace JosephM.Application.ViewModel.Query
                 if (isChanging && value != null)
                 {
                     FilterConditions = CreateFilterCondition();
-                    Joins = new JoinsViewModel(SelectedRelationshipTarget, RecordService, ApplicationController, OnConditionSelectedChanged, LoadingViewModel);
+                    Joins = new JoinsViewModel(SelectedRelationshipTarget, RecordService, ApplicationController, OnConditionSelectedChanged, LoadingViewModel, _queryViewModel);
                 }
                 OnPropertyChanged(nameof(SelectedItem));
             }
@@ -186,11 +187,13 @@ namespace JosephM.Application.ViewModel.Query
 
         private FilterConditionsViewModel CreateFilterCondition()
         {
-            return new FilterConditionsViewModel(SelectedRelationshipTarget, RecordService, ApplicationController, OnConditionSelectedChanged);
+            return new FilterConditionsViewModel(SelectedRelationshipTarget, RecordService, ApplicationController, OnConditionSelectedChanged, _queryViewModel);
         }
 
 
         private FilterConditionsViewModel _filterConditions;
+        private readonly QueryViewModel _queryViewModel;
+
         public FilterConditionsViewModel FilterConditions
         {
             get

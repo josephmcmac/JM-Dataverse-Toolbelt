@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Xml;
 
 namespace JosephM.Xrm.Vsix.Application
 {
@@ -103,6 +105,45 @@ namespace JosephM.Xrm.Vsix.Application
                 }
             }
             throw new NullReferenceException("Could not find assembly name for selected project");
+        }
+
+        public override string GetSelectedProjectProperty(string propertyName)
+        {
+            var propertyNames = new StringBuilder();
+            var selectedItems = DTE.SelectedItems;
+            foreach (SelectedItem item in selectedItems)
+            {
+                var project = item.Project;
+                if (project.Name != null)
+                {
+                    var projectXml = File.ReadAllText(project.FullName);
+                    var xmlDocument = new XmlDocument();
+                    xmlDocument.LoadXml(projectXml);
+                    XmlNamespaceManager mgr = new XmlNamespaceManager(xmlDocument.NameTable);
+                    mgr.AddNamespace("x", "http://schemas.microsoft.com/developer/msbuild/2003");
+                    foreach (XmlNode matchingNode in xmlDocument.SelectNodes($"//x:{propertyName}", mgr))
+                    {
+                        return matchingNode.InnerText;
+                    }
+                    return null;
+                }
+            }
+            throw new NullReferenceException("Couldn't load project properties");
+        }
+
+        public override string GetSelectedProjectDirectory()
+        {
+            var selectedItems = DTE.SelectedItems;
+            foreach (SelectedItem item in selectedItems)
+            {
+                var project = item.Project;
+                if (project.Name != null)
+                {
+                    var fileInfo = new FileInfo(project.FullName);
+                    return fileInfo.DirectoryName;
+                }
+            }
+            throw new NullReferenceException("Could not find directory for selected project");
         }
 
         public override IEnumerable<string> GetSelectedFileNamesQualified()

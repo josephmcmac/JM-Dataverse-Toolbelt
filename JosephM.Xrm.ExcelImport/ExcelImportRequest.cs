@@ -128,7 +128,7 @@ namespace JosephM.Xrm.ExcelImport
             [PropertyInContextByPropertyNotNull(nameof(TargetType))]
             public IEnumerable<ExcelImportFieldMapping> Mappings { get; set; }
 
-            public IEnumerable<ExplicitFieldValues> ExplicitValuesToSet => new ExplicitFieldValues[0];
+            public IEnumerable<ExplicitFieldValues> ExplicitValuesToSet { get; set; } = new ExplicitFieldValues[0];
 
             string IMapSourceImport.SourceType => SourceTab?.Key;
             string IMapSourceImport.TargetType => TargetType?.Key;

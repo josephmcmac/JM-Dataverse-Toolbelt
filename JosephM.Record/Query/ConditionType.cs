@@ -44,6 +44,11 @@ namespace JosephM.Record.Query
         [ValidForFieldTypes(IntegerType.Language, RecordFieldType.Integer)]
         EqualUserLanguage,
 
+        [ValidForFieldTypes(RecordFieldType.Picklist, MultiSelectOnly = true)]
+        ContainValues,
+        [ValidForFieldTypes(RecordFieldType.Picklist, MultiSelectOnly = true)]
+        DoesNotContainValues,
+
         [ValidForFieldTypes(RecordFieldType.Date)]
         Yesterday,
         [ValidForFieldTypes(RecordFieldType.Date)]

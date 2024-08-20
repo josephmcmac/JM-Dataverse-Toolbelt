@@ -88,7 +88,7 @@ namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 response.CompletionMessage = ex.XrmDisplayString();
             }

@@ -14,6 +14,8 @@ namespace JosephM.Xrm.Vsix.Application
         string GetItemText(string name, string folderName);
         string BuildSelectedProjectAndGetAssemblyName(bool addIlMergePath);
         string GetSelectedProjectAssemblyName();
+        string GetSelectedProjectProperty(string propertyName);
+        string GetSelectedProjectDirectory();
         IEnumerable<string> GetSelectedFileNamesQualified();
         void SaveSelectedFiles();
         IEnumerable<IVisualStudioItem> GetSelectedItems();

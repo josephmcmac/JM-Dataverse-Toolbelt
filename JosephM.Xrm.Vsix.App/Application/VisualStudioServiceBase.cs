@@ -112,6 +112,10 @@ namespace JosephM.Xrm.Vsix.Application
 
         public abstract string GetSelectedProjectAssemblyName();
 
+        public abstract string GetSelectedProjectProperty(string propertyName);
+
+        public abstract string GetSelectedProjectDirectory();
+
         public string GetVsixSettingText(string name)
         {
             //chnaged folder used so also check old folder

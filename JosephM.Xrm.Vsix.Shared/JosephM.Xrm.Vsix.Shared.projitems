@@ -15,7 +15,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\VisualStudioProjectBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\VisualStudioProjectItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\VisualStudioService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Application\VisualStudioServiceBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\VisualStudioSolutionFolder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\XrmMenuCommandService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Wizards\MyProjectItemWizard.cs" />

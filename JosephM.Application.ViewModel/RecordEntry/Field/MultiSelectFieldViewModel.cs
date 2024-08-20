@@ -1,6 +1,8 @@
 ﻿using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.Query;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Shared;
+using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.FieldType;
 using System;
 using System.Collections.Generic;
@@ -85,33 +87,39 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     //with heap of rows each with heap of bindings in the popup grid
                     //so changed to a child dialog when selected
 
-                    var mainFormInContext = RecordEntryViewModel;
+                    TabAreaViewModelBase mainAreaInContext = RecordEntryViewModel;
                     if (RecordEntryViewModel is GridRowViewModel)
-                        mainFormInContext = RecordEntryViewModel.ParentForm;
+                    {
+                        mainAreaInContext = RecordEntryViewModel.ParentForm;
+                    }
+                    if (RecordEntryViewModel is ConditionViewModel cvm)
+                    {
+                        mainAreaInContext = cvm.ParentArea;
+                    }
 
                     //okay i need to load a dialog
                     //displaying a grid of the selectable options with a checkbox
                     Action<IEnumerable<T>> onSave = (selectedOptions) =>
                     {
                         //copy into the
-                        mainFormInContext.LoadingViewModel.IsLoading = true;
+                        mainAreaInContext.LoadingViewModel.IsLoading = true;
                         try
                         {
                             RefreshSelectedItemsIntoValue(selectedOptions);
-                            mainFormInContext.ClearChildForm();
+                            mainAreaInContext.ClearChildForm();
                         }
                         catch (Exception ex)
                         {
-                            RecordEntryViewModel.ApplicationController.ThrowException(ex);
+                            mainAreaInContext.ApplicationController.ThrowException(ex);
                         }
                         finally
                         {
-                            mainFormInContext.LoadingViewModel.IsLoading = false;
+                            mainAreaInContext.LoadingViewModel.IsLoading = false;
                         }
                     };
 
-                    var childForm = new MultiSelectDialogViewModel<T>(ItemsSource, Value, onSave, () => mainFormInContext.ClearChildForm(), ApplicationController);
-                    mainFormInContext.LoadChildForm(childForm);
+                    var childForm = new MultiSelectDialogViewModel<T>(ItemsSource, Value, onSave, () => mainAreaInContext.ClearChildForm(), ApplicationController);
+                    mainAreaInContext.LoadChildForm(childForm);
                 }
                 catch (Exception ex)
                 {

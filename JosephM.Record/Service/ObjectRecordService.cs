@@ -404,7 +404,7 @@ namespace JosephM.Record.Service
                             if (lookupService == null)
                                 return new RecordType[0];
                             var recordTypes = lookupService.GetAllRecordTypes();
-                            var includeExplicit = new[] {  "subject", "uom", "productpricelevel", "activitymimeattachment" };
+                            var includeExplicit = new[] {  "subject", "uom", "productpricelevel", "activitymimeattachment", "activityparty", "organization", "timezonedefinition", "usersettings", "calendar", "calendarrule", "incidentresolution" };
                             var options = recordTypes
                                 .Select(rt => lookupService.GetRecordTypeMetadata(rt))
                                 .Where(mt => mt.Searchable || includeExplicit.Contains(mt.SchemaName))
@@ -488,30 +488,39 @@ namespace JosephM.Record.Service
                                 var supplementaryDependencyArguments = dependencySplit.Length == 1 || dependencySplit[1] == ""
                                     ? null
                                     : dependencySplit[1].Split(',');
-
-                                if (validForFieldAttribute.FieldTypes.Contains(fieldTypeEnum))
+                                if (validForFieldAttribute.MultiSelectOnly)
                                 {
-                                    if (validForFieldAttribute.IntegerType.HasValue)
-                                    {
-                                        if (supplementaryDependencyArguments != null
-                                            && supplementaryDependencyArguments.Contains(validForFieldAttribute.IntegerType.Value.ToString()))
-                                        {
-                                            options.Add(PicklistOption.EnumToPicklistOption(item));
-                                        }
-                                    }
-                                    else if (validForFieldAttribute.TargetType != null)
-                                    {
-                                        if (supplementaryDependencyArguments != null
-                                            && supplementaryDependencyArguments.Contains(validForFieldAttribute.TargetType))
-                                        {
-                                            options.Add(PicklistOption.EnumToPicklistOption(item));
-                                        }
-                                    }
-                                    else if (validForFieldAttribute.TargetType == null || supplementaryDependencyArguments == null)
+                                    if(fieldTypeEnum == RecordFieldType.Picklist && supplementaryDependencyArguments.Any() && supplementaryDependencyArguments.First() == true.ToString())
                                     {
                                         options.Add(PicklistOption.EnumToPicklistOption(item));
                                     }
+                                }
+                                else
+                                {
 
+                                    if (validForFieldAttribute.FieldTypes.Contains(fieldTypeEnum))
+                                    {
+                                        if (validForFieldAttribute.IntegerType.HasValue)
+                                        {
+                                            if (supplementaryDependencyArguments != null
+                                                && supplementaryDependencyArguments.Contains(validForFieldAttribute.IntegerType.Value.ToString()))
+                                            {
+                                                options.Add(PicklistOption.EnumToPicklistOption(item));
+                                            }
+                                        }
+                                        else if (validForFieldAttribute.TargetType != null)
+                                        {
+                                            if (supplementaryDependencyArguments != null
+                                                && supplementaryDependencyArguments.Contains(validForFieldAttribute.TargetType))
+                                            {
+                                                options.Add(PicklistOption.EnumToPicklistOption(item));
+                                            }
+                                        }
+                                        else if (validForFieldAttribute.TargetType == null || supplementaryDependencyArguments == null)
+                                        {
+                                            options.Add(PicklistOption.EnumToPicklistOption(item));
+                                        }
+                                    }
                                 }
                             }
                         }

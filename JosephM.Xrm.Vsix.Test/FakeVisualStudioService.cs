@@ -77,6 +77,16 @@ namespace JosephM.Xrm.Vsix.Test
             return PluginAssemblyName;
         }
 
+        public override string GetSelectedProjectProperty(string propertyName)
+        {
+            return null;
+        }
+
+        public override string GetSelectedProjectDirectory()
+        {
+            return null;
+        }
+
         public override IVisualStudioProject GetProject(string name)
         {
             foreach(var folder in Directory.GetDirectories(SolutionDirectory))

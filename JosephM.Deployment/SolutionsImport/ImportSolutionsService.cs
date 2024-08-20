@@ -259,66 +259,6 @@ namespace JosephM.Deployment.SolutionsImport
                         ProcessCompletedSolutionImportJob(response, xrmService, importId);
                     }
                 }
-                if (response.Success && solutionMetadata.Managed && importRequest.InstallAsUpgrade)
-                {
-                    Entity uninstallSolutionHistory = null;
-                    var errorCount = 0;
-                    while (true)
-                    {
-                        try
-                        {
-                            Thread.Sleep(5000);
-                            if (uninstallSolutionHistory != null)
-                            {
-                                uninstallSolutionHistory = xrmService.Retrieve(uninstallSolutionHistory.LogicalName, uninstallSolutionHistory.Id, new[] { Fields.msdyn_solutionhistory_.msdyn_status, Fields.msdyn_solutionhistory_.msdyn_result, Fields.msdyn_solutionhistory_.msdyn_solutionversion });
-                                var status = uninstallSolutionHistory.GetOptionSetValue(Fields.msdyn_solutionhistory_.msdyn_status);
-                                if (status == OptionSets.SolutionHistory.Status.Completed)
-                                {
-                                    if (!uninstallSolutionHistory.GetBoolean(Fields.msdyn_solutionhistory_.msdyn_result))
-                                    {
-                                        throw new Exception($"Error uninstalling {solutionMetadata.UniqueName} version {solutionMetadata.Version}: {uninstallSolutionHistory.GetStringField(Fields.msdyn_solutionhistory_.msdyn_exceptionmessage)}");
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-                                }
-                                else
-                                {
-                                    controller.LogDetail($"Uninstall process running on previous {solutionMetadata.UniqueName} solution version {uninstallSolutionHistory.GetStringField(Fields.msdyn_solutionhistory_.msdyn_solutionversion)}");
-                                }
-                            }
-                            else
-                            {
-                                var solutionHistoryQuery = new QueryExpression(Entities.msdyn_solutionhistory);
-                                solutionHistoryQuery.TopCount = 2;
-                                solutionHistoryQuery.ColumnSet = new ColumnSet(true);
-                                solutionHistoryQuery.Criteria.AddCondition(new ConditionExpression(Fields.msdyn_solutionhistory_.msdyn_name, ConditionOperator.Equal, solutionMetadata.UniqueName));
-                                solutionHistoryQuery.Orders.Add(new OrderExpression(Fields.msdyn_solutionhistory_.msdyn_starttime, OrderType.Descending));
-                                var checkForSolutionHistory = xrmService.RetrieveFirst(solutionHistoryQuery);
-                                if (checkForSolutionHistory.GetOptionSetValue(Fields.msdyn_solutionhistory_.msdyn_operation) == OptionSets.SolutionHistory.Operation.Uninstall
-                                    && checkForSolutionHistory.GetStringField(Fields.msdyn_solutionhistory_.msdyn_solutionversion) != solutionMetadata.Version)
-                                {
-                                    uninstallSolutionHistory = checkForSolutionHistory;
-                                }
-                                else
-                                {
-                                    controller.LogDetail($"Waiting for uninstall process on previous solution version");
-                                }
-                            }
-                            errorCount = 0;
-                        }
-                        catch (Exception ex)
-                        {
-                            errorCount++;
-                            if (errorCount > 2)
-                            {
-                                throw;
-                            }
-                            controller.LogLiteral("Unexpected error skipped. Still waiting for deletion job to complete: " + ex.Message);
-                        }
-                    }
-                }
             }
         }
     }

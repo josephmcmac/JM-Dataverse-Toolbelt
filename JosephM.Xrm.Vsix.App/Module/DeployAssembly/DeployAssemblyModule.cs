@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.DeployAssembly
 {
-    [MenuItemVisibleForPluginProject]
+    [DeployAssemblyMenuItemVisible]
     [DependantModule(typeof(XrmPackageSettingsModule))]
     [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class DeployAssemblyModule : ServiceRequestModule<DeployAssemblyDialog, DeployAssemblyService, DeployAssemblyRequest, DeployAssemblyResponse, DeployAssemblyResponseItem>

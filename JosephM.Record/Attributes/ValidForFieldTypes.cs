@@ -10,6 +10,7 @@ namespace JosephM.Record.Attributes
 
         public IEnumerable<RecordFieldType> FieldTypes { get; set; }
         public string TargetType { get; set; }
+        public bool MultiSelectOnly { get; set; }
 
         public ValidForFieldTypes(params RecordFieldType[] fieldTypes)
         {

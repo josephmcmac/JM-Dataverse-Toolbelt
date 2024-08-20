@@ -34,6 +34,10 @@ namespace JosephM.Xrm.Vsix.Wizards
                 {
                     new XrmPackageSettings.PluginProject(replacementsDictionary["$projectname$"] + ".Plugins")
                 };
+                XrmPackageSettings.PluginPackageProjects = new[]
+                {
+                    new XrmPackageSettings.PluginPackageProject("N/A")
+                };
                 XrmPackageSettings.WebResourceProjects = new[]
                 {
                     new XrmPackageSettings.WebResourceProject(replacementsDictionary["$projectname$"] + ".WebResources")

@@ -4,7 +4,7 @@ using JosephM.XrmModule.SavedXrmConnections;
 
 namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
 {
-    [MenuItemVisibleForPluginProject]
+    [UpdateAssemblyMenuItemVisible]
     [DependantModule(typeof(XrmPackageSettingsModule))]
     [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class UpdateAssemblyModule : OptionActionModule
