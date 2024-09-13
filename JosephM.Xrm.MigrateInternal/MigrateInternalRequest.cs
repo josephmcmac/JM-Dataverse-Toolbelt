@@ -38,6 +38,7 @@ namespace JosephM.Xrm.MigrateInternal
         [Group(Sections.ImportOptions)]
         [DisplayOrder(417)]
         [RequiredProperty]
+        [DisplayName("ForceSubmitAllFields")]
         public bool SubmitUnchangedFields { get; set; }
 
         [Group(Sections.ImportOptions)]

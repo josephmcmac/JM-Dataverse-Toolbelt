@@ -34,7 +34,7 @@ namespace JosephM.Xrm.DataImportExport.Import
 
         private Dictionary<string, Dictionary<string, Dictionary<string, List<Entity>>>> _cachedRecords = new Dictionary<string, Dictionary<string, Dictionary<string, List<Entity>>>>();
 
-        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary = null, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary = null, bool updateOnly = false, bool includeOwner = false, bool includeOverrideCreatedOn = false, bool containsExportedConfigFields = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null, bool onlyFieldMatchActive = false, bool submitUnchangedFields = false) 
+        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary = null, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary = null, bool updateOnly = false, bool includeOwner = false, bool includeOverrideCreatedOn = false, bool containsExportedConfigFields = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null, bool onlyFieldMatchActive = false, bool forceSubmitAllFields = false, bool displayTimeEstimations = false) 
         {
             var response = new DataImportResponse(entities, loadExistingErrorsIntoSummary);
             controller.AddObjectToUi(response);
@@ -56,7 +56,8 @@ namespace JosephM.Xrm.DataImportExport.Import
                     executeMultipleSetSize ?? 1,
                     targetCacheLimit ?? 1000,
                     onlyFieldMatchActive,
-                    submitUnchangedFields);
+                    forceSubmitAllFields,
+                    displayTimeEstimations);
 
                 ImportEntities(dataImportContainer);
 
@@ -339,6 +340,7 @@ namespace JosephM.Xrm.DataImportExport.Import
 
                     var thisTypeCreatedDictionary = dataImportContainer.Response.GetImportForType(recordType).GetCreatedEntities();
 
+                    var taskEstimator = new TaskEstimator(countRecordsToImport);
                     //process create and updates for this type in sets
                     while (thisTypeEntities.Any())
                     {
@@ -442,7 +444,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                             else
                             {
                                 var existingRecord = matchDictionary[entity];
-                                var fieldsToSubmit = dataImportContainer.SubmitUnchangedFields
+                                var fieldsToSubmit = dataImportContainer.ForceSubmitAllFields
                                     ? fieldsToSet.ToArray()
                                     : fieldsToSet.Where(f =>
                                 {
@@ -496,7 +498,19 @@ namespace JosephM.Xrm.DataImportExport.Import
                                     }
                                 }
                             }
-                            var responses = XrmService.CreateMultiple(forCreateEntitiesCopy.Keys);
+                            IEnumerable<ExecuteMultipleResponseItem> responses = null;
+                            try
+                            {
+                                responses = XrmService.CreateMultiple(forCreateEntitiesCopy.Keys);
+                            }
+                            catch (FaultException<OrganizationServiceFault> fex)
+                            {
+                                responses = forUpdateEntitiesCopy.Select(e => new ExecuteMultipleResponseItem() { Fault = fex.Detail }).ToArray();
+                            }
+                            catch (Exception ex)
+                            {
+                                responses = forUpdateEntitiesCopy.Select(e => new ExecuteMultipleResponseItem() { Fault = new OrganizationServiceFault { Message = ex.Message } });
+                            }
                             var i = 0;
                             foreach (var createResponse in responses)
                             {
@@ -526,7 +540,19 @@ namespace JosephM.Xrm.DataImportExport.Import
                                     forUpdate.Key.RemoveFields(new[] { "statuscode", "statecode" });
                                 }
                             }
-                            var responses = XrmService.UpdateMultiple(forUpdateEntitiesCopy.Keys, null);
+                            IEnumerable<ExecuteMultipleResponseItem> responses = null;
+                            try
+                            {
+                                responses = XrmService.UpdateMultiple(forUpdateEntitiesCopy.Keys, null);
+                            }
+                            catch (FaultException<OrganizationServiceFault> fex)
+                            {
+                                responses = forUpdateEntitiesCopy.Select(e => new ExecuteMultipleResponseItem() { Fault = fex.Detail }).ToArray();
+                            }
+                            catch (Exception ex)
+                            {
+                                responses = forUpdateEntitiesCopy.Select(e => new ExecuteMultipleResponseItem() { Fault = new OrganizationServiceFault { Message = ex.Message } });
+                            }
                             var i = 0;
                             foreach (var updateResponse in responses)
                             {
@@ -594,6 +620,10 @@ namespace JosephM.Xrm.DataImportExport.Import
                         }
 
                         countRecordsImported += countThisSet;
+                        if (dataImportContainer.DisplayTimeEstimations)
+                        {
+                            dataImportContainer.Controller.UpdateProgress(countImported++, countToImport, estimator.GetProgressString(countRecordsImported, taskName: $"Importing {recordType} Records"));
+                        }
                         dataImportContainer.Controller.UpdateLevel2Progress(countRecordsImported, countRecordsToImport, estimator.GetProgressString(countRecordsImported));
                     }
                 }

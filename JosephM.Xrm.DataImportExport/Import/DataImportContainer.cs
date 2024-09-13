@@ -16,7 +16,7 @@ namespace JosephM.Xrm.DataImportExport.Import
     public class DataImportContainer
     {
         private Dictionary<Entity, List<string>> _fieldsToRetry = new Dictionary<Entity, List<string>>();
-        public DataImportContainer(DataImportResponse response, XrmRecordService xrmRecordService, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary, IEnumerable<Entity> entities, ServiceRequestController controller, bool includeOwner, bool includeOverrideCreatedOn,bool maskEmails, MatchOption matchOption, bool updateOnly, bool containsExportedConfigFields, int executeMultipleSetSize, int targetCacheLimit, bool onlyFieldMatchActive, bool submitUnchangedFields)
+        public DataImportContainer(DataImportResponse response, XrmRecordService xrmRecordService, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary, IEnumerable<Entity> entities, ServiceRequestController controller, bool includeOwner, bool includeOverrideCreatedOn,bool maskEmails, MatchOption matchOption, bool updateOnly, bool containsExportedConfigFields, int executeMultipleSetSize, int targetCacheLimit, bool onlyFieldMatchActive, bool forceSubmitAllFields, bool displayTimeEstimations)
         {
             Response = response;
             XrmRecordService = xrmRecordService;
@@ -27,7 +27,8 @@ namespace JosephM.Xrm.DataImportExport.Import
             IncludeOverrideCreatedOn = includeOverrideCreatedOn;
             MaskEmails = maskEmails;
             OnlyFieldMatchActive = onlyFieldMatchActive;
-            SubmitUnchangedFields = submitUnchangedFields;
+            ForceSubmitAllFields = forceSubmitAllFields;
+            DisplayTimeEstimations = displayTimeEstimations;
             MatchOption = matchOption;
             UpdateOnly = updateOnly;
             ContainsExportedConfigFields = containsExportedConfigFields;
@@ -56,7 +57,8 @@ namespace JosephM.Xrm.DataImportExport.Import
         public bool IncludeOverrideCreatedOn { get; }
         public bool MaskEmails { get; }
         public bool OnlyFieldMatchActive { get; }
-        public bool SubmitUnchangedFields { get; }
+        public bool ForceSubmitAllFields { get; }
+        public bool DisplayTimeEstimations { get; }
         public MatchOption MatchOption { get; }
         public bool UpdateOnly { get; }
         public bool ContainsExportedConfigFields { get; }
@@ -112,7 +114,7 @@ namespace JosephM.Xrm.DataImportExport.Import
         public IEnumerable<string> GetFieldsToImport(IEnumerable<Entity> thisTypeEntities, string type)
         {
             var fields = GetFieldsInEntities(thisTypeEntities)
-                .Where(f => IsIncludeField(f, type, XrmRecordService, IncludeOwner, IncludeOverrideCreatedOn))
+                .Where(f => ForceSubmitAllFields || IsIncludeField(f, type, XrmRecordService, IncludeOwner, IncludeOverrideCreatedOn))
                 .Distinct()
                 .ToList();
             return fields;
