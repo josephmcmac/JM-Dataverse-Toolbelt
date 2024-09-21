@@ -81,7 +81,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployPluginPackage
                         packageRecord.Id = Service.Create(packageRecord);
 
                         //add plugin assembly to the solution
-                        var pluginPackageComponentType = 10030;
+                        var pluginPackageComponentType = 10029;
                         if (PackageSettings.AddToSolution)
                             Service.AddSolutionComponents(PackageSettings.Solution.Id, pluginPackageComponentType, new[] { packageRecord.Id });
 
@@ -102,7 +102,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployPluginPackage
                             throw new Exception("Error Updating Plugin Package", packageLoadResponse.Errors.Values.First());
                         }
                         //add plugin assembly to the solution
-                        var pluginPackageComponentType = 10030;
+                        var pluginPackageComponentType = 10029;
                         var itemsToAdd = packageLoadResponse.Created.Union(packageLoadResponse.Updated);
                         if (PackageSettings.AddToSolution)
                             Service.AddSolutionComponents(PackageSettings.Solution.Id, pluginPackageComponentType, itemsToAdd.Select(i => i.Id));
