@@ -56,6 +56,13 @@ namespace JosephM.InstanceComparer
         [MyDescription("This option is to ignore differences in picklists of object type codes for shared and field picklists")]
         public bool IgnoreObjectTypeCodeDifferences { get; set; }
 
+        [GridWidth(120)]
+        [Group(Sections.GeneralOptions)]
+        [PropertyInContextByPropertyValue(nameof(Solutions), true)]
+        [DisplayOrder(17)]
+        [MyDescription("Declares if hidden solutions should be compared")]
+        public bool IncludeHiddenSolutions { get; set; }
+
         [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayOrder(17)]

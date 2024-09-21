@@ -593,7 +593,7 @@ namespace JosephM.InstanceComparer
                 Entities.solution,
                 Fields.solution_.uniquename,
                 Fields.solution_.friendlyname,
-                new[] { new Condition(Fields.solution_.isvisible, ConditionType.Equal, true) },
+                processContainer.Request.IncludeHiddenSolutions ? null : new[] { new Condition(Fields.solution_.isvisible, ConditionType.Equal, true) },
                 new[] { Fields.solution_.version, Fields.solution_.friendlyname, Fields.solution_.configurationpageid, Fields.solution_.description });
 
             processContainer.Comparisons.Add(processArgs);
