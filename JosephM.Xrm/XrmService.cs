@@ -2426,6 +2426,15 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 }
             }
         }
+        //7.0.1.144
+
+        public bool SupportsSetStateUpdate
+        {
+            get
+            {
+                return VersionHelper.IsNewerVersion(OrganisationVersion, "7.0.1.145");
+            }
+        }
 
         public bool SupportsExecuteMultiple
         {

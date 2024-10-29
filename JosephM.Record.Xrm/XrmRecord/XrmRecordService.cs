@@ -159,9 +159,25 @@ namespace JosephM.Record.Xrm.XrmRecord
         public void Update(IRecord record, IEnumerable<string> changedPersistentFields)
         {
             if (changedPersistentFields == null)
-                _xrmService.Update(ToEntity(record));
+            {
+                var entity = ToEntity(record);
+                var fieldsInEntity = entity.GetFieldsInEntity();
+                var setStateInstead = !XrmService.SupportsSetStateUpdate
+                    && ((fieldsInEntity.Count() == 2 && fieldsInEntity.Contains("statecode") && fieldsInEntity.Contains("statuscode"))
+                        || (fieldsInEntity.Count() == 1 && fieldsInEntity.Contains("statecode")));
+                if (setStateInstead)
+                {
+                    _xrmService.SetState(entity.LogicalName, entity.Id, entity.GetOptionSetValue("statecode"), entity.GetOptionSetValue("statuscode"));
+                }
+                else
+                {
+                    _xrmService.Update(entity);
+                }
+            }
             else
+            {
                 _xrmService.Update(ToEntity(record), changedPersistentFields);
+            }
         }
 
         public IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null)
