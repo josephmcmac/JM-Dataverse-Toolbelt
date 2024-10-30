@@ -21,7 +21,7 @@ namespace JosephM.Record.Service
 
         public abstract IRecord Get(string recordType, string id);
 
-        public abstract void Update(IRecord record, IEnumerable<string> fieldToCommit);
+        public abstract void Update(IRecord record, IEnumerable<string> fieldToCommit, bool bypassWorkflowsAndPlugins = false);
 
         public abstract string Create(IRecord record, IEnumerable<string> fieldToSet);
 
@@ -365,7 +365,7 @@ namespace JosephM.Record.Service
         {
         }
 
-        public IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null)
+        public IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null, bool bypassWorkflowsAndPlugins = false)
         {
             var result = new Dictionary<int, Exception>();
 
@@ -374,7 +374,7 @@ namespace JosephM.Record.Service
             {
                 try
                 {
-                    Update(item, fieldsToUpdate);
+                    Update(item, fieldsToUpdate, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins);
                 }
                 catch (Exception ex)
                 {

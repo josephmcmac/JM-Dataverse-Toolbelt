@@ -120,7 +120,7 @@ namespace JosephM.Record.Service
                     }), null);
         }
 
-        public override void Update(IRecord record, IEnumerable<string> fieldsToUpdate)
+        public override void Update(IRecord record, IEnumerable<string> fieldsToUpdate, bool bypassWorkflowsAndPlugins = false)
         {
             var savedRecord = GetActualWithoutCloning(record.Type, record.Id);
             CopyFieldsTo(record, savedRecord, fieldsToUpdate);

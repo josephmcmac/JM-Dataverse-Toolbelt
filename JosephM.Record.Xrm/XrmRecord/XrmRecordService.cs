@@ -156,7 +156,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         }
 
 
-        public void Update(IRecord record, IEnumerable<string> changedPersistentFields)
+        public void Update(IRecord record, IEnumerable<string> changedPersistentFields, bool bypassWorkflowsAndPlugins = false)
         {
             if (changedPersistentFields == null)
             {
@@ -171,20 +171,20 @@ namespace JosephM.Record.Xrm.XrmRecord
                 }
                 else
                 {
-                    _xrmService.Update(entity);
+                    _xrmService.Update(entity, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins);
                 }
             }
             else
             {
-                _xrmService.Update(ToEntity(record), changedPersistentFields);
+                _xrmService.Update(ToEntity(record), changedPersistentFields, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins);
             }
         }
 
-        public IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null)
+        public IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null, bool bypassWorkflowsAndPlugins = false)
         {
             var result = new Dictionary<int, Exception>();
 
-            var response = XrmService.UpdateMultiple(ToEntities(updateRecords), fieldsToUpdate);
+            var response = XrmService.UpdateMultiple(ToEntities(updateRecords), fieldsToUpdate, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins);
             var i = 0;
             foreach (var item in response)
             {

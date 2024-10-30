@@ -57,7 +57,7 @@ namespace JosephM.Record.IService
         IEnumerable<IRecord> GetLinkedRecords(string linkedRecordType, string recordTypeFrom, string linkedRecordLookup,
             string recordFromId);
 
-        IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null);
+        IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null, bool bypassWorkflowsAndPlugins = false);
 
         IDictionary<int, Exception> DeleteMultiple(IEnumerable<IRecord> recordsToDelete);
 
@@ -72,7 +72,7 @@ namespace JosephM.Record.IService
         /// <summary>
         ///     Saves Only The Specified Fields To The Record In The Data Store
         /// </summary>
-        void Update(IRecord record, IEnumerable<string> fieldsToSubmit);
+        void Update(IRecord record, IEnumerable<string> fieldsToSubmit, bool bypassWorkflowsAndPlugins = false);
 
         /// <summary>
         ///     Gets The Target Type Of A Lookup Field

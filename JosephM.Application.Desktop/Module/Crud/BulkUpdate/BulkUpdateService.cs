@@ -83,7 +83,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
                     var record = thisSetOfRecordsNew.First();
                     try
                     {
-                        RecordService.Update(record);
+                        RecordService.Update(record, bypassWorkflowsAndPlugins: request.BypassPluginsAndWorkflows);
                     }
                     catch (Exception ex)
                     {
@@ -94,7 +94,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
                 }
                 else
                 {
-                    var multipleResponse = RecordService.UpdateMultiple(thisSetOfRecordsNew);
+                    var multipleResponse = RecordService.UpdateMultiple(thisSetOfRecordsNew, bypassWorkflowsAndPlugins: request.BypassPluginsAndWorkflows);
                     foreach (var item in multipleResponse)
                     {
                         var originalRecord = thisSetOfRecords[item.Key];

@@ -8,6 +8,7 @@ using System.Linq;
 namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
 {
     [Group(Sections.RecordDetails, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
+    [Group(Sections.Options, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20, displayLabel: false)]
     [Group(Sections.FieldUpdate, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30, displayLabel: false)]
     [Group(Sections.FieldUpdate2, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 31, displayLabel: false)]
     [Group(Sections.FieldUpdate3, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 32, displayLabel: false)]
@@ -49,13 +50,18 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
         [DisplayOrder(20)]
         public int RecordCount { get { return _recordsToUpdate?.Count() ?? 0; } }
 
-        [Group(Sections.RecordDetails)]
+        [Group(Sections.Options)]
         [DisplayOrder(21)]
         [RequiredProperty]
         [MinimumIntValue(1)]
         [MaximumIntValue(1000)]
         [PropertyInContextByPropertyValue(nameof(AllowExecuteMultiples), true)]
         public int? ExecuteMultipleSetSize { get; set; }
+
+        [DisplayName("Bypass Plugins and Workflows")]
+        [Group(Sections.Options)]
+        [DisplayOrder(22)]
+        public bool BypassPluginsAndWorkflows { get; set; }
 
         [DisplayName("Field to Update 1")]
         [Group(Sections.FieldUpdate)]
@@ -241,6 +247,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
         private static class Sections
         {
             public const string RecordDetails = "Bulk Update";
+            public const string Options = "Options";
             public const string FieldUpdate = "Field Values To Update";
             public const string FieldUpdate2 = "FieldUpdate2";
             public const string FieldUpdate3 = "FieldUpdate3";

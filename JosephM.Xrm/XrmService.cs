@@ -2005,6 +2005,19 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             Execute(request);
         }
 
+        public void Update(Entity entity, bool bypassWorkflowsAndPlugins)
+        {
+            var request = new UpdateRequest
+            {
+                Target = entity
+            };
+            if(bypassWorkflowsAndPlugins)
+            {
+                request.Parameters.Add("BypassBusinessLogicExecution", "CustomSync,CustomAsync");
+            }
+            Execute(request);
+        }
+
         public void Associate(string relationshipName, string keyAttributeFrom, Guid entityFrom, string keyAttributeTo,
             IEnumerable<Guid> relatedEntities)
         {
@@ -2122,12 +2135,12 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             Disassociate(relationshipName, keyAttributeFrom, entityFrom, keyAttributeTo, new[] { relatedEntity });
         }
 
-        public void Update(Entity entity, IEnumerable<string> fieldsToSubmit)
+        public void Update(Entity entity, IEnumerable<string> fieldsToSubmit, bool bypassWorkflowsAndPlugins = false)
         {
             if (fieldsToSubmit != null && fieldsToSubmit.Any())
             {
                 var submissionEntity = ReplicateWithFields(entity, fieldsToSubmit);
-                Update(submissionEntity);
+                Update(submissionEntity, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins);
             }
         }
 
@@ -3300,11 +3313,19 @@ string recordType)
         }
 
         public IEnumerable<ExecuteMultipleResponseItem> UpdateMultiple(IEnumerable<Entity> entities,
-            IEnumerable<string> fields)
+            IEnumerable<string> fields, bool bypassWorkflowsAndPlugins = false)
         {
             var responses = ExecuteMultiple(entities
                 .Select(e => fields == null ? e : ReplicateWithFields(e, fields))
-                .Select(e => new UpdateRequest() { Target = e }));
+                .Select(e =>
+                {
+                    var request = new UpdateRequest() { Target = e };
+                    if (bypassWorkflowsAndPlugins)
+                    {
+                        request.Parameters.Add("BypassBusinessLogicExecution", "CustomSync,CustomAsync");
+                    }
+                    return request;
+                }));
 
             return responses.ToArray();
         }

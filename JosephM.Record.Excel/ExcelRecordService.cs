@@ -124,7 +124,7 @@ namespace JosephM.Record.Excel
             throw new NotImplementedException();
         }
 
-        public override void Update(IRecord record, IEnumerable<string> fieldToCommit)
+        public override void Update(IRecord record, IEnumerable<string> fieldToCommit, bool bypassWorkflowsAndPlugins = false)
         {
             throw new NotImplementedException();
         }
