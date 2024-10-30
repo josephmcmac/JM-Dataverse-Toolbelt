@@ -50,6 +50,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
         [DisplayOrder(20)]
         public int RecordCount { get { return _recordsToUpdate?.Count() ?? 0; } }
 
+        [MyDescription("Specify for updates to be submitted the given batch size using execute multple operations")]
         [Group(Sections.Options)]
         [DisplayOrder(21)]
         [RequiredProperty]
@@ -58,10 +59,11 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
         [PropertyInContextByPropertyValue(nameof(AllowExecuteMultiples), true)]
         public int? ExecuteMultipleSetSize { get; set; }
 
-        [DisplayName("Bypass Plugins and Workflows")]
+        [MyDescription("Specify for cloud flow, plugin, and workflow logic not to trigger from update operations being performed")]
+        [DisplayName("Bypass Flows, Plugins and Workflows")]
         [Group(Sections.Options)]
         [DisplayOrder(22)]
-        public bool BypassPluginsAndWorkflows { get; set; }
+        public bool BypassFlowsPluginsAndWorkflows { get; set; }
 
         [DisplayName("Field to Update 1")]
         [Group(Sections.FieldUpdate)]

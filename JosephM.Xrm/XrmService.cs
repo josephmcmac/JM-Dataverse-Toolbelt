@@ -2013,6 +2013,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             };
             if(bypassWorkflowsAndPlugins)
             {
+                request.Parameters.Add("SuppressCallbackRegistrationExpanderJob", true);
                 request.Parameters.Add("BypassBusinessLogicExecution", "CustomSync,CustomAsync");
             }
             Execute(request);
@@ -3322,6 +3323,7 @@ string recordType)
                     var request = new UpdateRequest() { Target = e };
                     if (bypassWorkflowsAndPlugins)
                     {
+                        request.Parameters.Add("SuppressCallbackRegistrationExpanderJob", true);
                         request.Parameters.Add("BypassBusinessLogicExecution", "CustomSync,CustomAsync");
                     }
                     return request;
