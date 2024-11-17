@@ -27,83 +27,90 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
             while(recordsRemaining.Any())
             {
                 controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Updates"));
-
                 var thisSetOfRecords = recordsRemaining
                     .Take(request.ExecuteMultipleSetSize ?? 50)
                     .ToList();
-
-                recordsRemaining.RemoveRange(0, thisSetOfRecords.Count);
-
-                var thisSetOfRecordsNew = thisSetOfRecords
-                    .Select(r =>
-                    {
-                        var newRecord = RecordService.NewRecord(request.RecordType.Key);
-                        newRecord.Id = r.Id;
-                        if (request.ClearValue)
-                            newRecord.SetField(request.FieldToSet.Key, null, RecordService);
-                        else
-                            newRecord.SetField(request.FieldToSet.Key, request.ValueToSet, RecordService);
-                        if (request.AddUpdateField2)
-                        {
-                            if (request.ClearValue2)
-                                newRecord.SetField(request.FieldToSet2.Key, null, RecordService);
-                            else
-                                newRecord.SetField(request.FieldToSet2.Key, request.ValueToSet2, RecordService);
-                        }
-                        if (request.AddUpdateField3)
-                        {
-                            if (request.ClearValue3)
-                                newRecord.SetField(request.FieldToSet3.Key, null, RecordService);
-                            else
-                                newRecord.SetField(request.FieldToSet3.Key, request.ValueToSet3, RecordService);
-                        }
-                        if (request.AddUpdateField4)
-                        {
-                            if (request.ClearValue4)
-                                newRecord.SetField(request.FieldToSet4.Key, null, RecordService);
-                            else
-                                newRecord.SetField(request.FieldToSet4.Key, request.ValueToSet4, RecordService);
-                        }
-                        if (request.AddUpdateField5)
-                        {
-                            if (request.ClearValue5)
-                                newRecord.SetField(request.FieldToSet5.Key, null, RecordService);
-                            else
-                                newRecord.SetField(request.FieldToSet5.Key, request.ValueToSet5, RecordService);
-                        }
-                        return newRecord;
-                    })
-                    .ToArray();
-
                 var errorsThisIteration = 0;
-
-                //old versions dont have execute multiple so if 1 then do each request
-                if (thisSetOfRecordsNew.Count() == 1)
+                try
                 {
-                    var record = thisSetOfRecordsNew.First();
-                    try
+                    recordsRemaining.RemoveRange(0, thisSetOfRecords.Count);
+
+                    var thisSetOfRecordsNew = thisSetOfRecords
+                        .Select(r =>
+                        {
+                            var newRecord = RecordService.NewRecord(request.RecordType.Key);
+                            newRecord.Id = r.Id;
+                            if (request.ClearValue)
+                                newRecord.SetField(request.FieldToSet.Key, null, RecordService);
+                            else
+                                newRecord.SetField(request.FieldToSet.Key, request.ValueToSet, RecordService);
+                            if (request.AddUpdateField2)
+                            {
+                                if (request.ClearValue2)
+                                    newRecord.SetField(request.FieldToSet2.Key, null, RecordService);
+                                else
+                                    newRecord.SetField(request.FieldToSet2.Key, request.ValueToSet2, RecordService);
+                            }
+                            if (request.AddUpdateField3)
+                            {
+                                if (request.ClearValue3)
+                                    newRecord.SetField(request.FieldToSet3.Key, null, RecordService);
+                                else
+                                    newRecord.SetField(request.FieldToSet3.Key, request.ValueToSet3, RecordService);
+                            }
+                            if (request.AddUpdateField4)
+                            {
+                                if (request.ClearValue4)
+                                    newRecord.SetField(request.FieldToSet4.Key, null, RecordService);
+                                else
+                                    newRecord.SetField(request.FieldToSet4.Key, request.ValueToSet4, RecordService);
+                            }
+                            if (request.AddUpdateField5)
+                            {
+                                if (request.ClearValue5)
+                                    newRecord.SetField(request.FieldToSet5.Key, null, RecordService);
+                                else
+                                    newRecord.SetField(request.FieldToSet5.Key, request.ValueToSet5, RecordService);
+                            }
+                            return newRecord;
+                        })
+                        .ToArray();
+
+                    //old versions dont have execute multiple so if 1 then do each request
+                    if (thisSetOfRecordsNew.Count() == 1)
                     {
-                        RecordService.Update(record, bypassWorkflowsAndPlugins: request.BypassFlowsPluginsAndWorkflows);
+                        var record = thisSetOfRecordsNew[0];
+                        try
+                        {
+                            RecordService.Update(record, bypassWorkflowsAndPlugins: request.BypassFlowsPluginsAndWorkflows);
+                        }
+                        catch (Exception ex)
+                        {
+                            var primaryField = RecordService.GetPrimaryField(record.Type);
+                            response.AddResponseItem(new BulkUpdateResponseItem(record.Id, primaryField == null ? record.Id : record.GetStringField(primaryField), ex));
+                            errorsThisIteration++;
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        var primaryField = RecordService.GetPrimaryField(record.Type);
-                        response.AddResponseItem(new BulkUpdateResponseItem(record.Id, primaryField == null ? record.Id : record.GetStringField(primaryField), ex));
+                        var multipleResponse = RecordService.UpdateMultiple(thisSetOfRecordsNew, bypassWorkflowsAndPlugins: request.BypassFlowsPluginsAndWorkflows);
+                        foreach (var item in multipleResponse)
+                        {
+                            var originalRecord = thisSetOfRecords[item.Key];
+                            response.AddResponseItem(new BulkUpdateResponseItem(originalRecord.Id, originalRecord.GetStringField(RecordService.GetPrimaryField(originalRecord.Type)), item.Value));
+                        }
+                        errorsThisIteration += multipleResponse.Count;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    foreach(var thisSetRecord in  thisSetOfRecords)
+                    {
                         errorsThisIteration++;
+                        response.AddResponseItem(new BulkUpdateResponseItem(thisSetRecord.Id, thisSetRecord.GetStringField(RecordService.GetPrimaryField(thisSetRecord.Type)), ex));
                     }
                 }
-                else
-                {
-                    var multipleResponse = RecordService.UpdateMultiple(thisSetOfRecordsNew, bypassWorkflowsAndPlugins: request.BypassFlowsPluginsAndWorkflows);
-                    foreach (var item in multipleResponse)
-                    {
-                        var originalRecord = thisSetOfRecords[item.Key];
-                        response.AddResponseItem(new BulkUpdateResponseItem(originalRecord.Id, originalRecord.GetStringField(RecordService.GetPrimaryField(originalRecord.Type)), item.Value));
-                    }
-                    errorsThisIteration += multipleResponse.Count;
-                }
-
-                countUpdated += thisSetOfRecords.Count();
+                countUpdated += thisSetOfRecords.Count;
                 response.NumberOfErrors += errorsThisIteration;
                 response.TotalRecordsProcessed = countUpdated;
             }
