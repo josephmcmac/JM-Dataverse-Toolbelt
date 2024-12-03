@@ -306,11 +306,6 @@ namespace JosephM.Record.Service
 
         #endregion metadata changes
 
-        public virtual IEnumerable<IRecord> GetLinkedRecordsThroughBridge(string linkedRecordType, string recordTypeThrough, string recordTypeFrom, string linkedThroughLookupFrom, string linkedThroughLookupTo, string recordFromId)
-        {
-            throw new NotImplementedException();
-        }
-
         public string GetDisplayNameField(string recordType)
         {
             return GetRecordTypeMetadata(recordType).PrimaryFieldSchemaName;
@@ -445,6 +440,11 @@ namespace JosephM.Record.Service
         public string GetFieldLabel(string fieldName, string recordtype)
         {
             return this.GetFieldMetadata(fieldName, recordtype).DisplayName ?? fieldName;
+        }
+
+        public virtual IRecordService CloneForParellelProcessing()
+        {
+            return this;
         }
     }
 }

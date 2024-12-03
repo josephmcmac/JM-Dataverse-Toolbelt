@@ -75,6 +75,11 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
+        public IRecordService CloneForParellelProcessing()
+        {
+            return new XrmRecordService(XrmRecordConfiguration, Controller, ServiceFactory.Clone(), formService: _formService);
+        }
+
         public void LoadFieldsForAllEntities(LogController logController)
         {
             XrmService.LoadFieldsForAllEntities(logController);
@@ -1268,11 +1273,6 @@ namespace JosephM.Record.Xrm.XrmRecord
             return
                 ToIRecords(_xrmService.GetFirstX(type, x, fields, ToConditionExpressions(conditions, type),
                     ToOrderExpressions(sort)));
-        }
-
-        public IEnumerable<IRecord> GetLinkedRecordsThroughBridge(string linkedRecordType, string recordTypeThrough, string recordTypeFrom, string linkedThroughLookupFrom, string linkedThroughLookupTo, string recordFromId)
-        {
-            return ToIRecords(_xrmService.GetLinkedRecordsThroughBridge(linkedRecordType, recordTypeThrough, recordTypeFrom, linkedThroughLookupFrom, linkedThroughLookupTo, new Guid(recordFromId)));
         }
 
         public IRecordService GetLookupService(string fieldName, string recordType, string reference, IRecord record)

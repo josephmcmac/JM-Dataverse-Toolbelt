@@ -64,12 +64,6 @@ namespace JosephM.Record.IService
         IEnumerable<IRecord> GetMultiple(string recordType, IEnumerable<string> ids, IEnumerable<string> fields);
 
         /// <summary>
-        ///     Returns All Records Linked To A Record By A Lookup Field
-        /// </summary>
-        IEnumerable<IRecord> GetLinkedRecordsThroughBridge(string linkedRecordType, string recordTypeThrough, string recordTypeFrom, string linkedThroughLookupFrom, string linkedThroughLookupTo,
-            string recordFromId);
-
-        /// <summary>
         ///     Saves Only The Specified Fields To The Record In The Data Store
         /// </summary>
         void Update(IRecord record, IEnumerable<string> fieldsToSubmit, bool bypassWorkflowsAndPlugins = false);
@@ -216,5 +210,7 @@ namespace JosephM.Record.IService
         QueryDefinition GetViewAsQueryDefinition(string viewId);
 
         IRecordLocalisationService GetLocalisationService();
+
+        IRecordService CloneForParellelProcessing();
     }
 }

@@ -51,7 +51,7 @@ namespace JosephM.Application.ViewModel.Query
             NotInUngroupSelectedConditions = new XrmButtonViewModel("Ungroup Selected", () => UnGroupSelected(isNotIn: true), ApplicationController);
 
             RunQueryButton = new XrmButtonViewModel("Run Query", QuickFind, ApplicationController);
-            IncludeNotInButton = new XrmButtonViewModel("Add Not In Query", NotInSwitch, ApplicationController);
+            IncludeNotInButton = new XrmButtonViewModel("Add Not In Query", NotInSwitch, ApplicationController) {  IsVisible = false };
 
             if (!AllowQuery)
             {

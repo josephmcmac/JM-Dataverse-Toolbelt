@@ -2,14 +2,12 @@
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Deployment.CreatePackage;
-using JosephM.Deployment.DeployPackage;
 using JosephM.Record.Extentions;
 using JosephM.Xrm.DataImportExport.Import;
 using JosephM.Xrm.DataImportExport.XmlImport;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Linq;
 
 namespace JosephM.Deployment.Test

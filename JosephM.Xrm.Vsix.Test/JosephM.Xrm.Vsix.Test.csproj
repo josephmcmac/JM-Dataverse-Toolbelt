@@ -69,11 +69,9 @@
     <Compile Include="FakeVisualStudioSolutionFolder.cs" />
     <Compile Include="FakeVsixApplicationController.cs" />
     <Compile Include="ValidationClassPrefixValidationTests.cs" />
-    <Compile Include="VsixAddPortalCodeTests.cs" />
     <Compile Include="VsixGeneralAssemblyTests.cs" />
     <Compile Include="VsixPackageSettingsModuleTests.cs" />
     <Compile Include="VsixXrmCrudDialogTests.cs" />
-    <Compile Include="VsixDeployIntoFieldTests.cs" />
     <Compile Include="VsixManagePluginTriggersTests.cs" />
     <Compile Include="VsixCreateAndDeployPackageTests.cs" />
     <Compile Include="VsixRefreshSettingsDialogTests.cs" />

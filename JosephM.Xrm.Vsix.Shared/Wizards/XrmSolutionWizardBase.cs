@@ -12,7 +12,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Json;
 using System.Text;
-using System.Windows;
 using VSLangProj;
 
 namespace JosephM.Xrm.Vsix.Wizards
@@ -41,10 +40,6 @@ namespace JosephM.Xrm.Vsix.Wizards
                 XrmPackageSettings.WebResourceProjects = new[]
                 {
                     new XrmPackageSettings.WebResourceProject(replacementsDictionary["$projectname$"] + ".WebResources")
-                };
-                XrmPackageSettings.DeployIntoFieldProjects = new[]
-                {
-                    new XrmPackageSettings.DeployIntoFieldProject("N/A")
                 };
             }
             var visualStudioService = new VisualStudioService(DTE);

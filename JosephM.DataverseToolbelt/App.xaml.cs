@@ -40,7 +40,7 @@ namespace JosephM.XrmDeveloperTool
             app.AddModule<SavedXrmConnectionsModule>();
             app.AddModule<DevAppApplicationInsightsModule>();
             app.AddModule<DeploymentModule>();
-            app.AddModule<ExportDataUsabilityModule>();
+            app.AddModule<ExportDataTypeUsabilitiesModule>();
             app.AddModule<ExcelImportModule>();
             app.AddModule<SqlImportModule>();
             app.AddModule<MigrateInternalModule>();

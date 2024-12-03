@@ -1,8 +1,5 @@
-﻿#region
-
-using System;
-
-#endregion
+﻿using System;
+using System.Linq;
 
 namespace JosephM.Core.Extentions
 {
@@ -15,13 +12,18 @@ namespace JosephM.Core.Extentions
         public static string DisplayString(this Exception ex)
         {
             if (ex == null)
-                return "An unidentified error occured";
-            var result = "";
-            if (ex != null)
             {
-                result = string.Concat(ex.GetType(), ": ", ex.Message, "\n", ex.StackTrace);
-                if (ex.InnerException != null)
-                    result = string.Concat(result, "\n", ex.InnerException.DisplayString());
+                return "An unidentified error occured";
+            }
+            var result = "";
+            result = string.Concat(ex.GetType(), ": ", ex.Message, "\n", ex.StackTrace);
+            if (ex.InnerException != null)
+            {
+                result = string.Concat(result, "\nInner Exception: ", ex.InnerException.DisplayString());
+            }
+            if(ex is AggregateException aggregateException && aggregateException.InnerExceptions != null)
+            {
+                result = string.Concat(result, "\nInner Exceptions: ", string.Join("\n",  aggregateException.InnerExceptions.Select(ie => ie.DisplayString())));
             }
             return result;
         }

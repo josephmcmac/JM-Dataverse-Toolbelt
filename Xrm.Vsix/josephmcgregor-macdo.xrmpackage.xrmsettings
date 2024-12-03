@@ -2,15 +2,15 @@
   "AddToSolution": false,
   "Connections": [
     {
-      "ClientId": "d8f27f89-13a4-4f7d-b2ef-29b831d1d300",
+      "ClientId": "146df633-07be-46df-95aa-381da5971186",
       "ClientSecret": {
-        "_password": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAGiTmDYTi0UuVihjAsv7aWgAAAAACAAAAAAAQZgAAAAEAACAAAACgcbeaya+qs2\/e8odd+Gpqob4CZt\/zTbBssR+zyR7TQAAAAAAOgAAAAAIAACAAAAAn\/88e+J+ljwBQGBPXMNwt+0zrMApUy0Vah\/nkZ9RDzmAAAAD2SP0loe+9ucI7BU9wjHN7ED1iNRMhWya8OImhIm8FQfwD01cqm1G7mF6Oz6ju1hTD\/2f26G4RnICIZ3Qn1INdr4jlqa9t0coOK+7+OGTx22ZfSxMtXLEZX0ws709Phn1AAAAAC+sW4npdXEOGoJoiRqA8jQCgxuQEyksd\/bgA9jrkGTRn4metLP0u3DKZRDcr6xEiJRs5TEQFSmE7utXy3Eeo+w==",
+        "_password": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAQ1E6PgtjlkWlNwEnV\/uhawAAAAACAAAAAAAQZgAAAAEAACAAAABvisOa6zPK39wThtIiNPH1G+f0LP9fB5mFac0ClyZv+QAAAAAOgAAAAAIAACAAAABjM99ziPTApVuXk6U7uDppiz+GtjTmJBCAyXrkkv5fS2AAAAC3OnLtrVnGqDc+gDW+4NAgP4NLHOgWrGstbmlUwF9wbeuX7ILq9d1DpC8np0dQ\/LpqSPKwII6GlFC0eSEeTGD2mKSTJ2rszZhLiCziPaADtO6awgFW22zf1Ht8RAj5eZNAAAAASvcUmwmz7sTSYCWqMLZpTv0vFwfSEtY+eftnuzREp3agiJibB351CWqg4aw9eOI8nKSymP2RveArZQLul25hIg==",
         "<EncryptPassword>k__BackingField": true
       },
       "ConnectionType": 0,
-      "Name": "CDX",
+      "Name": "Toolbelt App Dev",
       "ToolingConnectionId": null,
-      "WebUrl": "https:\/\/crm368461.crm5.dynamics.com",
+      "WebUrl": "https:\/\/toolbeltapp-dev.crm6.dynamics.com",
       "Active": true
     }
   ],
@@ -19,8 +19,11 @@
       "ProjectName": "N\/A"
     }
   ],
+  "PluginPackageProjects": [ ],
   "PluginProjects": [
     {
+      "DisableAssemblyDeploy": false,
+      "DisableAssemblyUpdate": false,
       "ProjectName": "N\/A",
       "UsesILMergeMsBuildTask": false
     }
@@ -32,6 +35,7 @@
   },
   "SolutionDynamicsCrmPrefix": "jmcg",
   "SolutionObjectPrefix": "JosephM",
+  "TypesForSchemaGeneration": [ ],
   "WebResourceProjects": [
     {
       "ProjectName": "N\/A"

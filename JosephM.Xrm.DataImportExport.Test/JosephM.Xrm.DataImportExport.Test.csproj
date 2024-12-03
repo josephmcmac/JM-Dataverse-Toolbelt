@@ -63,7 +63,6 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="AddPortalDataModuleTests.cs" />
     <Compile Include="XmlExportServiceTests.cs" />
     <Compile Include="XmlImportTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

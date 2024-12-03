@@ -28,6 +28,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
         public BulkUpdateRequest()
         {
             ExecuteMultipleSetSize = 50;
+            ParallelUpdateProcesses = 1;
         }
 
         private IEnumerable<IRecord> _recordsToUpdate { get; set; }
@@ -59,15 +60,23 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
         [PropertyInContextByPropertyValue(nameof(AllowExecuteMultiples), true)]
         public int? ExecuteMultipleSetSize { get; set; }
 
+        [MyDescription("Specify number of parallel processes to run applying the updates")]
+        [Group(Sections.Options)]
+        [DisplayOrder(22)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(5)]
+        public int? ParallelUpdateProcesses { get; set; }
+
         [MyDescription("Specify for cloud flow, plugin, and workflow logic not to trigger from update operations being performed")]
         [DisplayName("Bypass Flows, Plugins and Workflows")]
         [Group(Sections.Options)]
-        [DisplayOrder(22)]
+        [DisplayOrder(23)]
         public bool BypassFlowsPluginsAndWorkflows { get; set; }
 
         [DisplayName("Field to Update 1")]
         [Group(Sections.FieldUpdate)]
-        [DisplayOrder(22)]
+        [DisplayOrder(24)]
         [RequiredProperty]
         [RecordFieldFor(nameof(ValueToSet))]
         public RecordField FieldToSet { get; set; }

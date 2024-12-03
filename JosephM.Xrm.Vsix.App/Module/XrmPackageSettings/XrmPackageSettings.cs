@@ -82,11 +82,6 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
         [MyDescription("Specify if you want to only display plugin package options for specific projects")]
         public IEnumerable<PluginPackageProject> PluginPackageProjects { get; set; }
 
-        [DisplayOrder(340)]
-        [Group(Sections.OtherSolutionOptions)]
-        [MyDescription("Specify if you want to only display portal code / deploy into field options for specific projects")]
-        public IEnumerable<DeployIntoFieldProject> DeployIntoFieldProjects { get; set; }
-
         [DisplayName("Type Filter for Schema Generation (optional)")]
         [DisplayOrder(350)]
         [Group(Sections.SchemaGenerationFilter)]
@@ -181,27 +176,8 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
             public string ProjectName { get; set; }
         }
 
-        [DoNotAllowGridOpen]
-        public class DeployIntoFieldProject
-        {
-            public DeployIntoFieldProject()
-            {
-
-            }
-
-            public DeployIntoFieldProject(string projectName)
-            {
-                ProjectName = projectName;
-            }
-
-            [GridWidth(330)]
-            [RequiredProperty]
-            public string ProjectName { get; set; }
-        }
-
         private static class Sections
         {
-            public const string ObjectPrefixes = "Prefixes";
             public const string Solution = "Active Dev Solution";
             public const string ConnectionInstances = "Instance Connections";
             public const string ProjectSolutionOptions = "Project type options - use these to filter menu options within projects. If you want to hide menu options for all projects just insert a fake project name";

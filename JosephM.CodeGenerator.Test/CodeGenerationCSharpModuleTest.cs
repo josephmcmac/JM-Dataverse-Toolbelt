@@ -66,7 +66,7 @@ namespace JosephM.CodeGenerator.Test
         }
 
 
-        private void VerifyCompiles(string cSharpCode)
+        private static void VerifyCompiles(string cSharpCode)
         {
             var csc = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v4.0" } });
             var parameters = new CompilerParameters(new[] { "mscorlib.dll", "System.Core.dll" }, "foo.exe", true);

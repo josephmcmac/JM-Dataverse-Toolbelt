@@ -1,24 +1,11 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
-using System.IO;
 
 namespace JosephM.Spreadsheet.Test
 {
     [TestClass]
     public class SpreadsheetExcelReadTests
     {
-        [TestMethod]
-        public void SpreadsheetExcelReadXlsDebug()
-        {
-            var rows = ExcelUtility.SelectPropertyBagsFromExcelTab("C:\\Temp\\System Forms - TEST.xlsx", "Records");
-
-            foreach(var row in rows)
-            {
-                File.WriteAllText($"C:\\Temp\\FormXmlFiles\\{row.GetFieldAsString("Entity Name")} - {row.GetFieldAsString("Name")}.xml", row.GetFieldAsString("formxml"));
-            }
-        }
-
         [DeploymentItem("TestXlsx.xlsx")]
         [TestMethod]
         public void SpreadsheetExcelReadXlsxTest()
