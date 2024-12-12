@@ -322,7 +322,7 @@ namespace JosephM.Record.Service
             }
         }
 
-        public override void Update(IRecord record, IEnumerable<string> changedPersistentFields)
+        public override void Update(IRecord record, IEnumerable<string> changedPersistentFields, bool bypassWorkflowsAndPlugins = false)
         {
             throw new NotImplementedException();
         }

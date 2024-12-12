@@ -22,6 +22,7 @@ namespace JosephM.Xrm.MigrateInternal
         public MigrateInternalRequest()
         {
             ExecuteMultipleSetSize = 50;
+            ParallelImportProcessCount = 1;
             TargetCacheLimit = 1000;
         }
 
@@ -38,6 +39,7 @@ namespace JosephM.Xrm.MigrateInternal
         [Group(Sections.ImportOptions)]
         [DisplayOrder(417)]
         [RequiredProperty]
+        [DisplayName("ForceSubmitAllFields")]
         public bool SubmitUnchangedFields { get; set; }
 
         [Group(Sections.ImportOptions)]
@@ -46,6 +48,13 @@ namespace JosephM.Xrm.MigrateInternal
         [MinimumIntValue(1)]
         [MaximumIntValue(1000)]
         public int? ExecuteMultipleSetSize { get; set; }
+
+        [Group(Sections.ImportOptions)]
+        [DisplayOrder(423)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(4)]
+        public int? ParallelImportProcessCount { get; set; }
 
         [Group(Sections.ImportOptions)]
         [DisplayOrder(425)]

@@ -32,6 +32,8 @@ namespace JosephM.CodeGenerator
             get { return new[] { "abstract", "event", "namespace", "equals", "class", "string", "int", "object", "decimal", "double", "float", "override", "virtual", "constant", "ref", "out", "true", "false", "is", "as", "default" }; }
         }
 
+        private static string _basicAlphanumeric = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+
         protected static string CreateCodeLabel(string rawLabel)
         {
             var stringBuilder = new StringBuilder();
@@ -40,7 +42,7 @@ namespace JosephM.CodeGenerator
                 for (var i = 0; i < rawLabel.Length; i++)
                 {
                     var c = rawLabel.ElementAt(i);
-                    if (c != '_' && (char.IsWhiteSpace(c) || !char.IsLetterOrDigit(c)))
+                    if (c != '_' && !_basicAlphanumeric.Contains(c))
                     {
                         continue;
                     }

@@ -275,14 +275,6 @@
           <ButtonText>Deploy Records</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="DeployIntoFieldCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
-        <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>
-        <Strings>
-          <ButtonText>Deploy Into Record</ButtonText>
-        </Strings>
-      </Button>
       <Button guid="guidXrmPackageCmdSet" id="GenerateJavascriptOptionsCommandId" priority="0x0102" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
@@ -352,7 +344,6 @@
       <IDSymbol name="AboutCommandId" value="0x0113" />
       <IDSymbol name="ImportSolutionCommandId" value="0x0114" />
       <IDSymbol name="ImportRecordsCommandId" value="0x0115" />
-      <IDSymbol name="DeployIntoFieldCommandId" value="0x0117" />
       <IDSymbol name="GenerateJavascriptOptionsCommandId" value="0x0118" />
       <IDSymbol name="OpenCrmDefaultSolutionCommandId" value="0x0119" />
       <IDSymbol name="AddPortalCodeCommandId" value="0x011B" />

@@ -9,15 +9,20 @@ namespace JosephM.XrmModule.ToolingConnector
 {
     public class ToolingOrganizationConnectionFactory : XrmOrganizationConnectionFactory
     {
-        private Dictionary<string, CrmServiceClient> _cachedToolingConnections = new Dictionary<string, CrmServiceClient>();
+        private readonly Dictionary<string, CrmServiceClient> _cachedToolingConnections = new Dictionary<string, CrmServiceClient>();
 
-        private object _lockObject = new Object();
+        private readonly object _lockObject = new Object();
 
         public IApplicationController ApplicationController { get; }
 
         public ToolingOrganizationConnectionFactory(IApplicationController applicationController)
         {
             ApplicationController = applicationController;
+        }
+
+        public override IOrganizationConnectionFactory Clone()
+        {
+            return new ToolingOrganizationConnectionFactory(ApplicationController);
         }
 
         public override GetOrganisationConnectionResponse GetOrganisationConnection(IXrmConfiguration xrmConfiguration)
@@ -104,9 +109,9 @@ namespace JosephM.XrmModule.ToolingConnector
 
         private static void LoginFrm_ConnectionToCrmCompleted(object sender, EventArgs e)
         {
-            if (sender is ToolingConnectorForm)
+            if (sender is ToolingConnectorForm toolingConnectorForm)
             {
-                ((ToolingConnectorForm)sender).Close();
+                toolingConnectorForm.Close();
             }
         }
     }

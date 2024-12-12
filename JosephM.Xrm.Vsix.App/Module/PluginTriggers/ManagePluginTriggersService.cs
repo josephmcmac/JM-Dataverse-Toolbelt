@@ -99,10 +99,10 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
             controller.UpdateProgress(3, 4, "Creating/Updating Images");
 
-            var updatesAndDeletes =
+            var imageItems =
                 unloadedObjects.Keys.Where(
                     r =>
-                        new[] { "Update", "Delete" }.Contains(
+                        new[] { "Update", "Delete", "SetStateDynamicEntity" }.Contains(
                             r.GetLookupName(Fields.sdkmessageprocessingstep_.sdkmessageid)))
                             .ToArray();
 
@@ -110,7 +110,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
             //update/delete pre-images
             var imagesToCreateOrUpdate = new List<IRecord>();
             var imagesToDelete = new List<IRecord>();
-            foreach (var item in updatesAndDeletes
+            foreach (var item in imageItems
                 .Where(i => !triggerLoads.Errors.Keys.Contains(i)))
             {
                 var matchingPluginTrigger = unloadedObjects[item];
@@ -137,7 +137,6 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                     try
                     {
                         //set the details to create/update in the pre-image
-                        var isUpdate = triggerLoads.Updated.Contains(item);
                         var imageRecord = Service.NewRecord(Entities.sdkmessageprocessingstepimage);
                         imageRecord.Id = matchingPluginTrigger.PreImageId;
                         if (matchingPluginTrigger.PreImageId != null)
@@ -147,7 +146,10 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
                         imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.name, matchingPluginTrigger.PreImageName, Service);
                         imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.entityalias, matchingPluginTrigger.PreImageName, Service);
-                        imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.messagepropertyname, "Target", Service);
+                        var messagePropertyName = item.GetLookupName(Fields.sdkmessageprocessingstep_.sdkmessageid) == "SetStateDynamicEntity"
+                            ? "EntityMoniker"
+                            : "Target";
+                        imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.messagepropertyname, messagePropertyName, Service);
                         imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid, Service.ToLookup(item), Service);
                         imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.imagetype, OptionSets.SdkMessageProcessingStepImage.ImageType.PreImage, Service);
                         var attributesString = matchingPluginTrigger.PreImageAllFields || matchingPluginTrigger.PreImageFields == null || !matchingPluginTrigger.PreImageFields.Any()

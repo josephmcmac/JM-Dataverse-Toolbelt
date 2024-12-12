@@ -75,6 +75,11 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
+        public IRecordService CloneForParellelProcessing()
+        {
+            return new XrmRecordService(XrmRecordConfiguration, Controller, ServiceFactory.Clone(), formService: _formService);
+        }
+
         public void LoadFieldsForAllEntities(LogController logController)
         {
             XrmService.LoadFieldsForAllEntities(logController);
@@ -156,19 +161,35 @@ namespace JosephM.Record.Xrm.XrmRecord
         }
 
 
-        public void Update(IRecord record, IEnumerable<string> changedPersistentFields)
+        public void Update(IRecord record, IEnumerable<string> changedPersistentFields, bool bypassWorkflowsAndPlugins = false)
         {
             if (changedPersistentFields == null)
-                _xrmService.Update(ToEntity(record));
+            {
+                var entity = ToEntity(record);
+                var fieldsInEntity = entity.GetFieldsInEntity();
+                var setStateInstead = !XrmService.SupportsSetStateUpdate
+                    && ((fieldsInEntity.Count() == 2 && fieldsInEntity.Contains("statecode") && fieldsInEntity.Contains("statuscode"))
+                        || (fieldsInEntity.Count() == 1 && fieldsInEntity.Contains("statecode")));
+                if (setStateInstead)
+                {
+                    _xrmService.SetState(entity.LogicalName, entity.Id, entity.GetOptionSetValue("statecode"), entity.GetOptionSetValue("statuscode"));
+                }
+                else
+                {
+                    _xrmService.Update(entity, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins);
+                }
+            }
             else
-                _xrmService.Update(ToEntity(record), changedPersistentFields);
+            {
+                _xrmService.Update(ToEntity(record), changedPersistentFields, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins);
+            }
         }
 
-        public IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null)
+        public IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null, bool bypassWorkflowsAndPlugins = false)
         {
             var result = new Dictionary<int, Exception>();
 
-            var response = XrmService.UpdateMultiple(ToEntities(updateRecords), fieldsToUpdate);
+            var response = XrmService.UpdateMultiple(ToEntities(updateRecords), fieldsToUpdate, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins);
             var i = 0;
             foreach (var item in response)
             {
@@ -1252,11 +1273,6 @@ namespace JosephM.Record.Xrm.XrmRecord
             return
                 ToIRecords(_xrmService.GetFirstX(type, x, fields, ToConditionExpressions(conditions, type),
                     ToOrderExpressions(sort)));
-        }
-
-        public IEnumerable<IRecord> GetLinkedRecordsThroughBridge(string linkedRecordType, string recordTypeThrough, string recordTypeFrom, string linkedThroughLookupFrom, string linkedThroughLookupTo, string recordFromId)
-        {
-            return ToIRecords(_xrmService.GetLinkedRecordsThroughBridge(linkedRecordType, recordTypeThrough, recordTypeFrom, linkedThroughLookupFrom, linkedThroughLookupTo, new Guid(recordFromId)));
         }
 
         public IRecordService GetLookupService(string fieldName, string recordType, string reference, IRecord record)

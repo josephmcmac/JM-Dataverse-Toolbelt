@@ -8,6 +8,7 @@ using System.Linq;
 namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
 {
     [Group(Sections.RecordDetails, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
+    [Group(Sections.Options, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20, displayLabel: false)]
     [Group(Sections.FieldUpdate, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30, displayLabel: false)]
     [Group(Sections.FieldUpdate2, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 31, displayLabel: false)]
     [Group(Sections.FieldUpdate3, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 32, displayLabel: false)]
@@ -27,6 +28,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
         public BulkUpdateRequest()
         {
             ExecuteMultipleSetSize = 50;
+            ParallelUpdateProcesses = 1;
         }
 
         private IEnumerable<IRecord> _recordsToUpdate { get; set; }
@@ -49,7 +51,8 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
         [DisplayOrder(20)]
         public int RecordCount { get { return _recordsToUpdate?.Count() ?? 0; } }
 
-        [Group(Sections.RecordDetails)]
+        [MyDescription("Specify for updates to be submitted the given batch size using execute multple operations")]
+        [Group(Sections.Options)]
         [DisplayOrder(21)]
         [RequiredProperty]
         [MinimumIntValue(1)]
@@ -57,9 +60,23 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
         [PropertyInContextByPropertyValue(nameof(AllowExecuteMultiples), true)]
         public int? ExecuteMultipleSetSize { get; set; }
 
+        [MyDescription("Specify number of parallel processes to run applying the updates")]
+        [Group(Sections.Options)]
+        [DisplayOrder(22)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(5)]
+        public int? ParallelUpdateProcesses { get; set; }
+
+        [MyDescription("Specify for cloud flow, plugin, and workflow logic not to trigger from update operations being performed")]
+        [DisplayName("Bypass Flows, Plugins and Workflows")]
+        [Group(Sections.Options)]
+        [DisplayOrder(23)]
+        public bool BypassFlowsPluginsAndWorkflows { get; set; }
+
         [DisplayName("Field to Update 1")]
         [Group(Sections.FieldUpdate)]
-        [DisplayOrder(22)]
+        [DisplayOrder(24)]
         [RequiredProperty]
         [RecordFieldFor(nameof(ValueToSet))]
         public RecordField FieldToSet { get; set; }
@@ -241,6 +258,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
         private static class Sections
         {
             public const string RecordDetails = "Bulk Update";
+            public const string Options = "Options";
             public const string FieldUpdate = "Field Values To Update";
             public const string FieldUpdate2 = "FieldUpdate2";
             public const string FieldUpdate3 = "FieldUpdate3";

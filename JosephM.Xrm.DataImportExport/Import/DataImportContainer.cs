@@ -15,8 +15,8 @@ namespace JosephM.Xrm.DataImportExport.Import
 {
     public class DataImportContainer
     {
-        private Dictionary<Entity, List<string>> _fieldsToRetry = new Dictionary<Entity, List<string>>();
-        public DataImportContainer(DataImportResponse response, XrmRecordService xrmRecordService, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary, IEnumerable<Entity> entities, ServiceRequestController controller, bool includeOwner, bool includeOverrideCreatedOn,bool maskEmails, MatchOption matchOption, bool updateOnly, bool containsExportedConfigFields, int executeMultipleSetSize, int targetCacheLimit, bool onlyFieldMatchActive, bool submitUnchangedFields)
+        private readonly Dictionary<Entity, List<string>> _fieldsToRetry = new Dictionary<Entity, List<string>>();
+        public DataImportContainer(DataImportResponse response, XrmRecordService xrmRecordService, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary, IEnumerable<Entity> entities, ServiceRequestController controller, bool includeOwner, bool includeOverrideCreatedOn,bool maskEmails, MatchOption matchOption, bool updateOnly, bool containsExportedConfigFields, int executeMultipleSetSize, int targetCacheLimit, bool onlyFieldMatchActive, bool forceSubmitAllFields, bool displayTimeEstimations, int parallelImportProcessCount)
         {
             Response = response;
             XrmRecordService = xrmRecordService;
@@ -27,11 +27,13 @@ namespace JosephM.Xrm.DataImportExport.Import
             IncludeOverrideCreatedOn = includeOverrideCreatedOn;
             MaskEmails = maskEmails;
             OnlyFieldMatchActive = onlyFieldMatchActive;
-            SubmitUnchangedFields = submitUnchangedFields;
+            ForceSubmitAllFields = forceSubmitAllFields;
+            DisplayTimeEstimations = displayTimeEstimations;
             MatchOption = matchOption;
             UpdateOnly = updateOnly;
             ContainsExportedConfigFields = containsExportedConfigFields;
             ExecuteMultipleSetSize = executeMultipleSetSize;
+            ParallelImportProcessCount = parallelImportProcessCount;
             _maxCacheCount = targetCacheLimit;
             EntitiesToImport = entities;
             var typesToImport = entities.Select(e => e.LogicalName).Distinct();
@@ -56,11 +58,13 @@ namespace JosephM.Xrm.DataImportExport.Import
         public bool IncludeOverrideCreatedOn { get; }
         public bool MaskEmails { get; }
         public bool OnlyFieldMatchActive { get; }
-        public bool SubmitUnchangedFields { get; }
+        public bool ForceSubmitAllFields { get; }
+        public bool DisplayTimeEstimations { get; }
         public MatchOption MatchOption { get; }
         public bool UpdateOnly { get; }
         public bool ContainsExportedConfigFields { get; }
         public int ExecuteMultipleSetSize { get; }
+        public int ParallelImportProcessCount { get; private set; }
 
         public IDictionary<Entity, List<string>> FieldsToRetry {  get { return _fieldsToRetry; } }
         public IEnumerable<string> AssociationTypesToImport { get; }
@@ -112,7 +116,7 @@ namespace JosephM.Xrm.DataImportExport.Import
         public IEnumerable<string> GetFieldsToImport(IEnumerable<Entity> thisTypeEntities, string type)
         {
             var fields = GetFieldsInEntities(thisTypeEntities)
-                .Where(f => IsIncludeField(f, type, XrmRecordService, IncludeOwner, IncludeOverrideCreatedOn))
+                .Where(f => ForceSubmitAllFields || IsIncludeField(f, type, XrmRecordService, IncludeOwner, IncludeOverrideCreatedOn))
                 .Distinct()
                 .ToList();
             return fields;

@@ -459,19 +459,12 @@ namespace JosephM.Application.ViewModel.Fakes
             get { return FakeConstants.FakeHtml; }
         }
 
-        public override IEnumerable<IRecord> GetLinkedRecordsThroughBridge(string linkedRecordType, string recordTypeThrough, string recordTypeFrom,
-            string linkedThroughLookupFrom, string linkedThroughLookupTo, string recordFromId)
-        {
-            //todo not necessary yet
-            return new RecordObject[0];
-        }
-
         public override IsValidResponse VerifyConnection()
         {
             return new IsValidResponse();
         }
 
-        private FakeFormService _formService = new FakeFormService();
+        private readonly FakeFormService _formService = new FakeFormService();
         public override IFormService GetFormService()
         {
             return _formService;

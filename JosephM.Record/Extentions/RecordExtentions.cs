@@ -197,9 +197,9 @@ namespace JosephM.Record.Extentions
             return recordService.Create(record, null);
         }
 
-        public static void Update(this IRecordService recordService, IRecord record)
+        public static void Update(this IRecordService recordService, IRecord record, bool bypassWorkflowsAndPlugins = false)
         {
-            recordService.Update(record, null);
+            recordService.Update(record, null, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins);
         }
 
         public static void Delete(this IRecordService recordService, IRecord record)

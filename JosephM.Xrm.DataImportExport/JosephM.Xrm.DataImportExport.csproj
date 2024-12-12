@@ -57,9 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Modules\AddPortalDataModule.cs" />
     <Compile Include="Modules\ExportDataTypeUsabilitiesModule.cs" />
-    <Compile Include="Modules\ExportDataUsabilityModule.cs" />
     <Compile Include="Import\ExplicitFieldValues.cs" />
     <Compile Include="XmlExport\ExportRecordType.cs" />
     <Compile Include="XmlExport\ExportType.cs" />

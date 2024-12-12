@@ -21,7 +21,7 @@ namespace JosephM.Record.Service
 
         public abstract IRecord Get(string recordType, string id);
 
-        public abstract void Update(IRecord record, IEnumerable<string> fieldToCommit);
+        public abstract void Update(IRecord record, IEnumerable<string> fieldToCommit, bool bypassWorkflowsAndPlugins = false);
 
         public abstract string Create(IRecord record, IEnumerable<string> fieldToSet);
 
@@ -306,11 +306,6 @@ namespace JosephM.Record.Service
 
         #endregion metadata changes
 
-        public virtual IEnumerable<IRecord> GetLinkedRecordsThroughBridge(string linkedRecordType, string recordTypeThrough, string recordTypeFrom, string linkedThroughLookupFrom, string linkedThroughLookupTo, string recordFromId)
-        {
-            throw new NotImplementedException();
-        }
-
         public string GetDisplayNameField(string recordType)
         {
             return GetRecordTypeMetadata(recordType).PrimaryFieldSchemaName;
@@ -365,7 +360,7 @@ namespace JosephM.Record.Service
         {
         }
 
-        public IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null)
+        public IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null, bool bypassWorkflowsAndPlugins = false)
         {
             var result = new Dictionary<int, Exception>();
 
@@ -374,7 +369,7 @@ namespace JosephM.Record.Service
             {
                 try
                 {
-                    Update(item, fieldsToUpdate);
+                    Update(item, fieldsToUpdate, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins);
                 }
                 catch (Exception ex)
                 {
@@ -445,6 +440,11 @@ namespace JosephM.Record.Service
         public string GetFieldLabel(string fieldName, string recordtype)
         {
             return this.GetFieldMetadata(fieldName, recordtype).DisplayName ?? fieldName;
+        }
+
+        public virtual IRecordService CloneForParellelProcessing()
+        {
+            return this;
         }
     }
 }

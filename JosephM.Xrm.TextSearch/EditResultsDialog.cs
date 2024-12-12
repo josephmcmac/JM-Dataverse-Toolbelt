@@ -71,7 +71,7 @@ namespace JosephM.Xrm.TextSearch
                 {
                     new CustomGridFunction("BACKTOSUMMARY", "Back To Summary", Remove),
                     new CustomGridFunction("EDITCOLUMNS", "Edit Columns", (g) => LoadColumnEdit(), (g) => DynamicGridViewModel != null),
-                    new CustomGridFunction("DOWNLOAD", "Download", new[]
+                    new CustomGridFunction("DOWNLOAD", "Export", new[]
                     {
                         new CustomGridFunction("DOWNLOADEXCEL", "Excel", (g) => g.DownloadExcel(), (g) => g.GridRecords != null && g.GridRecords.Any()),
                         new CustomGridFunction("DOWNLOADCSV", "CSV", (g) => g.DownloadCsv(), (g) => g.GridRecords != null && g.GridRecords.Any())

@@ -152,7 +152,7 @@ namespace JosephM.Record.Sql
             return new RecordMetadata() { SchemaName = recordType, DisplayName = recordType, CollectionName = recordType + "s" };
         }
 
-        public override void Update(IRecord record, IEnumerable<string> changedPersistentFields)
+        public override void Update(IRecord record, IEnumerable<string> changedPersistentFields, bool bypassWorkflowsAndPlugins = false)
         {
             var sql = GetUpdateString(record, changedPersistentFields);
             ExecuteSql(sql);

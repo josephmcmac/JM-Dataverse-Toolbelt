@@ -186,6 +186,7 @@
     <Compile Include="Utility\FileUtility.cs" />
     <Compile Include="Sql\QueryRow.cs" />
     <Compile Include="Log\LogController.cs" />
+    <Compile Include="Utility\ParallelTaskHelper.cs" />
     <Compile Include="Utility\TaskEstimator.cs" />
     <Compile Include="Utility\VersionHelper.cs" />
   </ItemGroup>

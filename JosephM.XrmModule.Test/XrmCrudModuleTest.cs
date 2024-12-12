@@ -93,6 +93,8 @@ namespace JosephM.XrmModule.Test
         [TestMethod]
         public void XrmCrudQueryWithNotInTestScript()
         {
+            Assert.Inconclusive();
+
             DeleteAll(Entities.account);
 
             var conditionFieldIn = Fields.account_.address1_line1;

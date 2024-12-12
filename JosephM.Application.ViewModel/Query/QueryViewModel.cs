@@ -51,7 +51,7 @@ namespace JosephM.Application.ViewModel.Query
             NotInUngroupSelectedConditions = new XrmButtonViewModel("Ungroup Selected", () => UnGroupSelected(isNotIn: true), ApplicationController);
 
             RunQueryButton = new XrmButtonViewModel("Run Query", QuickFind, ApplicationController);
-            IncludeNotInButton = new XrmButtonViewModel("Add Not In Query", NotInSwitch, ApplicationController);
+            IncludeNotInButton = new XrmButtonViewModel("Add Not In Query", NotInSwitch, ApplicationController) {  IsVisible = false };
 
             if (!AllowQuery)
             {
@@ -293,7 +293,7 @@ namespace JosephM.Application.ViewModel.Query
                         });
                     };
                 }
-                customFunctionList.Add(new CustomGridFunction("DOWNLOAD", "Download", new[]
+                customFunctionList.Add(new CustomGridFunction("DOWNLOAD", "Export", new[]
                 {
                     new CustomGridFunction("DOWNLOADEXCEL", "Excel", (g) => g.DownloadExcel(), (g) => g.GridRecords != null && g.GridRecords.Any()),
                     new CustomGridFunction("DOWNLOADCSV", "CSV", (g) => g.DownloadCsv(), (g) => g.GridRecords != null && g.GridRecords.Any())

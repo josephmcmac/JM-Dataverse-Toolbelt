@@ -1,14 +1,12 @@
 ﻿using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Core.FieldType;
 using JosephM.Deployment.ImportSolution;
-using JosephM.Deployment.SolutionTransfer;
 using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using System.Linq;
 
 namespace JosephM.Deployment.Test
 {

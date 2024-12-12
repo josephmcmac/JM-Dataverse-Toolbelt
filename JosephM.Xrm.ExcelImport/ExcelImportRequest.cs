@@ -15,13 +15,14 @@ namespace JosephM.Xrm.ExcelImport
     [AllowSaveAndLoad]
     [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10, displayLabel: false)]
     [Group(Sections.ImportOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20)]
-    [Group(Sections.CacheOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30)]
+    [Group(Sections.PerformanceOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30)]
     public class ExcelImportRequest : ServiceRequestBase, IValidatableObject
     {
         public ExcelImportRequest()
         {
             MatchRecordsByName = true;
             ExecuteMultipleSetSize = 50;
+            ParallelImportProcessCount = 1;
             TargetCacheLimit = 1000;
         }
 
@@ -58,14 +59,21 @@ namespace JosephM.Xrm.ExcelImport
         [RequiredProperty]
         public bool OnlyFieldMatchActive { get; set; }
 
-        [Group(Sections.CacheOptions)]
+        [Group(Sections.PerformanceOptions)]
         [DisplayOrder(420)]
         [RequiredProperty]
         [MinimumIntValue(1)]
         [MaximumIntValue(1000)]
         public int? ExecuteMultipleSetSize { get; set; }
 
-        [Group(Sections.CacheOptions)]
+        [Group(Sections.PerformanceOptions)]
+        [DisplayOrder(423)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(4)]
+        public int? ParallelImportProcessCount { get; set; }
+
+        [Group(Sections.PerformanceOptions)]
         [DisplayOrder(425)]
         [RequiredProperty]
         [MinimumIntValue(1)]
@@ -89,7 +97,7 @@ namespace JosephM.Xrm.ExcelImport
         {
             public const string Main = "Main";
             public const string ImportOptions = "Import Options";
-            public const string CacheOptions = "Cache Options";
+            public const string PerformanceOptions = "Performance Options";
         }
 
         [DoNotAllowGridOpen]

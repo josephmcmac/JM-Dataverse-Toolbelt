@@ -57,22 +57,16 @@ namespace JosephM.Record.IService
         IEnumerable<IRecord> GetLinkedRecords(string linkedRecordType, string recordTypeFrom, string linkedRecordLookup,
             string recordFromId);
 
-        IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null);
+        IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null, bool bypassWorkflowsAndPlugins = false);
 
         IDictionary<int, Exception> DeleteMultiple(IEnumerable<IRecord> recordsToDelete);
 
         IEnumerable<IRecord> GetMultiple(string recordType, IEnumerable<string> ids, IEnumerable<string> fields);
 
         /// <summary>
-        ///     Returns All Records Linked To A Record By A Lookup Field
-        /// </summary>
-        IEnumerable<IRecord> GetLinkedRecordsThroughBridge(string linkedRecordType, string recordTypeThrough, string recordTypeFrom, string linkedThroughLookupFrom, string linkedThroughLookupTo,
-            string recordFromId);
-
-        /// <summary>
         ///     Saves Only The Specified Fields To The Record In The Data Store
         /// </summary>
-        void Update(IRecord record, IEnumerable<string> fieldsToSubmit);
+        void Update(IRecord record, IEnumerable<string> fieldsToSubmit, bool bypassWorkflowsAndPlugins = false);
 
         /// <summary>
         ///     Gets The Target Type Of A Lookup Field
@@ -216,5 +210,7 @@ namespace JosephM.Record.IService
         QueryDefinition GetViewAsQueryDefinition(string viewId);
 
         IRecordLocalisationService GetLocalisationService();
+
+        IRecordService CloneForParellelProcessing();
     }
 }

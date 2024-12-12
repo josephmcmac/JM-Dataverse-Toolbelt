@@ -1056,7 +1056,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             var allowDownloadAttribute = ObjectRecordService.GetPropertyInfo(referenceName, recordForm.RecordType).GetCustomAttribute<AllowDownload>();
             if (allowDownloadAttribute != null)
             {
-                customGridFunctions.Add(new CustomGridFunction("DOWNLOAD", "Download", new[]
+                customGridFunctions.Add(new CustomGridFunction("DOWNLOAD", "Export", new[]
                 {
                     new CustomGridFunction("DOWNLOADEXCEL", "Excel", () => recordForm.GetEnumerableFieldViewModel(referenceName).DynamicGridViewModel.DownloadExcel()),
                     new CustomGridFunction("DOWNLOADCSV", "CSV", () => recordForm.GetEnumerableFieldViewModel(referenceName).DynamicGridViewModel.DownloadCsv())

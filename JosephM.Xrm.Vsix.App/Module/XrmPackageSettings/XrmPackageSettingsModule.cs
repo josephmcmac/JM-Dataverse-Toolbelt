@@ -26,7 +26,6 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
         {
             var props = new[]
             {
-                new KeyValuePair<Type,string>(typeof(XrmPackageSettings.DeployIntoFieldProject), nameof(XrmPackageSettings.DeployIntoFieldProject.ProjectName)),
                 new KeyValuePair<Type,string>(typeof(XrmPackageSettings.PluginPackageProject), nameof(XrmPackageSettings.PluginPackageProject.ProjectName)),
                 new KeyValuePair<Type,string>(typeof(XrmPackageSettings.PluginProject), nameof(XrmPackageSettings.PluginProject.ProjectName)),
                 new KeyValuePair<Type,string>(typeof(XrmPackageSettings.WebResourceProject), nameof(XrmPackageSettings.WebResourceProject.ProjectName)),
