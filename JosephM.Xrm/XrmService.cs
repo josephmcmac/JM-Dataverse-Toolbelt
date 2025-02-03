@@ -3332,9 +3332,21 @@ string recordType)
             return responses.ToArray();
         }
 
-        public IEnumerable<ExecuteMultipleResponseItem> CreateMultiple(IEnumerable<Entity> entities)
+        public IEnumerable<ExecuteMultipleResponseItem> CreateMultiple(IEnumerable<Entity> entities, bool bypassWorkflowsAndPlugins = false)
         {
-            var response = ExecuteMultiple(entities.Where(e => e != null).Select(e => new CreateRequest() { Target = e }));
+            var response = ExecuteMultiple(entities
+                .Where(e => e != null)
+                .Select(e =>
+                {
+                    var request = new CreateRequest() { Target = e };
+                    if (bypassWorkflowsAndPlugins)
+                    {
+                        request.Parameters.Add("SuppressCallbackRegistrationExpanderJob", true);
+                        request.Parameters.Add("BypassBusinessLogicExecution", "CustomSync,CustomAsync");
+                    }
+                    return request;
+                }));
+
             return response.ToArray();
         }
 
