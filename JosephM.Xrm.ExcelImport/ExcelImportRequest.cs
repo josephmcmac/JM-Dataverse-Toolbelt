@@ -50,9 +50,15 @@ namespace JosephM.Xrm.ExcelImport
         public bool UpdateOnly { get; set; }
 
         [Group(Sections.ImportOptions)]
-        [DisplayOrder(417)]
+        [DisplayOrder(416)]
         [RequiredProperty]
         public bool IgnoreEmptyCells { get; set; }
+
+        [MyDescription("Specify for cloud flow, plugin, and workflow logic not to trigger from create and update operations being performed")]
+        [DisplayName("Bypass Flows, Plugins and Workflows")]
+        [Group(Sections.ImportOptions)]
+        [DisplayOrder(417)]
+        public bool BypassFlowsPluginsAndWorkflows { get; set; }
 
         [Group(Sections.ImportOptions)]
         [DisplayOrder(418)]
