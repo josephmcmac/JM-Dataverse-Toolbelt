@@ -35,7 +35,7 @@ namespace JosephM.Application.ViewModel.Query
             try
             {
                 //need to generate a list of all join options
-                //n:N, 1:N or N:1
+                //N:N, 1:N or N:1
                 LoadingViewModel.LoadingMessage = $"Loading join options for {RecordService.GetDisplayName(RecordType)}";
                 LoadingViewModel.IsLoading = true;
 
@@ -86,6 +86,20 @@ namespace JosephM.Application.ViewModel.Query
                 }
 
                 var oneToManyRelationships = RecordService.GetOneToManyRelationships(RecordType);
+                if (RecordType == "systemuser")
+                {
+                    var ignoreHash = new HashSet<string>(new[] { "modifiedonbehalfby", "createdonbehalfby", "createdby", "modifiedby", "owner", "owninguser" });
+                    oneToManyRelationships = oneToManyRelationships
+                        .Where(r => !ignoreHash.Contains(r.ReferencingAttribute))
+                        .ToArray();
+                }
+                if (RecordType == "team")
+                {
+                    var ignoreHash = new HashSet<string>(new[] { "owner", "owningteam" });
+                    oneToManyRelationships = oneToManyRelationships
+                        .Where(r => !ignoreHash.Contains(r.ReferencingAttribute))
+                        .ToArray();
+                }
                 var referencedTypes = oneToManyRelationships
                     .Select(r => r.ReferencingEntity)
                     .Distinct()
