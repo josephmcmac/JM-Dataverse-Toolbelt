@@ -198,7 +198,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         protected override IEnumerable<ReferencePicklistItem> GetPicklistOptions()
         {
             return GetSearchResults()
-                .Select(r => new ReferencePicklistItem(r, r.GetStringField(FormService.GetPicklistDisplayField(FieldName, GetRecordTypeOfThisField(), LookupService, RecordTypeToLookup))))
+                .Select(r => new ReferencePicklistItem(r, string.Join(" - ", FormService.GetPicklistDisplayFields(FieldName, GetRecordTypeOfThisField(), LookupService, RecordTypeToLookup).Select(r.GetStringField))))
                 .Union(new[] { new ReferencePicklistItem(null, null) })
                 .ToArray();
         }
@@ -272,8 +272,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         protected override IEnumerable<IRecord> GetSearchResults()
         {
-            if(LookupService == null)
-                throw new NullReferenceException(string.Format("Error searching field {0}. {1} is null", FieldName, "LookupService"));
+            if (LookupService == null)
+            {
+                throw new ArgumentNullException($"Error searching field {FieldName}. {FieldName} is null", nameof(LookupService));
+            }
             if (UsePicklist)
             {
                 return FormService.GetLookupPicklist(FieldName, RecordEntryViewModel.GetRecordType(),

@@ -41,7 +41,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 filter.AddCondition(Fields.sdkmessagefilter_.sdkmessageid, ConditionType.Equal, t.Message.Id);
                 return filter;
             }).ToArray();
-            var pluginFilters = Service.RetrieveAllOrClauses(Entities.sdkmessagefilter, filters);
+            var pluginFilters = Service.RetrieveAllOrClauses(Entities.sdkmessagefilter, filters, null);
 
             controller.UpdateProgress(1, 4, "Unloading Triggers");
             //unload the triggers into an entity object referencing it in a dictionary

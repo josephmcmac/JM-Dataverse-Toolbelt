@@ -518,7 +518,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         public override bool UsePicklist(string fieldName, string recordType)
         {
             var prop = GetPropertyInfo(fieldName, recordType);
-            return prop.GetCustomAttribute<UsePicklist>() != null;
+            return prop.GetCustomAttribute<UsePicklistAttribute>() != null;
         }
 
         private void AppendUniqueOnAttributes(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
@@ -530,9 +530,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     re => re.StartNewAction(() =>
                     {
                         //just need to if this in a grid then set all others off
-                        if (re is GridRowViewModel)
+                        if (re is GridRowViewModel gridRowViewModel)
                         {
-                            var gridRowViewModel = (GridRowViewModel)re;
                             var fieldViewModel = gridRowViewModel.GetFieldViewModel(fieldName) as BooleanFieldViewModel;
                             if (fieldViewModel != null && fieldViewModel.Value.Value)
                             {
@@ -1028,12 +1027,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return GetPropertyInfo(fieldName, recordType).GetCustomAttribute<InitialiseIfOneOption>() != null;
         }
 
-        internal override string GetPicklistDisplayField(string fieldName, string recordType, IRecordService lookupService, string recordTypeToLookup)
+        internal override string[] GetPicklistDisplayFields(string fieldName, string recordType, IRecordService lookupService, string recordTypeToLookup)
         {
-            var picklistAttribute = GetPropertyInfo(fieldName, recordType).GetCustomAttribute<UsePicklist>();
-            return picklistAttribute != null && !string.IsNullOrWhiteSpace(picklistAttribute.OverrideDisplayField)
+            var picklistAttribute = GetPropertyInfo(fieldName, recordType).GetCustomAttribute<UsePicklistAttribute>();
+            return picklistAttribute != null
+                && picklistAttribute.OverrideDisplayField.Any()
                 ? picklistAttribute.OverrideDisplayField
-                : lookupService.GetPrimaryField(recordTypeToLookup);
+                : new[] { lookupService.GetPrimaryField(recordTypeToLookup) };
         }
 
         public override IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryFormViewModel recordForm)

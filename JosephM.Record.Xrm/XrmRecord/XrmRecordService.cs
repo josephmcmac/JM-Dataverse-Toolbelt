@@ -250,8 +250,7 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IEnumerable<IRecord> RetrieveAllOrClauses(string recordType, IEnumerable<Condition> orConditions)
         {
-            return
-                ToEnumerableIRecord(_xrmService.RetrieveAllOrClauses(recordType, ToConditionExpressions(orConditions, recordType)));
+            return ToEnumerableIRecord(_xrmService.RetrieveAllOrClauses(recordType, ToConditionExpressions(orConditions, recordType)));
         }
 
         private IEnumerable<IRecord> ToEnumerableIRecord(IEnumerable<Entity> entities)
@@ -1079,12 +1078,12 @@ namespace JosephM.Record.Xrm.XrmRecord
                 .Select(kv => new PicklistOption(kv.Key.ToString(), kv.Value));
         }
 
-        private IEnumerable<OrderExpression> ToOrderExpressions(IEnumerable<SortExpression> sortExpressions)
+        private static IEnumerable<OrderExpression> ToOrderExpressions(IEnumerable<SortExpression> sortExpressions)
         {
             return sortExpressions == null ? null : sortExpressions.Select(ToOrderExpression);
         }
 
-        private OrderExpression ToOrderExpression(SortExpression sort)
+        private static OrderExpression ToOrderExpression(SortExpression sort)
         {
             return new OrderExpression(sort.FieldName, new SortTypeMapper().Map(sort.SortType));
         }
@@ -1099,12 +1098,12 @@ namespace JosephM.Record.Xrm.XrmRecord
             return entities == null ? null : entities.Select(ToIRecord).ToArray();
         }
 
-        public IEnumerable<IRecord> RetrieveAllOrClauses(string recordType, IEnumerable<Filter> filters)
+        public IEnumerable<IRecord> RetrieveAllOrClauses(string recordType, IEnumerable<Filter> filters, IEnumerable<string> fields)
         {
             var crmFilters = filters
                 .Select(f => ToFilterExpression(f, recordType))
                 .ToArray();
-            return _xrmService.RetrieveAllOrClauses(recordType, crmFilters, null).Select(ToIRecord);
+            return _xrmService.RetrieveAllOrClauses(recordType, crmFilters, fields).Select(ToIRecord).ToArray();
         }
 
         private FilterExpression ToFilterExpression(Filter filter, string recordType)

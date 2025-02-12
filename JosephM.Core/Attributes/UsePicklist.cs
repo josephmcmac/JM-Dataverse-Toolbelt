@@ -2,18 +2,19 @@
 
 namespace JosephM.Core.Attributes
 {
-    public class UsePicklist : Attribute
+    [AttributeUsage(AttributeTargets.Property)]
+    public class UsePicklistAttribute : Attribute
     {
-        public UsePicklist()
+        public UsePicklistAttribute()
         {
 
         }
 
-        public UsePicklist(string overrideDisplayField)
+        public UsePicklistAttribute(params string[] overrideDisplayField)
         {
             OverrideDisplayField = overrideDisplayField;
         }
 
-        public string OverrideDisplayField { get; set; }
+        public string[] OverrideDisplayField { get; set; } = new string[0];
     }
 }
