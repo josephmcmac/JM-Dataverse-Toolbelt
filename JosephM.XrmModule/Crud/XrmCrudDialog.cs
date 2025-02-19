@@ -33,85 +33,90 @@ namespace JosephM.XrmModule.Crud
 
         public XrmRecordService XrmRecordService { get; }
 
-        public override IEnumerable<CustomGridFunction> GetExtendedGridFunctions()
+        protected override void AppendExtendedGridFunctions(List<CustomGridFunction> gridFunctionList)
         {
-            var extraFunctions = new List<CustomGridFunction>();
-            extraFunctions.Add(new CustomGridFunction("OTHERACTIONS", "Other Actions", new[]
+            var otherActionMatches = gridFunctionList.Where(g => g.Id == "OTHERACTIONS");
+            if (otherActionMatches.Any())
             {
-                new CustomGridFunction("COPYQUERY", "Copy FetchXML", new[]
+                var otherActionsMenu = otherActionMatches.First();
+                var newChildFunctionList = new List<CustomGridFunction>(otherActionsMenu.ChildGridFunctions);
+                newChildFunctionList.AddRange(new[]
                 {
-                    new CustomGridFunction("RAWFETCHXML", "Raw FetchXML", (g) =>
-                        {
-                            DoOnAsynchThread(() =>
+                    new CustomGridFunction("COPYQUERY", "Copy FetchXML", new[]
+                    {
+                        new CustomGridFunction("RAWFETCHXML", "Raw FetchXML", (g) =>
                             {
-                                var fetchXml = GetQueryFetchXml();
-                                DoOnMainThread(() =>
+                                DoOnAsynchThread(() =>
                                 {
-                                    Clipboard.SetText(fetchXml);
-                                    ApplicationController.UserMessage("Fetch Copied To Clipboard!");
+                                    var fetchXml = GetQueryFetchXml();
+                                    DoOnMainThread(() =>
+                                    {
+                                        Clipboard.SetText(fetchXml);
+                                        ApplicationController.UserMessage("Fetch Copied To Clipboard!");
+                                    });
                                 });
-                            });
-                        }, (g) => !QueryViewModel.IncludeNotIn),
-                    new CustomGridFunction("JSFETCHXML", "JavaScript FetchXML", (g) =>
-                        {
-                            DoOnAsynchThread(() =>
+                            }, (g) => !QueryViewModel.IncludeNotIn),
+                        new CustomGridFunction("JSFETCHXML", "JavaScript FetchXML", (g) =>
                             {
-                                var fetchXml = GetQueryFetchXml();
-                                DoOnMainThread(() =>
+                                DoOnAsynchThread(() =>
                                 {
-                                    Clipboard.SetText(WriteFetchToJavascript(fetchXml));
-                                    ApplicationController.UserMessage("JavaScript Copied To Clipboard!");
+                                    var fetchXml = GetQueryFetchXml();
+                                    DoOnMainThread(() =>
+                                    {
+                                        Clipboard.SetText(WriteFetchToJavascript(fetchXml));
+                                        ApplicationController.UserMessage("JavaScript Copied To Clipboard!");
+                                    });
                                 });
-                            });
-                        }, (g) => !QueryViewModel.IncludeNotIn),
-                    new CustomGridFunction("PRIMARYFETCHFILTER", "Primary Filter", (g) =>
-                        {
-                            DoOnAsynchThread(() =>
+                            }, (g) => !QueryViewModel.IncludeNotIn),
+                        new CustomGridFunction("PRIMARYFETCHFILTER", "Primary Filter", (g) =>
                             {
-                                var fetchXmlString = GetQueryFetchXml();
-                                var fetchXml = new XmlDocument();
-                                fetchXml.LoadXml(fetchXmlString);
+                                DoOnAsynchThread(() =>
+                                {
+                                    var fetchXmlString = GetQueryFetchXml();
+                                    var fetchXml = new XmlDocument();
+                                    fetchXml.LoadXml(fetchXmlString);
 
-                                var attributeNodes = fetchXml.SelectNodes("//filter");
-                                if (attributeNodes == null && attributeNodes.Count == 0)
-                                {
-                                    ApplicationController.UserMessage("No Filter Conditions Found");
-                                }
-                                else
-                                {
-                                DoOnMainThread(() =>
-                                {
-                                    Clipboard.SetText(FormatXml(attributeNodes[0].OuterXml, "filter"));
-                                    ApplicationController.UserMessage("Primary Filter Copied To Clipboard!");
+                                    var attributeNodes = fetchXml.SelectNodes("//filter");
+                                    if (attributeNodes == null && attributeNodes.Count == 0)
+                                    {
+                                        ApplicationController.UserMessage("No Filter Conditions Found");
+                                    }
+                                    else
+                                    {
+                                    DoOnMainThread(() =>
+                                    {
+                                        Clipboard.SetText(FormatXml(attributeNodes[0].OuterXml, "filter"));
+                                        ApplicationController.UserMessage("Primary Filter Copied To Clipboard!");
+                                    });
+                                    }
                                 });
-                                }
-                            });
-                        }, (g) => !QueryViewModel.IncludeNotIn)
-                }),
-                new CustomGridFunction("ADDROLES", "Add Security Role", new[]
-                {
-                    new CustomGridFunction("ADDROLESALL", "All Results", (g) =>
-                        {
-                            TriggerAddRoles(false);
-                        }, (g) => g.RecordType == Entities.systemuser),
-                    new CustomGridFunction("ADDROLESSELECTED", "Selected Only", (g) =>
-                        {
-                            TriggerAddRoles(true);
-                        }, (g) => g.RecordType == Entities.systemuser),
-                }),
-                new CustomGridFunction("REMOVEROLES", "Remove Security Role", new[]
-                {
-                    new CustomGridFunction("REMOVEROLESALL", "All Results", (g) =>
-                        {
-                            TriggerRemoveRoles(false);
-                        }, (g) => g.RecordType == Entities.systemuser),
-                    new CustomGridFunction("REMOVEROLESSELECTED", "Selected Only", (g) =>
-                        {
-                            TriggerRemoveRoles(true);
-                        }, (g) => g.RecordType == Entities.systemuser),
-                }),
-            }));
-            return extraFunctions;
+                            }, (g) => !QueryViewModel.IncludeNotIn)
+                    }),
+                    new CustomGridFunction("ADDROLES", "Add Security Role", new[]
+                    {
+                        new CustomGridFunction("ADDROLESALL", "All Results", (g) =>
+                            {
+                                TriggerAddRoles(false);
+                            }, (g) => g.RecordType == Entities.systemuser),
+                        new CustomGridFunction("ADDROLESSELECTED", "Selected Only", (g) =>
+                            {
+                                TriggerAddRoles(true);
+                            }, (g) => g.RecordType == Entities.systemuser),
+                    }),
+                    new CustomGridFunction("REMOVEROLES", "Remove Security Role", new[]
+                    {
+                        new CustomGridFunction("REMOVEROLESALL", "All Results", (g) =>
+                            {
+                                TriggerRemoveRoles(false);
+                            }, (g) => g.RecordType == Entities.systemuser),
+                        new CustomGridFunction("REMOVEROLESSELECTED", "Selected Only", (g) =>
+                            {
+                                TriggerRemoveRoles(true);
+                            }, (g) => g.RecordType == Entities.systemuser),
+                    }),
+                });
+                otherActionsMenu.ChildGridFunctions = newChildFunctionList;
+            }
         }
 
         private void TriggerAddRoles(bool selectedOnly)
