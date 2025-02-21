@@ -102,7 +102,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
             var imageItems =
                 unloadedObjects.Keys.Where(
                     r =>
-                        new[] { "Update", "Delete", "SetStateDynamicEntity" }.Contains(
+                        new[] { "Update", "Delete", "SetStateDynamicEntity", "Assign" }.Contains(
                             r.GetLookupName(Fields.sdkmessageprocessingstep_.sdkmessageid)))
                             .ToArray();
 
