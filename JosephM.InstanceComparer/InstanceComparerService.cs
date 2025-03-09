@@ -1353,7 +1353,7 @@ namespace JosephM.InstanceComparer
             public ProcessCompareParams(InstanceComparerRequest.InstanceCompareDataCompare dataComparison, XrmRecordService recordService, InstanceComparerRequest request)
                 : this("Data - " + dataComparison.Type,
                       dataComparison.Type,
-                      recordService.GetTypeConfigs().GetComparisonFieldsFor(dataComparison.Type, recordService),
+                      recordService.GetTypeConfigs().GetComparisonFieldsFor(dataComparison.Type, recordService, request.DataMatchByName),
                       new[] { recordService.GetPrimaryField(dataComparison.Type) },
                       new Condition[0],
                       recordService

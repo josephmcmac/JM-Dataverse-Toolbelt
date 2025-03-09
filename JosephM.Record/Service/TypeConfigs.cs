@@ -35,7 +35,7 @@ namespace JosephM.Record.IService
                 : null;
         }
 
-        public IEnumerable<string> GetComparisonFieldsFor(string type, IRecordService recordService)
+        public IEnumerable<string> GetComparisonFieldsFor(string type, IRecordService recordService, bool matchNameOverPrimaryKey)
         {
             var config = GetFor(type);
             var fields = new List<string>();
@@ -45,19 +45,27 @@ namespace JosephM.Record.IService
                     fields.Add(config.ParentLookupField);
                 if (config.UniqueChildFields != null)
                     fields.AddRange(config.UniqueChildFields);
-                foreach(var field in fields.ToArray())
+                foreach (var field in fields.ToArray())
                 {
-                    if(recordService.IsLookup(field, type))
+                    if (recordService.IsLookup(field, type))
                     {
                         var reffedTypeConfig = GetFor(recordService.GetLookupTargetType(field, type));
-                        if(reffedTypeConfig != null)
+                        if (reffedTypeConfig != null)
                         {
                             AddLinkedFields(reffedTypeConfig, fields, field + ".", recordService);
                         }
                     }
                 }
+                fields.Add(recordService.GetPrimaryField(type));
             }
-            fields.Add(recordService.GetPrimaryField(type));
+            else if (matchNameOverPrimaryKey)
+            {
+                fields.Add(recordService.GetPrimaryField(type));
+            }
+            else
+            {
+                fields.Add(recordService.GetPrimaryKey(type));
+            }
             return fields;
         }
 

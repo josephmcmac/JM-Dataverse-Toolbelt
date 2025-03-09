@@ -63,6 +63,13 @@ namespace JosephM.InstanceComparer
         [MyDescription("Declares if hidden solutions should be compared")]
         public bool IncludeHiddenSolutions { get; set; }
 
+        [GridWidth(120)]
+        [Group(Sections.GeneralOptions)]
+        [PropertyInContextByPropertyValue(nameof(Data), true)]
+        [DisplayOrder(18)]
+        [MyDescription("This option specifies if records should be matched across the instances by name instead of primary key")]
+        public bool DataMatchByName { get; set; }
+
         [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayOrder(17)]
