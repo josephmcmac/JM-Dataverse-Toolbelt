@@ -53,7 +53,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
                     var record = thisSetOfRecordsNew.First();
                     try
                     {
-                        RecordService.Delete(record);
+                        RecordService.Delete(record, bypassWorkflowsAndPlugins: request.BypassFlowsPluginsAndWorkflows);
                     }
                     catch (Exception ex)
                     {
@@ -64,7 +64,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
                 }
                 else
                 {
-                    var multipleResponse = RecordService.DeleteMultiple(thisSetOfRecordsNew);
+                    var multipleResponse = RecordService.DeleteMultiple(thisSetOfRecordsNew, bypassWorkflowsAndPlugins: request.BypassFlowsPluginsAndWorkflows);
                     foreach (var item in multipleResponse)
                     {
                         var originalRecord = thisSetOfRecords[item.Key];

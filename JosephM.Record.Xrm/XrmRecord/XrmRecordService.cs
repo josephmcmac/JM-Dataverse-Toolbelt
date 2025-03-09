@@ -282,16 +282,16 @@ namespace JosephM.Record.Xrm.XrmRecord
             _xrmService.Delete(ToEntity(record));
         }
 
-        public void Delete(string recordType, string id)
+        public void Delete(string recordType, string id, bool bypassWorkflowsAndPlugins = false)
         {
-            _xrmService.Delete(recordType, new Guid(id));
+            _xrmService.Delete(recordType, new Guid(id), bypassWorkflowsAndPlugins);
         }
 
-        public IDictionary<int, Exception> DeleteMultiple(IEnumerable<IRecord> recordsToDelete)
+        public IDictionary<int, Exception> DeleteMultiple(IEnumerable<IRecord> recordsToDelete, bool bypassWorkflowsAndPlugins = false)
         {
             var result = new Dictionary<int, Exception>();
 
-            var response = XrmService.DeleteMultiple(ToEntities(recordsToDelete));
+            var response = XrmService.DeleteMultiple(ToEntities(recordsToDelete), bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins);
             var i = 0;
             foreach (var item in response)
             {

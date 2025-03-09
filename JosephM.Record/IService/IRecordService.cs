@@ -59,7 +59,7 @@ namespace JosephM.Record.IService
 
         IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null, bool bypassWorkflowsAndPlugins = false);
 
-        IDictionary<int, Exception> DeleteMultiple(IEnumerable<IRecord> recordsToDelete);
+        IDictionary<int, Exception> DeleteMultiple(IEnumerable<IRecord> recordsToDelete, bool bypassWorkflowsAndPlugins = false);
 
         IEnumerable<IRecord> GetMultiple(string recordType, IEnumerable<string> ids, IEnumerable<string> fields);
 
@@ -97,7 +97,7 @@ namespace JosephM.Record.IService
         /// <summary>
         ///     Deletes The Record Of The Type With The Given Id 
         /// </summary>
-        void Delete(string recordType, string id);
+        void Delete(string recordType, string id, bool bypassWorkflowsAndPlugins = false);
 
         /// <summary>
         ///     Gets The First X Records Of The Type

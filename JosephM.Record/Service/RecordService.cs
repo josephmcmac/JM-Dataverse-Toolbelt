@@ -299,7 +299,7 @@ namespace JosephM.Record.Service
             }
         }
 
-        public override void Delete(string recordType, string id)
+        public override void Delete(string recordType, string id, bool bypassWorkflowsAndPlugins = false)
         {
             throw new NotImplementedException();
         }

@@ -134,7 +134,7 @@ namespace JosephM.Record.Excel
             throw new NotImplementedException();
         }
 
-        public override void Delete(string recordType, string id)
+        public override void Delete(string recordType, string id, bool bypassWorkflowsAndPlugins = false)
         {
             throw new NotImplementedException();
         }

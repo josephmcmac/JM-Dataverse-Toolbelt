@@ -1936,10 +1936,20 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
 
         public void Delete(string entityName, Guid id)
         {
+            Delete(entityName, id, false);
+        }
+
+        public void Delete(string entityName, Guid id, bool bypassWorkflowsAndPlugins)
+        {
             var request = new DeleteRequest
             {
                 Target = CreateLookup(entityName, id)
             };
+            if (bypassWorkflowsAndPlugins)
+            {
+                request.Parameters.Add("SuppressCallbackRegistrationExpanderJob", true);
+                request.Parameters.Add("BypassBusinessLogicExecution", "CustomSync,CustomAsync");
+            }
             Execute(request);
         }
 
@@ -3350,12 +3360,22 @@ string recordType)
             return response.ToArray();
         }
 
-        public IEnumerable<ExecuteMultipleResponseItem> DeleteMultiple(IEnumerable<Entity> entities)
+        public IEnumerable<ExecuteMultipleResponseItem> DeleteMultiple(IEnumerable<Entity> entities, bool bypassWorkflowsAndPlugins = false)
         {
             var response =
                 ExecuteMultiple(
-                    entities.Where(e => e != null)
-                        .Select(e => new DeleteRequest() { Target = new EntityReference(e.LogicalName, e.Id) }));
+                    entities
+                    .Where(e => e != null)
+                    .Select(e =>
+                    {
+                        var request = new DeleteRequest() { Target = new EntityReference(e.LogicalName, e.Id) };
+                        if (bypassWorkflowsAndPlugins)
+                        {
+                            request.Parameters.Add("SuppressCallbackRegistrationExpanderJob", true);
+                            request.Parameters.Add("BypassBusinessLogicExecution", "CustomSync,CustomAsync");
+                        }
+                        return request;
+                    }));
             return response.ToArray();
         }
 
