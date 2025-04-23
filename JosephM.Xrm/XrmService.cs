@@ -4083,5 +4083,15 @@ string recordType)
                 Execute(commitRequest);
             }
         }
+
+        public FilterExpression GetFetchFilterAsFilterExpression(string recordType, string fetchXmlFilter)
+        {
+            var fetchXml = "<fetch><entity name=\"" + recordType + "\">" + fetchXmlFilter + "</entity></fetch>";
+            var response = (FetchXmlToQueryExpressionResponse)Execute(new FetchXmlToQueryExpressionRequest
+            {
+                FetchXml = fetchXml
+            });
+            return response.Query.Criteria;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.ViewModel.Attributes;
+using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
@@ -149,18 +150,86 @@ namespace JosephM.InstanceComparer
         [PropertyInContextByPropertyNotNull(nameof(ConnectionOne))]
         public IEnumerable<InstanceCompareTypeCompare> EntityTypeComparisons { get; set; }
 
-        [DoNotAllowGridOpen]
+        [Group(Sections.Hidden, isHiddenSection: true)]
+        [Group(Sections.GeneralOptions, Group.DisplayLayoutEnum.VerticalCentered)]
         [BulkAddRecordTypeFunction]
         public class InstanceCompareDataCompare
         {
             [Hidden]
             public string Type { get { return RecordType == null ? null : RecordType.Key; } }
 
+            [Group(Sections.GeneralOptions)]
+            [DisplayOrder(10)]
+            [GridField]
+            [GridWidth(400)]
+            [RecordTypeFor(nameof(IncludeFields) + "." + nameof(FieldSetting.RecordField))]
+            [RecordTypeFor(nameof(ExcludeFields) + "." + nameof(FieldSetting.RecordField))]
             public RecordType RecordType { get; set; }
+
+            [Group(Sections.GeneralOptions)]
+            [DisplayOrder(20)]
+            [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+            [Multiline]
+            public string FetchXmlFilter { get; set; }
+
+            [Group(Sections.GeneralOptions)]
+            [DisplayOrder(21)]
+            [PropertyInContextByPropertyNotNull(nameof(FetchXmlFilter))]
+            public bool UseAlternativeFilterForConnection2 { get; set; }
+
+            [Group(Sections.GeneralOptions)]
+            [DisplayOrder(22)]
+            [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+            [PropertyInContextByPropertyValue(nameof(UseAlternativeFilterForConnection2), true)]
+            [Multiline]
+            public string Connection2FetchXmlFilter { get; set; }
+
+            [Group(Sections.Hidden)]
+            [DisplayOrder(20)]
+            [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+            [GridField]
+            [GridWidth(110)]
+            public bool HasFilter { get { return !string.IsNullOrEmpty(FetchXmlFilter); } }
+
+            [Group(Sections.GeneralOptions)]
+            [DisplayOrder(25)]
+            [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+            [GridField]
+            [GridReadOnly]
+            [GridWidth(100)]
+            public bool SpecifyIncludeFields { get; set; }
+
+            [Group(Sections.GeneralOptions)]
+            [DisplayOrder(30)]
+            [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+            [PropertyInContextByPropertyValue(nameof(SpecifyIncludeFields), true)]
+            [RequiredProperty]
+            public IEnumerable<FieldSetting> IncludeFields { get; set; }
+
+            [Group(Sections.GeneralOptions)]
+            [DisplayOrder(35)]
+            [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+            [GridField]
+            [GridReadOnly]
+            [GridWidth(110)]
+            public bool SpecifyExcludeFields { get; set; }
+
+            [Group(Sections.GeneralOptions)]
+            [DisplayOrder(40)]
+            [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+            [PropertyInContextByPropertyValue(nameof(SpecifyExcludeFields), true)]
+            [RequiredProperty]
+            public IEnumerable<FieldSetting> ExcludeFields { get; set; }
 
             public override string ToString()
             {
                 return RecordType != null ? RecordType.Value : base.ToString();
+            }
+
+            private static class Sections
+            {
+                public const string GeneralOptions = "General Options";
+                public const string Hidden = "Hidden";
             }
         }
 
@@ -170,7 +239,6 @@ namespace JosephM.InstanceComparer
         {
             [Hidden]
             public string Type { get { return RecordType == null ? null : RecordType.Key; } }
-
             public RecordType RecordType { get; set; }
 
             public override string ToString()

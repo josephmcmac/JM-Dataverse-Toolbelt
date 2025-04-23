@@ -1108,6 +1108,10 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         private FilterExpression ToFilterExpression(Filter filter, string recordType)
         {
+            if(filter == null)
+            {
+                return new FilterExpression();
+            }
             var mapper = new EnumMapper<FilterOperator, LogicalOperator>();
             var crmFilter = new FilterExpression();
             crmFilter.FilterOperator = mapper.Map(filter.ConditionOperator);
@@ -1124,7 +1128,16 @@ namespace JosephM.Record.Xrm.XrmRecord
             return crmFilter;
         }
 
-        private Filter ToFilter(FilterExpression filterExpression, string recordType)
+        public Filter FetchXmlToFilter(string recordType, string fetchXmlFilter)
+        {
+            if (string.IsNullOrWhiteSpace(fetchXmlFilter))
+            {
+                return new Filter();
+            }
+            return ToFilter(recordType, XrmService.GetFetchFilterAsFilterExpression(recordType, fetchXmlFilter));
+        }
+
+        private Filter ToFilter(string recordType, FilterExpression filterExpression)
         {
             var mapper = new EnumMapper<LogicalOperator, FilterOperator>();
             var filter = new Filter();
@@ -1156,31 +1169,39 @@ namespace JosephM.Record.Xrm.XrmRecord
                         }
                         filter.SubFilters.Add(inFilter);
                     }
-                    else if (c.Values != null && c.Values.Any())
-                    {
-                        if(c.Values.Count > 1)
-                        {
-                            throw new NotImplementedException($"Condition Type {c.Operator} Not Implemented For Multiple Values");
-                        }
-                        var condition = new Condition(c.AttributeName,
-                            new ConditionTypeMapper().Map(c.Operator),
-                            QueryExpressionValueToRecordValue(c.AttributeName, recordType, c.Values.First()));
-                        filter.Conditions.Add(condition);
-                    }
                     else
                     {
-                        var condition = new Condition(c.AttributeName,
-                            new ConditionTypeMapper().Map(c.Operator));
-                        filter.Conditions.Add(condition);
+                        filter.Conditions.Add(ToCondition(recordType, c));
                     }
                 }
             }
             if (filterExpression.Filters != null)
             {
                 foreach (var f in filterExpression.Filters)
-                    filter.SubFilters.Add(ToFilter(f, recordType));
+                {
+                    filter.SubFilters.Add(ToFilter(recordType, f));
+                }
             }
             return filter;
+        }
+
+        public Condition ToCondition(string recordType, ConditionExpression conditionExpression)
+        {
+            if (conditionExpression.Values != null && conditionExpression.Values.Any())
+            {
+                if (conditionExpression.Values.Count > 1)
+                {
+                    throw new NotImplementedException($"Condition Type {conditionExpression.Operator} Not Implemented For Multiple Values");
+                }
+                return new Condition(conditionExpression.AttributeName,
+                    new ConditionTypeMapper().Map(conditionExpression.Operator),
+                    QueryExpressionValueToRecordValue(conditionExpression.AttributeName, recordType, conditionExpression.Values.First()));
+            }
+            else
+            {
+                return new Condition(conditionExpression.AttributeName,
+                    new ConditionTypeMapper().Map(conditionExpression.Operator));
+            }
         }
 
         private object QueryExpressionValueToRecordValue(string fieldName, string recordType, object queryExpressionValue)
@@ -1406,7 +1427,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             join.JoinType = new JoinTypeMapper().Map(link.JoinOperator);
             if (link.LinkCriteria != null)
             {
-                join.RootFilter = ToFilter(link.LinkCriteria, link.LinkToEntityName);
+                join.RootFilter = ToFilter(link.LinkToEntityName, link.LinkCriteria);
             }
             if (link.LinkEntities != null)
             {
@@ -1627,7 +1648,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                 ? queryExpression.ColumnSet.Columns.ToArray()
                 : null;
             queryDefinition.Distinct = queryExpression.Distinct;
-            queryDefinition.RootFilter = ToFilter(queryExpression.Criteria, queryExpression.EntityName);
+            queryDefinition.RootFilter = ToFilter(queryExpression.EntityName, queryExpression.Criteria);
             queryDefinition.Joins = queryExpression.LinkEntities.Select(ToJoin).ToList();
             return queryDefinition;
         }
