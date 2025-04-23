@@ -397,7 +397,7 @@ namespace JosephM.Xrm
             {
                 return EntityListFieldEqual(field1, field2);
             }
-            else if (field1 is OptionSetValueCollection osvc1 && field1 is OptionSetValueCollection osvc2)
+            else if (field1 is OptionSetValueCollection osvc1 && field2 is OptionSetValueCollection osvc2)
             {
                 var ints1 = osvc1.Select(x => x.Value).OrderBy(i => i).ToArray();
                 var ints2 = osvc2.Select(x => x.Value).OrderBy(i => i).ToArray();

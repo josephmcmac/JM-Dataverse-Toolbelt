@@ -11,6 +11,7 @@ using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.ServiceModel;
 
 namespace JosephM.Xrm.DataImportExport.Import
@@ -1146,6 +1147,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                         {
                             orderedEntities.Add(entity);
                         }
+                        dataImportContainer.Controller.LogLiteral($"Sorting for import {orderedEntities.Count}/{thisTypeEntities.Count}");
                         dataImportContainer.Controller.UpdateLevel2Progress(0, 1, $"Sorting for import {orderedEntities.Count}/{thisTypeEntities.Count}");
                     }
                 }

@@ -1237,6 +1237,12 @@ namespace JosephM.InstanceComparer
                 //in case the ids are not consistent
                 return ((Lookup)field1).Name == ((Lookup)field2).Name;
             }
+            if (field1 is PicklistOption[] options1 && field2 is PicklistOption[] options2)
+            {
+                var ints1 = options1.Select(x => x.Key).OrderBy(i => i).ToArray();
+                var ints2 = options2.Select(x => x.Key).OrderBy(i => i).ToArray();
+                return ints1.SequenceEqual(ints2);
+            }
             else
                 return field1.Equals(field2);
         }

@@ -32,8 +32,6 @@ namespace JosephM.Deployment.ImportSolution
 
         public override string MenuGroup => "Solution Deployment";
 
-
-
         private void AddDialogCompletionLinks()
         {
             this.AddCustomFormFunction(new CustomFormFunction("OPENINSTANCE"

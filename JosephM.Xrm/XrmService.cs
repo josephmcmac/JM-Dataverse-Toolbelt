@@ -3536,6 +3536,11 @@ string recordType)
                 }
                 return booleanValue.ToString();
             }
+            else if (value is OptionSetValueCollection osvCollection)
+            {
+                return string.Join(", ", osvCollection.Select(osv => GetOptionLabel(osv.Value, fieldName, recordType)));
+
+            }
             else if (value is byte[] byteValue)
             {
                 return "File";
