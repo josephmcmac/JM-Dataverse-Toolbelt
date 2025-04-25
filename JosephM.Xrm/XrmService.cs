@@ -1599,7 +1599,14 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             }
             else if (IsOptionSet(fieldName, entityType))
             {
-                return ((OptionSetValue)fieldValue).Value.ToString();
+                if (fieldValue is OptionSetValue osv)
+                {
+                    return osv.Value.ToString();
+                }
+                else
+                {
+                    return GetMatchingOptionValue(fieldValue.ToString(), fieldName, entityType).ToString();
+                }
             }
             else
                 return fieldValue.ToString()?.ToLower();

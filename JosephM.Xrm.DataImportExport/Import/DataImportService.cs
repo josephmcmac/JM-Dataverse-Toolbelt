@@ -949,7 +949,7 @@ namespace JosephM.Xrm.DataImportExport.Import
             //we will query the matches
             var querySetResponses = thisTypesConfig != null || !isCached
                 ? xrmRecordService.XrmService.ExecuteMultiple(thisSetOfEntities
-                    .Select(e => dataImportContainer.GetMatchQueryExpression(e))
+                    .Select(e => dataImportContainer.GetMatchQueryExpression(e, dataImportContainer))
                     .Select(q => new RetrieveMultipleRequest() { Query = q })
                     .ToArray())
                 : new ExecuteMultipleResponseItem[0];

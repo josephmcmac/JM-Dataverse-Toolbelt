@@ -419,7 +419,7 @@ namespace JosephM.Xrm.DataImportExport.Import
             return _rootBusinessUnit;
         }
 
-        public QueryExpression GetMatchQueryExpression(Entity thisEntity)
+        public QueryExpression GetMatchQueryExpression(Entity thisEntity, DataImportContainer dataImportContainer)
         {
             var thisTypesConfig = XrmRecordService.GetTypeConfigs().GetFor(thisEntity.LogicalName);
             if (thisTypesConfig != null)
@@ -455,7 +455,18 @@ namespace JosephM.Xrm.DataImportExport.Import
                             && XrmService.EntityExists(er.LogicalName))
                         {
                             var linkTo = matchQuery.AddLink(er.LogicalName, matchKeyField.Key, XrmService.GetPrimaryKeyField(er.LogicalName));
-                            linkTo.LinkCriteria.AddCondition(new ConditionExpression(XrmService.GetPrimaryNameField(er.LogicalName), ConditionOperator.Equal, er.Name));
+                            if (dataImportContainer.AltLookupMatchKeyDictionary != null
+                                && dataImportContainer.AltLookupMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
+                                && dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName].ContainsKey(matchKeyField.Key))
+                            {
+                                var altMatchType = dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName][matchKeyField.Key].Key;
+                                var altMatchField = dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName][matchKeyField.Key].Value;
+                                linkTo.LinkCriteria.AddCondition(new ConditionExpression(altMatchField, ConditionOperator.Equal, XrmService.ConvertToQueryValue(altMatchField, altMatchType,  er.Name)));
+                            }
+                            else
+                            {
+                                linkTo.LinkCriteria.AddCondition(new ConditionExpression(XrmService.GetPrimaryNameField(er.LogicalName), ConditionOperator.Equal, er.Name));
+                            }
                         }
                         else
                         {
