@@ -25,17 +25,17 @@ namespace JosephM.Xrm.DataImportExport.XmlExport
         public override void ExecuteExtention(ImportXmlRequest request, ImportXmlResponse response,
             ServiceRequestController controller)
         {
-            ImportXml(request, controller, response, maskEmails: request.MaskEmails, includeOwner: request.IncludeOwner, matchByName: request.MatchByName, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit);
+            ImportXml(request, controller, response, maskEmails: request.MaskEmails, includeOwner: request.IncludeOwner, matchByName: request.MatchByName, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit, displayTimeEstimations: true);
         }
 
 
         public void ImportXml(IImportXmlRequest request, ServiceRequestController controller,
-            ImportXmlResponse response, bool maskEmails = false, bool includeOwner = false, bool matchByName = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null)
+            ImportXmlResponse response, bool maskEmails = false, bool includeOwner = false, bool matchByName = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null, bool displayTimeEstimations = false)
         {
             controller.UpdateProgress(0, 1, "Loading XML Files");
             var entities = request.GetOrLoadEntitiesForImport(controller.Controller).Values.ToArray();
             var matchOption = matchByName ? MatchOption.PrimaryKeyThenName : MatchOption.PrimaryKeyOnly;
-            var importResponse = DataImportService.DoImport(entities, controller, maskEmails, matchOption: matchOption, includeOwner: includeOwner, executeMultipleSetSize: executeMultipleSetSize, targetCacheLimit: targetCacheLimit);
+            var importResponse = DataImportService.DoImport(entities, controller, maskEmails, matchOption: matchOption, includeOwner: includeOwner, executeMultipleSetSize: executeMultipleSetSize, targetCacheLimit: targetCacheLimit, displayTimeEstimations: displayTimeEstimations);
             response.Connection = XrmRecordService.XrmRecordConfiguration;
             response.LoadDataImport(importResponse);
             response.Message = "The Import Process Has Completed";

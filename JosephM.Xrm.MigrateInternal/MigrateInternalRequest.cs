@@ -39,8 +39,14 @@ namespace JosephM.Xrm.MigrateInternal
         [Group(Sections.ImportOptions)]
         [DisplayOrder(417)]
         [RequiredProperty]
-        [DisplayName("ForceSubmitAllFields")]
+        [DisplayName("Force Submit All Fields")]
         public bool SubmitUnchangedFields { get; set; }
+
+        [MyDescription("Specify for cloud flow, plugin, and workflow logic not to trigger from create and update operations being performed")]
+        [DisplayName("Bypass Flows, Plugins and Workflows")]
+        [Group(Sections.ImportOptions)]
+        [DisplayOrder(418)]
+        public bool BypassFlowsPluginsAndWorkflows { get; set; }
 
         [Group(Sections.ImportOptions)]
         [DisplayOrder(420)]

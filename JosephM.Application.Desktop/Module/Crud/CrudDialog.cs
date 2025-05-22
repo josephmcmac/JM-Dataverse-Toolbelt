@@ -55,30 +55,33 @@ namespace JosephM.Application.Desktop.Module.Crud
                                     TriggerBulkUpdate(false);
                                 }, (g) => g.GridRecords != null && g.GridRecords.Any()),
                             }),
-                            new CustomGridFunction("BULKREPLACE", "Bulk Replace", new []
+                            new CustomGridFunction("OTHERACTIONS", "Other Actions", new[]
                             {
-                                new CustomGridFunction("BULKREPLACESELECTED", "Selected Only", (g) =>
+                                new CustomGridFunction("BULKREPLACE", "Bulk Replace", new []
                                 {
-                                    TriggerBulkReplace(true);
-                                }, (g) => g.SelectedRows.Any()),
-                                new CustomGridFunction("BULKREPLACEALL", "All Results", (g) =>
+                                    new CustomGridFunction("BULKREPLACESELECTED", "Selected Only", (g) =>
+                                    {
+                                        TriggerBulkReplace(true);
+                                    }, (g) => g.SelectedRows.Any()),
+                                    new CustomGridFunction("BULKREPLACEALL", "All Results", (g) =>
+                                    {
+                                        TriggerBulkReplace(false);
+                                    }, (g) => g.GridRecords != null && g.GridRecords.Any()),
+                                }),
+                                new CustomGridFunction("DELETE", "Bulk Delete", new []
                                 {
-                                    TriggerBulkReplace(false);
-                                }, (g) => g.GridRecords != null && g.GridRecords.Any()),
-                            }),
-                            new CustomGridFunction("DELETE", "Bulk Delete", new []
-                            {
-                                new CustomGridFunction("BULKDELETESELECTED", "Selected Only", (g) =>
-                                {
-                                    TriggerBulkDelete(true);
-                                }, (g) => g.SelectedRows.Any()),
-                                new CustomGridFunction("BULKDELETEALL", "All Results", (g) =>
-                                {
-                                    TriggerBulkDelete(false);
-                                }, (g) => g.GridRecords != null && g.GridRecords.Any()),
+                                    new CustomGridFunction("BULKDELETESELECTED", "Selected Only", (g) =>
+                                    {
+                                        TriggerBulkDelete(true);
+                                    }, (g) => g.SelectedRows.Any()),
+                                    new CustomGridFunction("BULKDELETEALL", "All Results", (g) =>
+                                    {
+                                        TriggerBulkDelete(false);
+                                    }, (g) => g.GridRecords != null && g.GridRecords.Any()),
+                                })
                             })
                         };
-                customFunctionList.AddRange(GetExtendedGridFunctions());
+                AppendExtendedGridFunctions(customFunctionList);
                 QueryViewModel = new QueryViewModel(recordTypesForBrowsing, RecordService, ApplicationController, allowQuery: true, customFunctions: customFunctionList);
                 Controller.LoadToUi(QueryViewModel);
             }
@@ -88,9 +91,8 @@ namespace JosephM.Application.Desktop.Module.Crud
             }
         }
 
-        public virtual IEnumerable<CustomGridFunction> GetExtendedGridFunctions()
+        protected virtual void AppendExtendedGridFunctions(List<CustomGridFunction> gridFunctionList)
         {
-            return new CustomGridFunction[0];
         }
 
         public virtual IEnumerable<string> AdditionalExplicitTypes

@@ -250,8 +250,7 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IEnumerable<IRecord> RetrieveAllOrClauses(string recordType, IEnumerable<Condition> orConditions)
         {
-            return
-                ToEnumerableIRecord(_xrmService.RetrieveAllOrClauses(recordType, ToConditionExpressions(orConditions, recordType)));
+            return ToEnumerableIRecord(_xrmService.RetrieveAllOrClauses(recordType, ToConditionExpressions(orConditions, recordType)));
         }
 
         private IEnumerable<IRecord> ToEnumerableIRecord(IEnumerable<Entity> entities)
@@ -283,16 +282,16 @@ namespace JosephM.Record.Xrm.XrmRecord
             _xrmService.Delete(ToEntity(record));
         }
 
-        public void Delete(string recordType, string id)
+        public void Delete(string recordType, string id, bool bypassWorkflowsAndPlugins = false)
         {
-            _xrmService.Delete(recordType, new Guid(id));
+            _xrmService.Delete(recordType, new Guid(id), bypassWorkflowsAndPlugins);
         }
 
-        public IDictionary<int, Exception> DeleteMultiple(IEnumerable<IRecord> recordsToDelete)
+        public IDictionary<int, Exception> DeleteMultiple(IEnumerable<IRecord> recordsToDelete, bool bypassWorkflowsAndPlugins = false)
         {
             var result = new Dictionary<int, Exception>();
 
-            var response = XrmService.DeleteMultiple(ToEntities(recordsToDelete));
+            var response = XrmService.DeleteMultiple(ToEntities(recordsToDelete), bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins);
             var i = 0;
             foreach (var item in response)
             {
@@ -1079,12 +1078,12 @@ namespace JosephM.Record.Xrm.XrmRecord
                 .Select(kv => new PicklistOption(kv.Key.ToString(), kv.Value));
         }
 
-        private IEnumerable<OrderExpression> ToOrderExpressions(IEnumerable<SortExpression> sortExpressions)
+        private static IEnumerable<OrderExpression> ToOrderExpressions(IEnumerable<SortExpression> sortExpressions)
         {
             return sortExpressions == null ? null : sortExpressions.Select(ToOrderExpression);
         }
 
-        private OrderExpression ToOrderExpression(SortExpression sort)
+        private static OrderExpression ToOrderExpression(SortExpression sort)
         {
             return new OrderExpression(sort.FieldName, new SortTypeMapper().Map(sort.SortType));
         }
@@ -1099,16 +1098,20 @@ namespace JosephM.Record.Xrm.XrmRecord
             return entities == null ? null : entities.Select(ToIRecord).ToArray();
         }
 
-        public IEnumerable<IRecord> RetrieveAllOrClauses(string recordType, IEnumerable<Filter> filters)
+        public IEnumerable<IRecord> RetrieveAllOrClauses(string recordType, IEnumerable<Filter> filters, IEnumerable<string> fields)
         {
             var crmFilters = filters
                 .Select(f => ToFilterExpression(f, recordType))
                 .ToArray();
-            return _xrmService.RetrieveAllOrClauses(recordType, crmFilters, null).Select(ToIRecord);
+            return _xrmService.RetrieveAllOrClauses(recordType, crmFilters, fields).Select(ToIRecord).ToArray();
         }
 
         private FilterExpression ToFilterExpression(Filter filter, string recordType)
         {
+            if(filter == null)
+            {
+                return new FilterExpression();
+            }
             var mapper = new EnumMapper<FilterOperator, LogicalOperator>();
             var crmFilter = new FilterExpression();
             crmFilter.FilterOperator = mapper.Map(filter.ConditionOperator);
@@ -1125,7 +1128,16 @@ namespace JosephM.Record.Xrm.XrmRecord
             return crmFilter;
         }
 
-        private Filter ToFilter(FilterExpression filterExpression, string recordType)
+        public Filter FetchXmlToFilter(string recordType, string fetchXmlFilter)
+        {
+            if (string.IsNullOrWhiteSpace(fetchXmlFilter))
+            {
+                return new Filter();
+            }
+            return ToFilter(recordType, XrmService.GetFetchFilterAsFilterExpression(recordType, fetchXmlFilter));
+        }
+
+        private Filter ToFilter(string recordType, FilterExpression filterExpression)
         {
             var mapper = new EnumMapper<LogicalOperator, FilterOperator>();
             var filter = new Filter();
@@ -1157,31 +1169,39 @@ namespace JosephM.Record.Xrm.XrmRecord
                         }
                         filter.SubFilters.Add(inFilter);
                     }
-                    else if (c.Values != null && c.Values.Any())
-                    {
-                        if(c.Values.Count > 1)
-                        {
-                            throw new NotImplementedException($"Condition Type {c.Operator} Not Implemented For Multiple Values");
-                        }
-                        var condition = new Condition(c.AttributeName,
-                            new ConditionTypeMapper().Map(c.Operator),
-                            QueryExpressionValueToRecordValue(c.AttributeName, recordType, c.Values.First()));
-                        filter.Conditions.Add(condition);
-                    }
                     else
                     {
-                        var condition = new Condition(c.AttributeName,
-                            new ConditionTypeMapper().Map(c.Operator));
-                        filter.Conditions.Add(condition);
+                        filter.Conditions.Add(ToCondition(recordType, c));
                     }
                 }
             }
             if (filterExpression.Filters != null)
             {
                 foreach (var f in filterExpression.Filters)
-                    filter.SubFilters.Add(ToFilter(f, recordType));
+                {
+                    filter.SubFilters.Add(ToFilter(recordType, f));
+                }
             }
             return filter;
+        }
+
+        public Condition ToCondition(string recordType, ConditionExpression conditionExpression)
+        {
+            if (conditionExpression.Values != null && conditionExpression.Values.Any())
+            {
+                if (conditionExpression.Values.Count > 1)
+                {
+                    throw new NotImplementedException($"Condition Type {conditionExpression.Operator} Not Implemented For Multiple Values");
+                }
+                return new Condition(conditionExpression.AttributeName,
+                    new ConditionTypeMapper().Map(conditionExpression.Operator),
+                    QueryExpressionValueToRecordValue(conditionExpression.AttributeName, recordType, conditionExpression.Values.First()));
+            }
+            else
+            {
+                return new Condition(conditionExpression.AttributeName,
+                    new ConditionTypeMapper().Map(conditionExpression.Operator));
+            }
         }
 
         private object QueryExpressionValueToRecordValue(string fieldName, string recordType, object queryExpressionValue)
@@ -1407,7 +1427,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             join.JoinType = new JoinTypeMapper().Map(link.JoinOperator);
             if (link.LinkCriteria != null)
             {
-                join.RootFilter = ToFilter(link.LinkCriteria, link.LinkToEntityName);
+                join.RootFilter = ToFilter(link.LinkToEntityName, link.LinkCriteria);
             }
             if (link.LinkEntities != null)
             {
@@ -1628,7 +1648,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                 ? queryExpression.ColumnSet.Columns.ToArray()
                 : null;
             queryDefinition.Distinct = queryExpression.Distinct;
-            queryDefinition.RootFilter = ToFilter(queryExpression.Criteria, queryExpression.EntityName);
+            queryDefinition.RootFilter = ToFilter(queryExpression.EntityName, queryExpression.Criteria);
             queryDefinition.Joins = queryExpression.LinkEntities.Select(ToJoin).ToList();
             return queryDefinition;
         }

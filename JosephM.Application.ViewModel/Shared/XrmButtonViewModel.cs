@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace JosephM.Application.ViewModel.Shared
 {
@@ -33,7 +34,13 @@ namespace JosephM.Application.ViewModel.Shared
             Label = label;
             Command = new MyCommand(() => { OpenChildButtons = true; });
             ChildButtons = childButtons;
+            foreach (var button in ChildButtons)
+            {
+                button.ParentButton = this;
+            }
         }
+
+        public XrmButtonViewModel ParentButton { get; set; }
 
         private bool _openChildButtons;
         public bool OpenChildButtons
@@ -46,6 +53,18 @@ namespace JosephM.Application.ViewModel.Shared
             {
                 _openChildButtons = value;
                 OnPropertyChanged(nameof(OpenChildButtons));
+                //cascade close of dropdown closing to parent if it doesn't have any other child branch open
+                if (ParentButton != null)
+                {
+                    ApplicationController.DoOnAsyncThread(() =>
+                    {
+                        Thread.Sleep(200);
+                        if(!ParentButton.ChildButtons.Any(cb => cb.OpenChildButtons))
+                        {
+                            ParentButton.OpenChildButtons = false;
+                        }
+                    });
+                }
             }
         }
 
@@ -60,7 +79,10 @@ namespace JosephM.Application.ViewModel.Shared
                 {
                     foreach (var button in value)
                     {
-                        button.Command = new MyCommand(() => { OpenChildButtons = false; button.ClickAction(); });
+                        if (!button.HasChildOptions)
+                        {
+                            button.Command = new MyCommand(() => { OpenChildButtons = false; button.ClickAction(); });
+                        }
                     }
                 }
                 OnPropertyChanged(nameof(ChildButtons));

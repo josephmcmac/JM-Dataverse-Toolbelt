@@ -88,7 +88,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
         [Group(Sections.PreImage)]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
-        [PropertyInContextByPropertyValues(nameof(Message), "Update", "Delete", "SetStateDynamicEntity")]
+        [PropertyInContextByPropertyValues(nameof(Message), "Update", "Delete", "SetStateDynamicEntity", "Assign")]
         [RequiredProperty]
         [DisplayOrder(70)]
         [GridWidth(100)]
@@ -98,14 +98,14 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         [DisplayOrder(80)]
         [GridWidth(125)]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
-        [PropertyInContextByPropertyValues(nameof(Message), "Update", "Delete", "SetStateDynamicEntity")]
+        [PropertyInContextByPropertyValues(nameof(Message), "Update", "Delete", "SetStateDynamicEntity", "Assign")]
         public bool PreImageAllFields { get; set; }
 
         [Group(Sections.PreImage)]
         [DisplayOrder(90)]
         [GridWidth(225)]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
-        [PropertyInContextByPropertyValues(nameof(Message), "Update", "Delete", "SetStateDynamicEntity")]
+        [PropertyInContextByPropertyValues(nameof(Message), "Update", "Delete", "SetStateDynamicEntity", "Assign")]
         [PropertyInContextByPropertyValue(nameof(PreImageAllFields), false)]
         public IEnumerable<RecordField> PreImageFields { get; set; }
 

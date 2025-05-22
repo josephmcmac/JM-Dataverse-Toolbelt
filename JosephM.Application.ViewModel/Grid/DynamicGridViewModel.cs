@@ -82,9 +82,17 @@ namespace JosephM.Application.ViewModel.Grid
         public XrmButtonViewModel GetButton(string id)
         {
             if (CustomFunctions.Any(b => b.Id == id))
+            {
                 return CustomFunctions.First(b => b.Id == id);
+            }
             if (CustomFunctions.Where(b => b.HasChildOptions).SelectMany(b => b.ChildButtons).Any(b => b.Id == id))
+            {
                 return CustomFunctions.Where(b => b.HasChildOptions).SelectMany(b => b.ChildButtons).First(b => b.Id == id);
+            }
+            if (CustomFunctions.Where(b => b.HasChildOptions).SelectMany(b => b.ChildButtons).Where(b => b.HasChildOptions).SelectMany(b => b.ChildButtons).Any(b => b.Id == id))
+            {
+                return CustomFunctions.Where(b => b.HasChildOptions).SelectMany(b => b.ChildButtons).Where(b => b.HasChildOptions).SelectMany(b => b.ChildButtons).First(b => b.Id == id);
+            }
             throw new ArgumentOutOfRangeException("id", "No Button Found With Id Of " + id);
         }
 

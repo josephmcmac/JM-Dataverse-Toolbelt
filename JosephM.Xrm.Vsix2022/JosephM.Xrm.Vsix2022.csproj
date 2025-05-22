@@ -91,7 +91,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <None Include="JM Dataverse Toolbelt Dev Kit.vsix" />
     <None Include="JosephM.XRM.VSIX.snk" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>

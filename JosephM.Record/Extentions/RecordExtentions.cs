@@ -202,9 +202,9 @@ namespace JosephM.Record.Extentions
             recordService.Update(record, null, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins);
         }
 
-        public static void Delete(this IRecordService recordService, IRecord record)
+        public static void Delete(this IRecordService recordService, IRecord record, bool bypassWorkflowsAndPlugins = false)
         {
-            recordService.Delete(record.Type, record.Id);
+            recordService.Delete(record.Type, record.Id, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins);
         }
 
         public static IEnumerable<IRecord> RetrieveAll(this IRecordService recordService, string recordType, IEnumerable<string> fields)

@@ -2,7 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
              mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -43,13 +43,81 @@
                     IsOpen="{Binding OpenChildButtons}"
                     d:IsHidden="false">
                     <ItemsControl
-                ItemsSource="{Binding ChildButtons}"
-                ItemTemplate="{StaticResource XrmButtonDropdownTemplate}" d:IsLocked="True">
+                ItemsSource="{Binding ChildButtons}" >
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Vertical" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0" Visibility="{Binding HasChildOptions, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
+                                            <Button
+                                                Style="{StaticResource XrmDropdownButton}"
+                                                Margin="0,0,0,0"
+                                                MaxHeight="50"
+                                                BorderThickness="1,0,1,1" 
+                                                Command="{Binding Command}"
+                                                IsEnabled="{Binding Enabled}"
+                                                Content="{Binding Label}"
+                                                ToolTip="{Binding Description}" />
+                                        </Grid>
+                                        <Grid Grid.Row="1" Visibility="{Binding HasChildOptions, Converter={StaticResource BoolToVis}}" VerticalAlignment="Top">
+                                            <Button
+                                                Style="{StaticResource XrmDropdownButton}"
+                                                Margin="0,0,0,0"
+                                                MaxHeight="50"
+                                                BorderThickness="1,0,1,1" 
+                                                Name="ParentButton"
+                                                Content="{Binding Label}"
+                                                Command="{Binding Command}"
+                                                ToolTip="{Binding Description}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding}" Style="{StaticResource XrmButtonContentTextBlock}"></TextBlock>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
+                                            <Popup
+                                                Style="{StaticResource ButtonDropDownPopup}"
+                                                PlacementTarget="{Binding ElementName=ParentButton}"
+                                                Placement="Left"
+                                                StaysOpen="False"
+                                                IsOpen="{Binding OpenChildButtons}"
+                                                d:IsHidden="false">
+                                                <ItemsControl
+                                                    ItemsSource="{Binding ChildButtons}" >
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <StackPanel Orientation="Vertical" />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Button
+                                                                Style="{StaticResource XrmDropdownButton}"
+                                                                Margin="0,0,0,0"
+                                                                MaxHeight="50"
+                                                                BorderThickness="1,1,1,1" 
+                                                                Command="{Binding Command}"
+                                                                IsEnabled="{Binding Enabled}"
+                                                                Content="{Binding Label}"
+                                                                ToolTip="{Binding Description}" />
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </Popup>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </Popup>
             </Grid>

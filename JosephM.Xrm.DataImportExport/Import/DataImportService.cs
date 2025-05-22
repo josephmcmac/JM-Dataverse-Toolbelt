@@ -11,6 +11,7 @@ using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.ServiceModel;
 
 namespace JosephM.Xrm.DataImportExport.Import
@@ -34,7 +35,7 @@ namespace JosephM.Xrm.DataImportExport.Import
 
         private readonly Dictionary<string, Dictionary<string, Dictionary<string, List<Entity>>>> _cachedRecords = new Dictionary<string, Dictionary<string, Dictionary<string, List<Entity>>>>();
 
-        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary = null, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary = null, bool updateOnly = false, bool includeOwner = false, bool includeOverrideCreatedOn = false, bool containsExportedConfigFields = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null, bool onlyFieldMatchActive = false, bool forceSubmitAllFields = false, bool displayTimeEstimations = false, int parallelImportProcessCount = 1) 
+        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary = null, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary = null, bool updateOnly = false, bool includeOwner = false, bool includeOverrideCreatedOn = false, bool containsExportedConfigFields = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null, bool onlyFieldMatchActive = false, bool forceSubmitAllFields = false, bool displayTimeEstimations = false, int parallelImportProcessCount = 1, bool bypassWorkflowsAndPlugins = false) 
         {
             var response = new DataImportResponse(entities, loadExistingErrorsIntoSummary);
             controller.AddObjectToUi(response);
@@ -58,7 +59,8 @@ namespace JosephM.Xrm.DataImportExport.Import
                     onlyFieldMatchActive,
                     forceSubmitAllFields,
                     displayTimeEstimations,
-                    parallelImportProcessCount);
+                    parallelImportProcessCount,
+                    bypassWorkflowsAndPlugins);
 
                 ImportEntities(dataImportContainer);
 
@@ -278,7 +280,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                     if (itemsForUpdate.Any())
                     {
                         var updateEntities = itemsForUpdate.Select(kv => kv.Value).ToArray();
-                        var responses = XrmService.UpdateMultiple(updateEntities, null);
+                        var responses = XrmService.UpdateMultiple(updateEntities, null, bypassWorkflowsAndPlugins: dataImportContainer.BypassFlowsPluginsAndWorkflows);
 
                         var i = 0;
                         foreach (var updateResponse in responses)
@@ -523,7 +525,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                         IEnumerable<ExecuteMultipleResponseItem> responses = null;
                         try
                         {
-                            responses = xrmRecordService.XrmService.CreateMultiple(forCreateEntitiesCopy.Keys);
+                            responses = xrmRecordService.XrmService.CreateMultiple(forCreateEntitiesCopy.Keys, bypassWorkflowsAndPlugins: dataImportContainer.BypassFlowsPluginsAndWorkflows);
                         }
                         catch (FaultException<OrganizationServiceFault> fex)
                         {
@@ -565,7 +567,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                         IEnumerable<ExecuteMultipleResponseItem> responses = null;
                         try
                         {
-                            responses = xrmRecordService.XrmService.UpdateMultiple(forUpdateEntitiesCopy.Keys, null);
+                            responses = xrmRecordService.XrmService.UpdateMultiple(forUpdateEntitiesCopy.Keys, null, bypassWorkflowsAndPlugins: dataImportContainer.BypassFlowsPluginsAndWorkflows);
                         }
                         catch (FaultException<OrganizationServiceFault> fex)
                         {
@@ -620,7 +622,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                         }
                     }
                     var setStateMessages = checkStateForEntities
-                        .Select(GetSetStateRequest)
+                        .Select(e => GetSetStateRequest(e, dataImportContainer.BypassFlowsPluginsAndWorkflows))
                         .ToArray();
                     if (setStateMessages.Any())
                     {
@@ -947,7 +949,7 @@ namespace JosephM.Xrm.DataImportExport.Import
             //we will query the matches
             var querySetResponses = thisTypesConfig != null || !isCached
                 ? xrmRecordService.XrmService.ExecuteMultiple(thisSetOfEntities
-                    .Select(e => dataImportContainer.GetMatchQueryExpression(e))
+                    .Select(e => dataImportContainer.GetMatchQueryExpression(e, dataImportContainer))
                     .Select(q => new RetrieveMultipleRequest() { Query = q })
                     .ToArray())
                 : new ExecuteMultipleResponseItem[0];
@@ -1145,6 +1147,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                         {
                             orderedEntities.Add(entity);
                         }
+                        dataImportContainer.Controller.LogLiteral($"Sorting for import {orderedEntities.Count}/{thisTypeEntities.Count}");
                         dataImportContainer.Controller.UpdateLevel2Progress(0, 1, $"Sorting for import {orderedEntities.Count}/{thisTypeEntities.Count}");
                     }
                 }
@@ -1243,7 +1246,7 @@ namespace JosephM.Xrm.DataImportExport.Import
             return orderedTypes;
         }
 
-        private static OrganizationRequest GetSetStateRequest(Entity thisEntity)
+        private static OrganizationRequest GetSetStateRequest(Entity thisEntity, bool bypassWorkflowsAndPlugins = false)
         {
             if(_customSetStateConfigurations.ContainsKey(thisEntity.LogicalName))
             {
@@ -1253,12 +1256,18 @@ namespace JosephM.Xrm.DataImportExport.Import
             {
                 var theState = thisEntity.GetOptionSetValue("statecode");
                 var theStatus = thisEntity.GetOptionSetValue("statuscode");
-                return new SetStateRequest()
+                var request = new SetStateRequest()
                 {
                     EntityMoniker = thisEntity.ToEntityReference(),
                     State = new OptionSetValue(theState),
                     Status = new OptionSetValue(theStatus)
                 };
+                if (bypassWorkflowsAndPlugins)
+                {
+                    request.Parameters.Add("SuppressCallbackRegistrationExpanderJob", true);
+                    request.Parameters.Add("BypassBusinessLogicExecution", "CustomSync,CustomAsync");
+                }
+                return request;
             }
         }
 

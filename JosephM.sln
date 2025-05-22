@@ -2328,8 +2328,8 @@ Global
 		{623E78B2-835C-4C53-AA6F-0C0209B25018} = {500C0086-B37F-4C83-AD91-DBD77757F0CD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		JosephM.Xrm.Vsix.Shared\JosephM.Xrm.Vsix.Shared.projitems*{2e3789be-94e7-4b9f-a096-dc112f4fb84e}*SharedItemsImports = 4

@@ -17,7 +17,9 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
     public class ExportXmlModule
         : ServiceRequestModule<ExportXmlDialog, ExportXmlService, ExportXmlRequest, ExportXmlResponse, ExportXmlResponseItem>
     {
-        public override string MenuGroup => "Data Import/Export";
+        public override string MenuGroup => "Import & Migrate Data";
+
+        public override string MainOperationName => "XML Export";
 
         public override void RegisterTypes()
         {

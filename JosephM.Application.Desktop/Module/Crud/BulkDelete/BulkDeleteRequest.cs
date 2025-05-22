@@ -8,7 +8,7 @@ using System.Linq;
 namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
 {
     [Group(Sections.RecordDetails, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
-    [Group(Sections.AdditionalOptions, Group.DisplayLayoutEnum.VerticalCentered, order: 30, displayLabel: false)]
+    [Group(Sections.AdditionalOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30, displayLabel: false)]
     public class BulkDeleteRequest : ServiceRequestBase
     {
         private bool _allowExecuteMultiples = true;
@@ -58,6 +58,12 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
                     ExecuteMultipleSetSize = 1;
             }
         }
+
+        [MyDescription("Specify for cloud flow, plugin, and workflow logic not to trigger from update operations being performed")]
+        [DisplayName("Bypass Flows, Plugins and Workflows")]
+        [Group(Sections.AdditionalOptions)]
+        [DisplayOrder(60)]
+        public bool BypassFlowsPluginsAndWorkflows { get; set; }
 
         private static class Sections
         {

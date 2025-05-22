@@ -123,10 +123,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return new Condition[0];
         }
 
-        internal virtual string GetPicklistDisplayField(string fieldName, string recordType, IRecordService lookupService, string recordTypeToLookup)
+        internal virtual string[] GetPicklistDisplayFields(string fieldName, string recordType, IRecordService lookupService, string recordTypeToLookup)
         {
             var targetType = lookupService.GetLookupTargetType(fieldName, recordType);
-            return lookupService.GetPrimaryField(targetType);
+            return new[] { lookupService.GetPrimaryField(targetType) };
         }
 
         internal virtual IEnumerable<CustomFormFunction> GetCustomFunctions(string recordType, RecordEntryFormViewModel recordForm)
@@ -196,15 +196,18 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             {
                 if (!_cachedPicklist.ContainsKey(fieldName) || _cachedPicklist[fieldName].LookupService != lookupService)
                 {
-                    var displayField = GetPicklistDisplayField(fieldName, recordType, lookupService, recordTypeToLookup);
+                    var displayFields = GetPicklistDisplayFields(fieldName, recordType, lookupService, recordTypeToLookup);
 
-                    var picklist = lookupService.RetrieveAllAndClauses(recordTypeToLookup, conditions,
-                        new[] { displayField });
+                    var picklist = lookupService.RetrieveAllAndClauses(recordTypeToLookup, conditions, displayFields);
                     var cache = new CachedPicklist(picklist, conditions, lookupService);
                     if (_cachedPicklist.ContainsKey(fieldName))
+                    {
                         _cachedPicklist[fieldName] = cache;
+                    }
                     else
+                    {
                         _cachedPicklist.Add(fieldName, cache);
+                    }
                 }
                 return _cachedPicklist[fieldName].Picklist;
             }

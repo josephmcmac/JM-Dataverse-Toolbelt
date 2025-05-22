@@ -25,7 +25,7 @@ namespace JosephM.Record.Service
 
         public abstract string Create(IRecord record, IEnumerable<string> fieldToSet);
 
-        public abstract void Delete(string recordType, string id);
+        public abstract void Delete(string recordType, string id, bool bypassWorkflowsAndPlugins = false);
 
         public abstract IEnumerable<IFieldMetadata> GetFieldMetadata(string recordType);
 
@@ -380,7 +380,7 @@ namespace JosephM.Record.Service
             return result;
         }
 
-        public IDictionary<int, Exception> DeleteMultiple(IEnumerable<IRecord> recordsToDelete)
+        public IDictionary<int, Exception> DeleteMultiple(IEnumerable<IRecord> recordsToDelete, bool bypassWorkflowsAndPlugins = false)
         {
             var result = new Dictionary<int, Exception>();
 
@@ -389,7 +389,7 @@ namespace JosephM.Record.Service
             {
                 try
                 {
-                    Delete(item.Type, item.Id);
+                    Delete(item.Type, item.Id, bypassWorkflowsAndPlugins);
                 }
                 catch (Exception ex)
                 {

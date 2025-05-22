@@ -16,7 +16,7 @@ namespace JosephM.Xrm.DataImportExport.Import
     public class DataImportContainer
     {
         private readonly Dictionary<Entity, List<string>> _fieldsToRetry = new Dictionary<Entity, List<string>>();
-        public DataImportContainer(DataImportResponse response, XrmRecordService xrmRecordService, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary, IEnumerable<Entity> entities, ServiceRequestController controller, bool includeOwner, bool includeOverrideCreatedOn,bool maskEmails, MatchOption matchOption, bool updateOnly, bool containsExportedConfigFields, int executeMultipleSetSize, int targetCacheLimit, bool onlyFieldMatchActive, bool forceSubmitAllFields, bool displayTimeEstimations, int parallelImportProcessCount)
+        public DataImportContainer(DataImportResponse response, XrmRecordService xrmRecordService, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary, IEnumerable<Entity> entities, ServiceRequestController controller, bool includeOwner, bool includeOverrideCreatedOn,bool maskEmails, MatchOption matchOption, bool updateOnly, bool containsExportedConfigFields, int executeMultipleSetSize, int targetCacheLimit, bool onlyFieldMatchActive, bool forceSubmitAllFields, bool displayTimeEstimations, int parallelImportProcessCount, bool bypassWorkflowsAndPlugins = false)
         {
             Response = response;
             XrmRecordService = xrmRecordService;
@@ -34,6 +34,7 @@ namespace JosephM.Xrm.DataImportExport.Import
             ContainsExportedConfigFields = containsExportedConfigFields;
             ExecuteMultipleSetSize = executeMultipleSetSize;
             ParallelImportProcessCount = parallelImportProcessCount;
+            BypassFlowsPluginsAndWorkflows = bypassWorkflowsAndPlugins;
             _maxCacheCount = targetCacheLimit;
             EntitiesToImport = entities;
             var typesToImport = entities.Select(e => e.LogicalName).Distinct();
@@ -65,6 +66,7 @@ namespace JosephM.Xrm.DataImportExport.Import
         public bool ContainsExportedConfigFields { get; }
         public int ExecuteMultipleSetSize { get; }
         public int ParallelImportProcessCount { get; private set; }
+        public bool BypassFlowsPluginsAndWorkflows { get; private set; }
 
         public IDictionary<Entity, List<string>> FieldsToRetry {  get { return _fieldsToRetry; } }
         public IEnumerable<string> AssociationTypesToImport { get; }
@@ -417,7 +419,7 @@ namespace JosephM.Xrm.DataImportExport.Import
             return _rootBusinessUnit;
         }
 
-        public QueryExpression GetMatchQueryExpression(Entity thisEntity)
+        public QueryExpression GetMatchQueryExpression(Entity thisEntity, DataImportContainer dataImportContainer)
         {
             var thisTypesConfig = XrmRecordService.GetTypeConfigs().GetFor(thisEntity.LogicalName);
             if (thisTypesConfig != null)
@@ -453,7 +455,18 @@ namespace JosephM.Xrm.DataImportExport.Import
                             && XrmService.EntityExists(er.LogicalName))
                         {
                             var linkTo = matchQuery.AddLink(er.LogicalName, matchKeyField.Key, XrmService.GetPrimaryKeyField(er.LogicalName));
-                            linkTo.LinkCriteria.AddCondition(new ConditionExpression(XrmService.GetPrimaryNameField(er.LogicalName), ConditionOperator.Equal, er.Name));
+                            if (dataImportContainer.AltLookupMatchKeyDictionary != null
+                                && dataImportContainer.AltLookupMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
+                                && dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName].ContainsKey(matchKeyField.Key))
+                            {
+                                var altMatchType = dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName][matchKeyField.Key].Key;
+                                var altMatchField = dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName][matchKeyField.Key].Value;
+                                linkTo.LinkCriteria.AddCondition(new ConditionExpression(altMatchField, ConditionOperator.Equal, XrmService.ConvertToQueryValue(altMatchField, altMatchType,  er.Name)));
+                            }
+                            else
+                            {
+                                linkTo.LinkCriteria.AddCondition(new ConditionExpression(XrmService.GetPrimaryNameField(er.LogicalName), ConditionOperator.Equal, er.Name));
+                            }
                         }
                         else
                         {

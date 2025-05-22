@@ -1599,7 +1599,14 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             }
             else if (IsOptionSet(fieldName, entityType))
             {
-                return ((OptionSetValue)fieldValue).Value.ToString();
+                if (fieldValue is OptionSetValue osv)
+                {
+                    return osv.Value.ToString();
+                }
+                else
+                {
+                    return GetMatchingOptionValue(fieldValue.ToString(), fieldName, entityType).ToString();
+                }
             }
             else
                 return fieldValue.ToString()?.ToLower();
@@ -1936,10 +1943,20 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
 
         public void Delete(string entityName, Guid id)
         {
+            Delete(entityName, id, false);
+        }
+
+        public void Delete(string entityName, Guid id, bool bypassWorkflowsAndPlugins)
+        {
             var request = new DeleteRequest
             {
                 Target = CreateLookup(entityName, id)
             };
+            if (bypassWorkflowsAndPlugins)
+            {
+                request.Parameters.Add("SuppressCallbackRegistrationExpanderJob", true);
+                request.Parameters.Add("BypassBusinessLogicExecution", "CustomSync,CustomAsync");
+            }
             Execute(request);
         }
 
@@ -3332,18 +3349,40 @@ string recordType)
             return responses.ToArray();
         }
 
-        public IEnumerable<ExecuteMultipleResponseItem> CreateMultiple(IEnumerable<Entity> entities)
+        public IEnumerable<ExecuteMultipleResponseItem> CreateMultiple(IEnumerable<Entity> entities, bool bypassWorkflowsAndPlugins = false)
         {
-            var response = ExecuteMultiple(entities.Where(e => e != null).Select(e => new CreateRequest() { Target = e }));
+            var response = ExecuteMultiple(entities
+                .Where(e => e != null)
+                .Select(e =>
+                {
+                    var request = new CreateRequest() { Target = e };
+                    if (bypassWorkflowsAndPlugins)
+                    {
+                        request.Parameters.Add("SuppressCallbackRegistrationExpanderJob", true);
+                        request.Parameters.Add("BypassBusinessLogicExecution", "CustomSync,CustomAsync");
+                    }
+                    return request;
+                }));
+
             return response.ToArray();
         }
 
-        public IEnumerable<ExecuteMultipleResponseItem> DeleteMultiple(IEnumerable<Entity> entities)
+        public IEnumerable<ExecuteMultipleResponseItem> DeleteMultiple(IEnumerable<Entity> entities, bool bypassWorkflowsAndPlugins = false)
         {
             var response =
                 ExecuteMultiple(
-                    entities.Where(e => e != null)
-                        .Select(e => new DeleteRequest() { Target = new EntityReference(e.LogicalName, e.Id) }));
+                    entities
+                    .Where(e => e != null)
+                    .Select(e =>
+                    {
+                        var request = new DeleteRequest() { Target = new EntityReference(e.LogicalName, e.Id) };
+                        if (bypassWorkflowsAndPlugins)
+                        {
+                            request.Parameters.Add("SuppressCallbackRegistrationExpanderJob", true);
+                            request.Parameters.Add("BypassBusinessLogicExecution", "CustomSync,CustomAsync");
+                        }
+                        return request;
+                    }));
             return response.ToArray();
         }
 
@@ -3503,6 +3542,11 @@ string recordType)
                     return value.ToString();
                 }
                 return booleanValue.ToString();
+            }
+            else if (value is OptionSetValueCollection osvCollection)
+            {
+                return string.Join(", ", osvCollection.Select(osv => GetOptionLabel(osv.Value, fieldName, recordType)));
+
             }
             else if (value is byte[] byteValue)
             {
@@ -4050,6 +4094,16 @@ string recordType)
                 };
                 Execute(commitRequest);
             }
+        }
+
+        public FilterExpression GetFetchFilterAsFilterExpression(string recordType, string fetchXmlFilter)
+        {
+            var fetchXml = "<fetch><entity name=\"" + recordType + "\">" + fetchXmlFilter + "</entity></fetch>";
+            var response = (FetchXmlToQueryExpressionResponse)Execute(new FetchXmlToQueryExpressionRequest
+            {
+                FetchXml = fetchXml
+            });
+            return response.Query.Criteria;
         }
     }
 }
