@@ -2,21 +2,16 @@
   "AddToSolution": false,
   "Connections": [
     {
-      "ClientId": "146df633-07be-46df-95aa-381da5971186",
+      "ClientId": "874e80e0-9c56-46e1-9e31-14cafc6bfed9",
       "ClientSecret": {
-        "_password": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAQ1E6PgtjlkWlNwEnV\/uhawAAAAACAAAAAAAQZgAAAAEAACAAAABvisOa6zPK39wThtIiNPH1G+f0LP9fB5mFac0ClyZv+QAAAAAOgAAAAAIAACAAAABjM99ziPTApVuXk6U7uDppiz+GtjTmJBCAyXrkkv5fS2AAAAC3OnLtrVnGqDc+gDW+4NAgP4NLHOgWrGstbmlUwF9wbeuX7ILq9d1DpC8np0dQ\/LpqSPKwII6GlFC0eSEeTGD2mKSTJ2rszZhLiCziPaADtO6awgFW22zf1Ht8RAj5eZNAAAAASvcUmwmz7sTSYCWqMLZpTv0vFwfSEtY+eftnuzREp3agiJibB351CWqg4aw9eOI8nKSymP2RveArZQLul25hIg==",
+        "_password": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAt9fwIT45wk+L0OeJPjGyZgAAAAACAAAAAAAQZgAAAAEAACAAAAA8Ct0hMf4\/4XmvebJMWdIkyESLtM9BfgQ7dp23DdwJ1gAAAAAOgAAAAAIAACAAAAAawpp0QVKLuU0Wsb38xI5BN6U5UlUirAHFb+UnJdumJ2AAAABCHSpS5cBXrHqbhnRDlg3k09N8baIJZdzfza0+DuHsytA79aQ7adOKhgIqfo0OAVcsh0+ZAHMn4dRBqehBDP\/4\/XTZJR+suZfa9dczj4ng1BsdQamInsqVtWs9MntJjq1AAAAAXuKlLj+Sagj\/SlAU+PskN1loYS+Qw6PqfJykL0DmKHW931NrUhtY4cIFd4SOdxyFuJOX5PN5OecmdDiC+H6TuQ==",
         "<EncryptPassword>k__BackingField": true
       },
       "ConnectionType": 0,
-      "Name": "Toolbelt App Dev",
+      "Name": "Joseph McGregor-Macdonald Dev",
       "ToolingConnectionId": null,
-      "WebUrl": "https:\/\/toolbeltapp-dev.crm6.dynamics.com",
+      "WebUrl": "https:\/\/josephmcgregormacdonald-dev.crm6.dynamics.com",
       "Active": true
-    }
-  ],
-  "DeployIntoFieldProjects": [
-    {
-      "ProjectName": "N\/A"
     }
   ],
   "PluginPackageProjects": [ ],

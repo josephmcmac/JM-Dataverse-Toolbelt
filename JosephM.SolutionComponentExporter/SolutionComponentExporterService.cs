@@ -96,6 +96,13 @@ namespace JosephM.SolutionComponentExporter
                 {
                     switch(componentTypeInt)
                     {
+                        case 10049:
+                            {
+                                solutionComponentOutput.ComponentType = "Connection Reference";
+                                var appModule = Service.Get(Entities.connectionreference, solutionComponentOutput.ComponentId, new[] { Fields.connectionreference_.connectionreferencedisplayname, Fields.connectionreference_.connectionreferencelogicalname });
+                                solutionComponentOutput.ComponentDisplayName = $"{appModule.GetStringField(Fields.connectionreference_.connectionreferencedisplayname)} ({appModule.GetStringField(Fields.connectionreference_.connectionreferencelogicalname)})";
+                                break;
+                            }
                         case 80:
                             {
                                 solutionComponentOutput.ComponentType = "Model Driven App";

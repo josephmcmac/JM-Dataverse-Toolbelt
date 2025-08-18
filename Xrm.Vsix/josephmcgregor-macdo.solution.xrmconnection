@@ -5,7 +5,7 @@
   },
   {
     "Key": "Name",
-    "Value": "Toolbelt App Dev"
+    "Value": "Joseph McGregor-Macdonald Dev"
   },
   {
     "Key": "ConnectionType",
@@ -13,15 +13,15 @@
   },
   {
     "Key": "ClientId",
-    "Value": "146df633-07be-46df-95aa-381da5971186"
+    "Value": "874e80e0-9c56-46e1-9e31-14cafc6bfed9"
   },
   {
     "Key": "ClientSecret",
-    "Value": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAQ1E6PgtjlkWlNwEnV\/uhawAAAAACAAAAAAAQZgAAAAEAACAAAABvisOa6zPK39wThtIiNPH1G+f0LP9fB5mFac0ClyZv+QAAAAAOgAAAAAIAACAAAABjM99ziPTApVuXk6U7uDppiz+GtjTmJBCAyXrkkv5fS2AAAAC3OnLtrVnGqDc+gDW+4NAgP4NLHOgWrGstbmlUwF9wbeuX7ILq9d1DpC8np0dQ\/LpqSPKwII6GlFC0eSEeTGD2mKSTJ2rszZhLiCziPaADtO6awgFW22zf1Ht8RAj5eZNAAAAASvcUmwmz7sTSYCWqMLZpTv0vFwfSEtY+eftnuzREp3agiJibB351CWqg4aw9eOI8nKSymP2RveArZQLul25hIg=="
+    "Value": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAt9fwIT45wk+L0OeJPjGyZgAAAAACAAAAAAAQZgAAAAEAACAAAAA8Ct0hMf4\/4XmvebJMWdIkyESLtM9BfgQ7dp23DdwJ1gAAAAAOgAAAAAIAACAAAAAawpp0QVKLuU0Wsb38xI5BN6U5UlUirAHFb+UnJdumJ2AAAABCHSpS5cBXrHqbhnRDlg3k09N8baIJZdzfza0+DuHsytA79aQ7adOKhgIqfo0OAVcsh0+ZAHMn4dRBqehBDP\/4\/XTZJR+suZfa9dczj4ng1BsdQamInsqVtWs9MntJjq1AAAAAXuKlLj+Sagj\/SlAU+PskN1loYS+Qw6PqfJykL0DmKHW931NrUhtY4cIFd4SOdxyFuJOX5PN5OecmdDiC+H6TuQ=="
   },
   {
     "Key": "WebUrl",
-    "Value": "https:\/\/toolbeltapp-dev.crm6.dynamics.com"
+    "Value": "https:\/\/josephmcgregormacdonald-dev.crm6.dynamics.com"
   },
   {
     "Key": "ToolingConnectionId",
