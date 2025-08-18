@@ -14,6 +14,10 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
     [Group(Sections.FieldUpdate3, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 32, displayLabel: false)]
     [Group(Sections.FieldUpdate4, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 33, displayLabel: false)]
     [Group(Sections.FieldUpdate5, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 34, displayLabel: false)]
+    [Group(Sections.FieldUpdate6, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 35, displayLabel: false)]
+    [Group(Sections.FieldUpdate7, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 36, displayLabel: false)]
+    [Group(Sections.FieldUpdate8, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 37, displayLabel: false)]
+    [Group(Sections.FieldUpdate9, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 38, displayLabel: false)]
     public class BulkUpdateRequest : ServiceRequestBase
     {
         private bool _allowExecuteMultiples = true;
@@ -43,6 +47,10 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
         [RecordTypeFor(nameof(FieldToSet3))]
         [RecordTypeFor(nameof(FieldToSet4))]
         [RecordTypeFor(nameof(FieldToSet5))]
+        [RecordTypeFor(nameof(FieldToSet6))]
+        [RecordTypeFor(nameof(FieldToSet7))]
+        [RecordTypeFor(nameof(FieldToSet8))]
+        [RecordTypeFor(nameof(FieldToSet9))]
         [Group(Sections.RecordDetails)]
         [DisplayOrder(10)]
         public RecordType RecordType { get; private set; }
@@ -245,6 +253,154 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
         public object ValueToSet5 { get; set; }
 
         [Hidden]
+        public bool Field5Populated
+        {
+            get { return FieldToSet5 != null && (ClearValue5 || ValueToSet5 != null); }
+        }
+
+        [PropertyInContextByPropertyValue(nameof(Field5Populated), true)]
+        [PropertyInContextByPropertyValue(nameof(AddUpdateField6), false)]
+        [Group(Sections.FieldUpdate6)]
+        [DisplayOrder(76)]
+        [RequiredProperty]
+        [DisplayName("Add 6th Field")]
+        public bool AddUpdateField6 { get; set; }
+
+        [Group(Sections.FieldUpdate6)]
+        [DisplayOrder(80)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue(nameof(AddUpdateField6), true)]
+        [RecordFieldFor(nameof(ValueToSet6))]
+        [DisplayName("Field to Update 6")]
+        public RecordField FieldToSet6 { get; set; }
+
+        [Group(Sections.FieldUpdate6)]
+        [DisplayOrder(86)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyNotNull(nameof(FieldToSet6))]
+        [DisplayName("Field 6 Set to Null")]
+        public bool ClearValue6 { get; set; }
+
+        [Group(Sections.FieldUpdate6)]
+        [DisplayOrder(90)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyNotNull(nameof(FieldToSet6))]
+        [PropertyInContextByPropertyValue(nameof(ClearValue6), false)]
+        [DisplayName("Field 6 Value to Set")]
+        public object ValueToSet6 { get; set; }
+
+        [Hidden]
+        public bool Field6Populated
+        {
+            get { return FieldToSet6 != null && (ClearValue6 || ValueToSet6 != null); }
+        }
+
+        [PropertyInContextByPropertyValue(nameof(Field6Populated), true)]
+        [PropertyInContextByPropertyValue(nameof(AddUpdateField7), false)]
+        [Group(Sections.FieldUpdate7)]
+        [DisplayOrder(77)]
+        [RequiredProperty]
+        [DisplayName("Add 7th Field")]
+        public bool AddUpdateField7 { get; set; }
+
+        [Group(Sections.FieldUpdate7)]
+        [DisplayOrder(80)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue(nameof(AddUpdateField7), true)]
+        [RecordFieldFor(nameof(ValueToSet7))]
+        [DisplayName("Field to Update 7")]
+        public RecordField FieldToSet7 { get; set; }
+
+        [Group(Sections.FieldUpdate7)]
+        [DisplayOrder(87)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyNotNull(nameof(FieldToSet7))]
+        [DisplayName("Field 7 Set to Null")]
+        public bool ClearValue7 { get; set; }
+
+        [Group(Sections.FieldUpdate7)]
+        [DisplayOrder(90)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyNotNull(nameof(FieldToSet7))]
+        [PropertyInContextByPropertyValue(nameof(ClearValue7), false)]
+        [DisplayName("Field 7 Value to Set")]
+        public object ValueToSet7 { get; set; }
+
+        [Hidden]
+        public bool Field7Populated
+        {
+            get { return FieldToSet7 != null && (ClearValue7 || ValueToSet7 != null); }
+        }
+
+        [PropertyInContextByPropertyValue(nameof(Field7Populated), true)]
+        [PropertyInContextByPropertyValue(nameof(AddUpdateField8), false)]
+        [Group(Sections.FieldUpdate8)]
+        [DisplayOrder(88)]
+        [RequiredProperty]
+        [DisplayName("Add 8th Field")]
+        public bool AddUpdateField8 { get; set; }
+
+        [Group(Sections.FieldUpdate8)]
+        [DisplayOrder(80)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue(nameof(AddUpdateField8), true)]
+        [RecordFieldFor(nameof(ValueToSet8))]
+        [DisplayName("Field to Update 8")]
+        public RecordField FieldToSet8 { get; set; }
+
+        [Group(Sections.FieldUpdate8)]
+        [DisplayOrder(88)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyNotNull(nameof(FieldToSet8))]
+        [DisplayName("Field 8 Set to Null")]
+        public bool ClearValue8 { get; set; }
+
+        [Group(Sections.FieldUpdate8)]
+        [DisplayOrder(90)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyNotNull(nameof(FieldToSet8))]
+        [PropertyInContextByPropertyValue(nameof(ClearValue8), false)]
+        [DisplayName("Field 8 Value to Set")]
+        public object ValueToSet8 { get; set; }
+
+        [Hidden]
+        public bool Field8Populated
+        {
+            get { return FieldToSet8 != null && (ClearValue8 || ValueToSet8 != null); }
+        }
+
+        [PropertyInContextByPropertyValue(nameof(Field8Populated), true)]
+        [PropertyInContextByPropertyValue(nameof(AddUpdateField9), false)]
+        [Group(Sections.FieldUpdate9)]
+        [DisplayOrder(99)]
+        [RequiredProperty]
+        [DisplayName("Add 9th Field")]
+        public bool AddUpdateField9 { get; set; }
+
+        [Group(Sections.FieldUpdate9)]
+        [DisplayOrder(90)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue(nameof(AddUpdateField9), true)]
+        [RecordFieldFor(nameof(ValueToSet9))]
+        [DisplayName("Field to Update 9")]
+        public RecordField FieldToSet9 { get; set; }
+
+        [Group(Sections.FieldUpdate9)]
+        [DisplayOrder(99)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyNotNull(nameof(FieldToSet9))]
+        [DisplayName("Field 9 Set to Null")]
+        public bool ClearValue9 { get; set; }
+
+        [Group(Sections.FieldUpdate9)]
+        [DisplayOrder(90)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyNotNull(nameof(FieldToSet9))]
+        [PropertyInContextByPropertyValue(nameof(ClearValue9), false)]
+        [DisplayName("Field 9 Value to Set")]
+        public object ValueToSet9 { get; set; }
+
+        [Hidden]
         public bool AllowExecuteMultiples
         {
             get => _allowExecuteMultiples; set
@@ -264,6 +420,10 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
             public const string FieldUpdate3 = "FieldUpdate3";
             public const string FieldUpdate4 = "FieldUpdate4";
             public const string FieldUpdate5 = "FieldUpdate5";
+            public const string FieldUpdate6 = "FieldUpdate6";
+            public const string FieldUpdate7 = "FieldUpdate7";
+            public const string FieldUpdate8 = "FieldUpdate8";
+            public const string FieldUpdate9 = "FieldUpdate9";
         }
     }
 }

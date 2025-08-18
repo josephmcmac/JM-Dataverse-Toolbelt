@@ -89,6 +89,34 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
                                     else
                                         newRecord.SetField(request.FieldToSet5.Key, request.ValueToSet5, recordService);
                                 }
+                                if (request.AddUpdateField6)
+                                {
+                                    if (request.ClearValue6)
+                                        newRecord.SetField(request.FieldToSet6.Key, null, recordService);
+                                    else
+                                        newRecord.SetField(request.FieldToSet6.Key, request.ValueToSet6, recordService);
+                                }
+                                if (request.AddUpdateField7)
+                                {
+                                    if (request.ClearValue7)
+                                        newRecord.SetField(request.FieldToSet7.Key, null, recordService);
+                                    else
+                                        newRecord.SetField(request.FieldToSet7.Key, request.ValueToSet7, recordService);
+                                }
+                                if (request.AddUpdateField8)
+                                {
+                                    if (request.ClearValue8)
+                                        newRecord.SetField(request.FieldToSet8.Key, null, recordService);
+                                    else
+                                        newRecord.SetField(request.FieldToSet8.Key, request.ValueToSet8, recordService);
+                                }
+                                if (request.AddUpdateField9)
+                                {
+                                    if (request.ClearValue9)
+                                        newRecord.SetField(request.FieldToSet9.Key, null, recordService);
+                                    else
+                                        newRecord.SetField(request.FieldToSet9.Key, request.ValueToSet9, recordService);
+                                }
                                 return newRecord;
                             })
                             .ToArray();
