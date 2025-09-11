@@ -222,6 +222,10 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
                                             };
                                     }
                                 }
+                                else
+                                {
+                                    fieldValues[targetField] = null;
+                                }
                             }
                             else
                             {

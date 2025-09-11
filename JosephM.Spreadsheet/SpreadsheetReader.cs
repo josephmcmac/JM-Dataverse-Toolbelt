@@ -186,6 +186,14 @@ namespace JosephM.Spreadsheet
                     if (!rowHasValue)
                         break;
 
+                    foreach(var col in columnIndexes.Values)
+                    {
+                        if(!newRow.ContainsKey(col))
+                        {
+                            newRow[col] = null;
+                        }
+                    }
+
                     rowDictionaries.Add(newRow);
                 }
 
@@ -212,6 +220,10 @@ namespace JosephM.Spreadsheet
         {
             var i = 0;
             var stringTablePart = document.WorkbookPart.SharedStringTablePart;
+            if(stringTablePart == null)
+            {
+                throw new NullReferenceException("Could not read spreadsheet columns. Please ensure all columns contain data");
+            }
             var dictionary = new Hashtable();
             foreach (var item in stringTablePart.SharedStringTable.ChildElements)
             {
