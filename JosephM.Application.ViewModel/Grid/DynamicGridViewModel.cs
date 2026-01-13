@@ -692,7 +692,7 @@ namespace JosephM.Application.ViewModel.Grid
                         }
                         else
                         {
-                            var sheetName = "Records";
+                            var sheetName = RecordService.GetDisplayName(RecordType);
                             var excelCellTypes = new Dictionary<string, CellDataType>();
                             foreach(var field in fields)
                             {

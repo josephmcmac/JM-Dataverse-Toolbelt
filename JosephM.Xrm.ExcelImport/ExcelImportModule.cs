@@ -53,26 +53,6 @@ namespace JosephM.Xrm.ExcelImport
             this.AddOnChangeFunction(customFunction, typeof(ExcelImportRequest));
         }
 
-        private void AddGenerateColumnMappingsTargetTypeSelected()
-        {
-            var customFunction = new OnChangeFunction((RecordEntryViewModelBase revm, string changedField) =>
-            {
-                switch (changedField)
-                {
-                    case nameof(ExcelImportRequest.ExcelImportTabMapping.TargetType):
-                        {
-                            if (revm.GetFieldViewModel(nameof(ExcelImportRequest.ExcelImportTabMapping.SourceTab)).ValueObject != null
-                                && revm.GetFieldViewModel(nameof(ExcelImportRequest.ExcelImportTabMapping.TargetType)).ValueObject != null)
-                            {
-                                var mappings = revm.GetEnumerableFieldViewModel(nameof(ExcelImportRequest.ExcelImportTabMapping.Mappings));
-                            }
-                            break;
-                        }
-                }
-            });
-            this.AddOnChangeFunction(customFunction, typeof(ExcelImportRequest.ExcelImportTabMapping));
-        }
-
         private static void GenerateMappings(DynamicGridViewModel g)
         {
             g.ApplicationController.DoOnAsyncThread(() =>
@@ -173,7 +153,7 @@ namespace JosephM.Xrm.ExcelImport
 
         private static GetTargetTypeResponse GetTargetType(IRecordService service, string sourceString)
         {
-            sourceString = sourceString?.ToLower();
+            sourceString = sourceString?.Replace("_", " ")?.ToLower();
             var recordTypes = service.GetAllRecordTypes();
             var typesForLabel = recordTypes.Where(t => service.GetDisplayName(t)?.ToLower() == sourceString || service.GetCollectionName(t)?.ToLower() == sourceString);
             if (typesForLabel.Count() == 1)
