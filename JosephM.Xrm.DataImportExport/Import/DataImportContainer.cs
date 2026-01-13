@@ -147,6 +147,8 @@ namespace JosephM.Xrm.DataImportExport.Import
                 return true;
             if (fieldName == Fields.product_.productstructure)
                 return true;
+            if (fieldName == Fields.savedqueryvisualization_.primaryentitytypecode)
+                return true;
             if (fieldName == "overriddencreatedon")
                 return true;
             return
