@@ -153,19 +153,26 @@ namespace JosephM.Xrm.ExcelImport
 
         private static GetTargetTypeResponse GetTargetType(IRecordService service, string sourceString)
         {
-            sourceString = sourceString?.Replace("_", " ")?.ToLower();
-            var recordTypes = service.GetAllRecordTypes();
-            var typesForLabel = recordTypes.Where(t => service.GetDisplayName(t)?.ToLower() == sourceString || service.GetCollectionName(t)?.ToLower() == sourceString);
-            if (typesForLabel.Count() == 1)
-                return new GetTargetTypeResponse(typesForLabel.First(), false);
-            var typesForName = recordTypes.Where(t => t == sourceString);
-            if (typesForName.Any())
-                return new GetTargetTypeResponse(typesForName.First(), false);
+            var sourceStrings = new[]
+            {
+                sourceString,
+                sourceString?.Replace("_", " ")?.ToLower()
+            };
+            foreach(var sourceStringItem in sourceStrings)
+            {
+                var recordTypes = service.GetAllRecordTypes();
+                var typesForLabel = recordTypes.Where(t => service.GetDisplayName(t)?.ToLower() == sourceStringItem || service.GetCollectionName(t)?.ToLower() == sourceStringItem);
+                if (typesForLabel.Count() == 1)
+                    return new GetTargetTypeResponse(typesForLabel.First(), false);
+                var typesForName = recordTypes.Where(t => t == sourceStringItem);
+                if (typesForName.Any())
+                    return new GetTargetTypeResponse(typesForName.First(), false);
 
-            var manyToManys = service.GetManyToManyRelationships();
-            var manysmatch = manyToManys.Where(mm => mm.SchemaName == sourceString);
-            if(manysmatch.Any())
-                return new GetTargetTypeResponse(manysmatch.First().SchemaName, false);
+                var manyToManys = service.GetManyToManyRelationships();
+                var manysmatch = manyToManys.Where(mm => mm.SchemaName == sourceStringItem);
+                if (manysmatch.Any())
+                    return new GetTargetTypeResponse(manysmatch.First().SchemaName, false);
+            }
 
             return new GetTargetTypeResponse();
         }
