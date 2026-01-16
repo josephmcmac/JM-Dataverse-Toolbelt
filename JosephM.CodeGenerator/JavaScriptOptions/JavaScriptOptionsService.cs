@@ -72,7 +72,7 @@ namespace JosephM.CodeGenerator.JavaScriptOptions
                     }
                 }
 
-                stringBuilder.AppendLine("var options = {");
+                stringBuilder.AppendLine("let options = {");
                 var picklistsToInclude = optionDictionary.Where(i => i.Value.Any()).ToArray();
                 var numberOfPicklistsRemaining = picklistsToInclude.Count();
                 foreach (var optionSet in picklistsToInclude)

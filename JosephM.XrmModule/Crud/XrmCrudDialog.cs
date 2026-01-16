@@ -217,7 +217,7 @@ namespace JosephM.XrmModule.Crud
             {
 
                 if (i == 0)
-                    conversionList.Add(string.Format("var {0} = {1}{2}{1};", variableName, stringCharacter, splitLines[i]));
+                    conversionList.Add(string.Format("let {0} = {1}{2}{1};", variableName, stringCharacter, splitLines[i]));
                 else
                     conversionList.Add(string.Format("{0} += {1}{2}{1};", variableName, stringCharacter, splitLines[i]));
             }
