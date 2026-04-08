@@ -30,8 +30,8 @@ namespace JosephM.Spreadsheet
                 var getCellType = getCellTypes != null && getCellTypes.ContainsKey(sheet.Key) ? getCellTypes[sheet.Key] : (s) => CellDataType.String;
 
                 var workSheet = new WorksheetDfn();
-                workSheet.Name = sheet.Key.Replace(" ", "_");
-                workSheet.TableName = sheet.Key.Replace(" ", "_");
+                workSheet.Name = sheet.Key.Replace(" ", "_").Left(31);
+                workSheet.TableName = sheet.Key.Replace(" ", "_").Left(31);
                 workSheet.ColumnHeadings = thesePropertyNames.Select(p => new CellDfn()
                 {
                     Bold = true,

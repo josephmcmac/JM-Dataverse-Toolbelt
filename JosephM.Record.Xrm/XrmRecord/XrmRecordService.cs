@@ -111,6 +111,12 @@ namespace JosephM.Record.Xrm.XrmRecord
             get { return _xrmService; }
         }
 
+        public Guid? ImpersonatingUserId
+        {
+            get { return XrmService.ImpersonatingUserId; }
+            set { XrmService.ImpersonatingUserId = value; }
+        }
+
         public IEnumerable<IFieldMetadata> GetFieldMetadata(string recordType)
         {
             return _xrmService

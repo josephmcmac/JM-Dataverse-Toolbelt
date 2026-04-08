@@ -25,6 +25,20 @@ namespace JosephM.Xrm
         private static DateTime MinimumDateTime = new DateTime(1753, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
         private int _timeoutSeconds = 600;
 
+        private Guid? _impersonatingUserId;
+        public Guid? ImpersonatingUserId
+        {
+            get
+            {
+                return _impersonatingUserId;
+            }
+            set
+            {
+                _impersonatingUserId = value;
+                SetImpersonatingUser(_impersonatingUserId);
+            }
+        }
+
         public int TimeoutSeconds
         {
             get { return _timeoutSeconds; }
@@ -67,6 +81,27 @@ namespace JosephM.Xrm
                     _currencies.Add(currencyId, Retrieve(Entities.transactioncurrency, currencyId));
                 }
                 return _currencies[currencyId];
+            }
+        }
+
+        private void SetImpersonatingUser(Guid? impersonatingUserId)
+        {
+            if (_service is OrganizationServiceProxy proxy)
+            {
+                proxy.CallerId = impersonatingUserId ?? Guid.Empty;
+            }
+            else if (_service is CrmServiceClient client)
+            {
+                client.CallerId = impersonatingUserId ?? Guid.Empty;
+                if (client.OrganizationServiceProxy != null)
+                {
+                    client.CallerId = impersonatingUserId ?? Guid.Empty;
+                }
+                if (client.OrganizationWebProxyClient != null
+                    && client.OrganizationWebProxyClient != null)
+                {
+                    client.OrganizationWebProxyClient.CallerId = impersonatingUserId ?? Guid.Empty;
+                }
             }
         }
 
@@ -172,16 +207,12 @@ namespace JosephM.Xrm
                     {
                         var getConnection = ServiceFactory.GetOrganisationConnection(XrmConfiguration);
                         _service = getConnection.Service;
+                        SetImpersonatingUser(_impersonatingUserId);
                         _organisation = getConnection.Organisation;
                         SetServiceTimeout();
                     }
                 }
                 return _service;
-            }
-            set
-            {
-                _service = value;
-                _connectionVerified = false;
             }
         }
 

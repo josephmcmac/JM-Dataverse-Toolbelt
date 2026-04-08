@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using JosephM.Record.Metadata;
+﻿using JosephM.Record.Metadata;
 
 namespace JosephM.Record.Service
 {

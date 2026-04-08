@@ -208,6 +208,10 @@
       <Project>{18e53d06-7b26-4314-8b4e-454f78e53f8b}</Project>
       <Name>JosephM.Application.Desktop</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.SavedViewsExport\JosephM.SavedViewsExport.csproj">
+      <Project>{cf4985b6-8479-4679-95b9-4f7a9542290a}</Project>
+      <Name>JosephM.SavedViewsExport</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.SolutionComponentExporter\JosephM.SolutionComponentExporter.csproj">
       <Project>{623e78b2-835c-4c53-aa6f-0c0209b25018}</Project>
       <Name>JosephM.SolutionComponentExporter</Name>
