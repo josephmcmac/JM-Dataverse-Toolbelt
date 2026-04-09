@@ -1,5 +1,5 @@
-﻿using System;
-using JosephM.Core.Service;
+﻿using JosephM.Core.Service;
+using System;
 
 namespace JosephM.SavedViewsExport
 {

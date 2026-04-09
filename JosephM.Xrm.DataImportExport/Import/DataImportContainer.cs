@@ -151,6 +151,8 @@ namespace JosephM.Xrm.DataImportExport.Import
                 return true;
             if (fieldName == "overriddencreatedon")
                 return true;
+            if (fieldName == Fields.userquery_.querytype)
+                return true;
             return
                 xrmRecordService.FieldExists(fieldName, entityType) && xrmRecordService.GetFieldMetadata(fieldName, entityType).Writeable;
         }

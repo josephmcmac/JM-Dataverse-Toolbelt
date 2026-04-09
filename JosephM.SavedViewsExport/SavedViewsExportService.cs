@@ -63,8 +63,10 @@ namespace JosephM.SavedViewsExport
                     {
                         var createdOn = savedView.GetDateTime(Fields.userquery_.createdon);
                         var modifiedOn = savedView.GetDateTime(Fields.userquery_.modifiedon);
-                        savedViews.Add(new SavedView()
+                        savedViews.Add(new SavedView(Service)
                         {
+                            Id = savedView.Id,
+                            OwningUserId = savedView.GetLookupId(Fields.userquery_.ownerid),
                             Owner = usersName,
                             RecordType = savedView.GetStringField(Fields.userquery_.returnedtypecode),
                             Name = savedView.GetStringField(Fields.userquery_.name),
@@ -72,6 +74,7 @@ namespace JosephM.SavedViewsExport
                             LayoutXml = savedView.GetStringField(Fields.userquery_.layoutxml),
                             CreatedOn = createdOn.HasValue ? Service.LocalisationService.ConvertUtcToLocalTime(createdOn.Value) : (DateTime?) null,
                             ModifiedOn = modifiedOn.HasValue ? Service.LocalisationService.ConvertUtcToLocalTime(modifiedOn.Value) : (DateTime?)null,
+                            Description = savedView.GetStringField(Fields.userquery_.description)
                         });
 
                     }
