@@ -23,6 +23,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
         public BulkDeleteRequest()
         {
             ExecuteMultipleSetSize = 50;
+            ParallelUpdateProcesses = 1;
         }
 
         private IEnumerable<IRecord> _recordsToDelete { get; set; }
@@ -58,6 +59,14 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
                     ExecuteMultipleSetSize = 1;
             }
         }
+
+        [MyDescription("Specify number of parallel processes to run the deletions")]
+        [Group(Sections.AdditionalOptions)]
+        [DisplayOrder(55)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(5)]
+        public int? ParallelUpdateProcesses { get; set; }
 
         [MyDescription("Specify for cloud flow, plugin, and workflow logic not to trigger from update operations being performed")]
         [DisplayName("Bypass Flows, Plugins and Workflows")]
