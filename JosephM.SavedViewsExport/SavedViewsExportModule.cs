@@ -19,6 +19,8 @@ namespace JosephM.SavedViewsExport
     {
         public override string MenuGroup => "Customisations";
 
+        public override string MainOperationName => "Saved View Utility";
+
         public override void RegisterTypes()
         {
             base.RegisterTypes();

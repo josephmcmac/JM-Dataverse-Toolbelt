@@ -25,7 +25,7 @@ namespace JosephM.SavedViewsExport.ShareSavedViews
             ServiceRequestController controller)
         {
             var countToUpdate = request.RecordCount;
-            controller.UpdateProgress(0, countToUpdate, "Cloning Views");
+            controller.UpdateProgress(0, countToUpdate, "Sharing Views");
             var viewsToClone = request.GetViewsToClone();
 
             var done = 0;
@@ -33,7 +33,7 @@ namespace JosephM.SavedViewsExport.ShareSavedViews
             var cloneService = RecordService.CloneForParellelProcessing() as XrmRecordService;
             foreach (var viewToClone in viewsToClone)
             {
-                controller.UpdateProgress(done, todo, $"Cloning saved views {done}/{todo}");
+                controller.UpdateProgress(done, todo, $"Sharing saved views {done}/{todo}");
                 done++;
                 try
                 {
@@ -79,7 +79,7 @@ namespace JosephM.SavedViewsExport.ShareSavedViews
                 response.TotalRecordsProcessed++;
             }
 
-            response.Message = "Clone Process Completed";
+            response.Message = "Share Process Completed";
         }
     }
 }

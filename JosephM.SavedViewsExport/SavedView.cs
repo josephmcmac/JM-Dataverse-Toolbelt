@@ -18,7 +18,6 @@ namespace JosephM.SavedViewsExport
             return _viewSourceConnection;
         }
 
-        [Hidden]
         public string Id { get; set; }
 
         [Hidden]
