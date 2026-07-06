@@ -6,6 +6,7 @@ using JosephM.Xrm;
 using Microsoft.Xrm.Sdk.Metadata;
 using System;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
@@ -339,6 +340,42 @@ namespace JosephM.Record.Xrm.XrmRecord
                     return null;
                 return string.Join(",", relationshipMatches.Select(r => r.ReferencingEntityNavigationPropertyName)
                     .Where(s => !string.IsNullOrWhiteSpace(s)).Distinct().OrderBy(s => s));
+            }
+        }
+
+        public string ValueBehaviour
+        {
+            get
+            {
+                var metadata = XrmService.GetFieldMetadata(FieldName, RecordType);
+                if(!metadata.SourceType.HasValue)
+                {
+                    return "";
+                }
+                switch (metadata.SourceType.Value)
+                {
+                    case 0:
+                        {
+                            return "Simple";
+                        }
+                    case 1:
+                        {
+                            return "Calculated";
+                        }
+                    case 2:
+                        {
+                            return "Rollup";
+                        }
+                    case 3:
+                        {
+                            return "Formula";
+                        }
+                    case 4:
+                        {
+                            return "Prompt";
+                        }
+                }
+                return "Unknown";
             }
         }
     }

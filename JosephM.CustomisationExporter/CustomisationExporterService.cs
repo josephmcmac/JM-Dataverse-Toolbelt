@@ -886,7 +886,7 @@ namespace JosephM.CustomisationExporter
                                     fieldMetadata.Searchable
                                     , displayRelated, referencedType, maxLength, textFormat, integerFormat, dateBehaviour, includeTime, minValue,
                                     maxValue, precision, picklist, fieldMetadata.MetadataId, fieldMetadata.IsMultiSelect
-                                    , fieldMetadata.HasFieldSecurity, fieldMetadata.NavigationProperty);
+                                    , fieldMetadata.HasFieldSecurity, fieldMetadata.NavigationProperty, fieldMetadata.ValueBehaviour);
                                 if (Service.IsString(field, thisType))
                                     fieldExport.MaxLength = Service.GetMaxLength(field, thisType);
                                 allFields.Add(fieldExport);

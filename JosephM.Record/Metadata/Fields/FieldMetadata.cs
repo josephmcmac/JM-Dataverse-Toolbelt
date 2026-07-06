@@ -191,5 +191,7 @@ namespace JosephM.Record.Metadata
         public bool HasFieldSecurity { get; set; }
 
         public string NavigationProperty { get; set; }
+
+        public string ValueBehaviour { get; set; }
     }
 }

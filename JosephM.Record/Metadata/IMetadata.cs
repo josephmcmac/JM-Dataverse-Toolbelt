@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using JosephM.Core.FieldType;
-using JosephM.Core.Attributes;
+﻿using JosephM.Core.Attributes;
 using JosephM.Record.Attributes;
 
 namespace JosephM.Record.Metadata

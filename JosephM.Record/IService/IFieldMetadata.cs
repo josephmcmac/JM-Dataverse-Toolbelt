@@ -70,5 +70,7 @@ namespace JosephM.Record.IService
         bool HasFieldSecurity { get; }
         [Hidden]
         string NavigationProperty { get; }
+        [Hidden]
+        string ValueBehaviour { get; }
     }
 }
