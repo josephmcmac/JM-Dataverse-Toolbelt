@@ -50,6 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Type\FormOrDashboardExport.cs" />
     <Compile Include="Type\PluginTriggerExport.cs" />
     <Compile Include="Type\PluginAssemblyExport.cs" />

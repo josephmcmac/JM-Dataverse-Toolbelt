@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.4.11626.88 stable
+VisualStudioVersion = 18.4.11626.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CustomisationImporter", "CustomisationImporter", "{36C82670-022D-4446-A1B6-FA03688A3E5E}"
 EndProject
@@ -29,6 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SolutionItems\Customisations.xlsx = SolutionItems\Customisations.xlsx
 		SolutionItems\DeviceRegistration.exe = SolutionItems\DeviceRegistration.exe
 		SolutionItems\JosephM.snk = SolutionItems\JosephM.snk
+		SolutionItems\SharedAssemblyInfo.cs = SolutionItems\SharedAssemblyInfo.cs
 		SolutionItems\TestAccountWorkflowOnDemand_1_0_0_0.zip = SolutionItems\TestAccountWorkflowOnDemand_1_0_0_0.zip
 		SolutionItems\TestAssemblyDeploy\TestAssemblyDeploy.zip = SolutionItems\TestAssemblyDeploy\TestAssemblyDeploy.zip
 		SolutionItems\TestComponents_1_0_0_0.zip = SolutionItems\TestComponents_1_0_0_0.zip

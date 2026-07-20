@@ -63,6 +63,9 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="FakeVisualStudioProject.cs" />
     <Compile Include="FakeVisualStudioService.cs" />
     <Compile Include="FakeVisualStudioProjectItem.cs" />

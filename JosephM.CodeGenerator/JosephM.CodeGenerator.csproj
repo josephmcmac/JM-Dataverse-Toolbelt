@@ -112,6 +112,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="CodeGeneratorModule.cs" />
     <Compile Include="CodeGeneratorServiceBase.cs" />
     <Compile Include="CSharp\CSharpDialog.cs" />

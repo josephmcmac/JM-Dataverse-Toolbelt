@@ -70,6 +70,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="DebugModule\DebugDialog.cs" />
     <Compile Include="DebugModule\DebugDialogModule.cs" />
     <Compile Include="DebugModule\DebugDialogRequest.cs" />

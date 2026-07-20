@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("JosephM.Xrm.Vsix.App.Vs2019")]
 [assembly: AssemblyCompany("JosephM")]
 [assembly: AssemblyProduct("JosephM.Xrm.Vsix.App.Vs2019")]
-[assembly: AssemblyVersion("2.0.*")]
+// AssemblyVersion moved to VersionInfo\\SharedAssemblyInfo.cs
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from

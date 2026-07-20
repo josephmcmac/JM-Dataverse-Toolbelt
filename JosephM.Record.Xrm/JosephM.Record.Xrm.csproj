@@ -93,6 +93,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Mappers\ConditionTypeMapper.cs" />
     <Compile Include="Mappers\JoinTypeMapper.cs" />
     <Compile Include="Mappers\XrmConfigurationMapper.cs" />

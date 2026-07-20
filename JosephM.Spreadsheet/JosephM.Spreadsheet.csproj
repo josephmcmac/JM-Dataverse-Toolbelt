@@ -71,6 +71,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="CsvUtility.cs" />
     <Compile Include="ExcelUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -47,6 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="ExcelFileConnection.cs" />
     <Compile Include="ExcelRecordService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

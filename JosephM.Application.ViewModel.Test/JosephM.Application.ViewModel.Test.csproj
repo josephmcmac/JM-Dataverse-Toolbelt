@@ -53,6 +53,9 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="DynamicsGridViewModelItemsTests.cs" />
     <Compile Include="RecordApplicationTests.cs" />
     <Compile Include="RecordEntryViewModelTests.cs" />

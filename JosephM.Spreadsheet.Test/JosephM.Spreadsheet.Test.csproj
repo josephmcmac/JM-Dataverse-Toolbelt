@@ -49,6 +49,9 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="CsvUtilityTests.cs" />
     <Compile Include="SpreadsheetExcelReadTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

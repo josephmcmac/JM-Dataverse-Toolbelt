@@ -84,6 +84,9 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Attributes\EnumerableRecordFieldMap.cs" />
     <Compile Include="Attributes\ConnectionConstructor.cs" />
     <Compile Include="Attributes\QuickFind.cs" />

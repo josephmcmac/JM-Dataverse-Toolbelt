@@ -57,6 +57,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Modules\ExportDataTypeUsabilitiesModule.cs" />
     <Compile Include="Import\ExplicitFieldValues.cs" />
     <Compile Include="XmlExport\ExportRecordType.cs" />

@@ -92,6 +92,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Application\DesktopSettingsManager.cs" />
     <Compile Include="Module\ApplicationInsights\ApplicationInsightsLogger.cs" />
     <Compile Include="Module\ApplicationInsights\ApplicationInsightsModule.cs" />

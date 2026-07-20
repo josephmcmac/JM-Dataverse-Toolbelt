@@ -67,6 +67,9 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="DeploymentCreateAndDeployPackageModuleTests.cs" />
     <Compile Include="DeploymentImportSolutionTests.cs" />
     <Compile Include="DeploymentSolutionTransferTests.cs" />

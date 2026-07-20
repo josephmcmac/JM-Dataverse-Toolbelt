@@ -83,6 +83,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="AddToSolution\AddToSolutionDialog.cs" />
     <Compile Include="AddToSolution\AddToSolutionItem.cs" />
     <Compile Include="AddToSolution\AddToSolutionRequest.cs" />

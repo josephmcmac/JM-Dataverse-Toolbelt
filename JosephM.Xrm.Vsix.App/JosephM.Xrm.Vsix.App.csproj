@@ -66,6 +66,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Application\IMenuCommand.cs" />
     <Compile Include="Application\IProjectItem.cs" />
     <Compile Include="Application\ISolutionFolder.cs" />

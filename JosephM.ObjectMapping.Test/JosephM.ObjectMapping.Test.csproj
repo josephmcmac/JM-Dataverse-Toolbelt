@@ -59,6 +59,9 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="ClassMapperTests.cs" />
     <Compile Include="ClassSelfMapperTests.cs" />
     <Compile Include="EnumMapperTests.cs" />

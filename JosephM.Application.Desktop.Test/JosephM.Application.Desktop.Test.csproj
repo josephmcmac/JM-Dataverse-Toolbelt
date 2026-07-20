@@ -60,6 +60,9 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="AutoDialogController.cs" />
     <Compile Include="DialogModuleTest.cs" />
     <Compile Include="DesktopSettingsManagerTests.cs" />

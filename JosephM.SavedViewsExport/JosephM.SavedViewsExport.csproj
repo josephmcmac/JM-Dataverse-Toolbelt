@@ -89,6 +89,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="ShareSavedViews\ShareSavedViewsDialog.cs" />
     <Compile Include="ShareSavedViews\ShareSavedViewsRequest.cs" />
     <Compile Include="ShareSavedViews\ShareSavedViewsResponse.cs" />
