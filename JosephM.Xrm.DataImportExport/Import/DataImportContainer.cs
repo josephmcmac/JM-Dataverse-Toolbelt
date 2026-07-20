@@ -16,7 +16,7 @@ namespace JosephM.Xrm.DataImportExport.Import
     public class DataImportContainer
     {
         private readonly Dictionary<Entity, List<string>> _fieldsToRetry = new Dictionary<Entity, List<string>>();
-        public DataImportContainer(DataImportResponse response, XrmRecordService xrmRecordService, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary, IEnumerable<Entity> entities, ServiceRequestController controller, bool includeOwner, bool includeOverrideCreatedOn,bool maskEmails, MatchOption matchOption, bool updateOnly, bool containsExportedConfigFields, int executeMultipleSetSize, int targetCacheLimit, bool onlyFieldMatchActive, bool forceSubmitAllFields, bool displayTimeEstimations, int parallelImportProcessCount, bool bypassWorkflowsAndPlugins = false)
+        public DataImportContainer(DataImportResponse response, XrmRecordService xrmRecordService, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary, IEnumerable<Entity> entities, ServiceRequestController controller, bool includeOwner, bool includeOverrideCreatedOn,bool maskEmails, MatchOption matchOption, bool updateOnly, bool containsExportedConfigFields, int executeMultipleSetSize, int targetCacheLimit, bool onlyFieldMatchActive, bool forceSubmitAllFields, bool displayTimeEstimations, int parallelImportProcessCount, bool bypassWorkflowsAndPlugins = false, bool trustSourceLookupGuids = false)
         {
             Response = response;
             XrmRecordService = xrmRecordService;
@@ -35,6 +35,7 @@ namespace JosephM.Xrm.DataImportExport.Import
             ExecuteMultipleSetSize = executeMultipleSetSize;
             ParallelImportProcessCount = parallelImportProcessCount;
             BypassFlowsPluginsAndWorkflows = bypassWorkflowsAndPlugins;
+            TrustSourceLookupGuids = trustSourceLookupGuids;
             _maxCacheCount = targetCacheLimit;
             EntitiesToImport = entities;
             var typesToImport = entities.Select(e => e.LogicalName).Distinct();
@@ -67,6 +68,7 @@ namespace JosephM.Xrm.DataImportExport.Import
         public int ExecuteMultipleSetSize { get; }
         public int ParallelImportProcessCount { get; private set; }
         public bool BypassFlowsPluginsAndWorkflows { get; private set; }
+        public bool TrustSourceLookupGuids { get; private set; }
 
         public IDictionary<Entity, List<string>> FieldsToRetry {  get { return _fieldsToRetry; } }
         public IEnumerable<string> AssociationTypesToImport { get; }
@@ -310,6 +312,7 @@ namespace JosephM.Xrm.DataImportExport.Import
             }
         }
 
+        private object _lockObject = new object();
         public IEnumerable<Entity> GetMatchingEntities(string type, IDictionary<string, object> fieldValues, string ignoreCacheFor = null)
         {
             var conditions = fieldValues.Select(fv =>
@@ -330,26 +333,37 @@ namespace JosephM.Xrm.DataImportExport.Import
                 var fieldName = fieldValues.Keys.First();
 
                 var matchString = XrmService.GetFieldAsMatchString(type, fieldName, fieldValues.Values.First());
-                if (!_cachedRecords.ContainsKey(type))
-                    _cachedRecords.Add(type, new Dictionary<string, Dictionary<string, List<Entity>>>());
-                if (!_cachedRecords[type].ContainsKey(fieldName))
+                lock (_lockObject)
                 {
-                    var query = XrmService.BuildQuery(type, null, matchFilters, null);
-                    var recordsToCache = XrmService.RetrieveFirstX(query, _maxCacheCount);
-                    _cachedRecords[type].Add(fieldName, new Dictionary<string, List<Entity>>());
-                    foreach (var item in recordsToCache)
+                    if (!_cachedRecords.ContainsKey(type))
+                        _cachedRecords.Add(type, new Dictionary<string, Dictionary<string, List<Entity>>>());
+                }
+                lock (_lockObject)
+                {
+                    if (!_cachedRecords[type].ContainsKey(fieldName))
                     {
-                        var cacheMatchString = XrmService.GetFieldAsMatchString(type, fieldName, item.GetFieldValue(fieldName));
-                        if (!_cachedRecords[type][fieldName].ContainsKey(cacheMatchString))
-                            _cachedRecords[type][fieldName].Add(cacheMatchString, new List<Entity>());
-                        _cachedRecords[type][fieldName][cacheMatchString].Add(item);
+                        var query = XrmService.BuildQuery(type, null, matchFilters, null);
+                        var recordsToCache = XrmService.RetrieveFirstX(query, _maxCacheCount);
+                        _cachedRecords[type].Add(fieldName, new Dictionary<string, List<Entity>>());
+                        foreach (var item in recordsToCache)
+                        {
+                            var cacheMatchString = XrmService.GetFieldAsMatchString(type, fieldName, item.GetFieldValue(fieldName));
+                            if (!_cachedRecords[type][fieldName].ContainsKey(cacheMatchString))
+                                _cachedRecords[type][fieldName].Add(cacheMatchString, new List<Entity>());
+                            _cachedRecords[type][fieldName][cacheMatchString].Add(item);
+                        }
                     }
                 }
                 //only use the cache if there were less than maxRecords
-                //otherwise there may be dupicates not included
-                if (_cachedRecords[type][fieldName].SelectMany(kv => kv.Value).Count() < _maxCacheCount
-                    && _cachedRecords[type][fieldName].ContainsKey(matchString))
-                    return _cachedRecords[type][fieldName][matchString];
+                //otherwise there may be duplicates not included
+                lock (_lockObject)
+                {
+                    if (_cachedRecords[type][fieldName].SelectMany(kv => kv.Value).Count() < _maxCacheCount
+                        && _cachedRecords[type][fieldName].ContainsKey(matchString))
+                    {
+                        return _cachedRecords[type][fieldName][matchString];
+                    }
+                }
             }
             return XrmService.RetrieveAllAndConditions(type, conditions.Union(matchFilters).ToArray(), null);
         }
@@ -509,7 +523,7 @@ namespace JosephM.Xrm.DataImportExport.Import
 
         public QueryExpression GetParseLookupQuery(Entity thisEntity, string field, string targetType, string matchField)
         {
-            var referencedValue = thisEntity.GetLookupName(field) ?? "";
+            object referencedValue = thisEntity.GetLookupName(field) ?? "";
             var referencedId = thisEntity.GetLookupGuid(field) ?? Guid.Empty;
             var primaryKey = XrmService.GetPrimaryKeyField(targetType);
             var configs = XrmRecordService.GetTypeConfigs();
@@ -548,6 +562,10 @@ namespace JosephM.Xrm.DataImportExport.Import
                     new ConditionExpression(primaryKey, ConditionOperator.Equal, referencedId));
                 if (matchField != null && matchField != primaryKey && referencedValue != null)
                 {
+                    if(XrmRecordService.IsLookup(matchField, targetType))
+                    {
+                        referencedValue = thisEntity.GetLookupGuid(field) ?? Guid.Empty;
+                    }
                     matchQuery.Criteria.Conditions.Add(
                         new ConditionExpression(matchField, ConditionOperator.Equal, referencedValue));
                 }

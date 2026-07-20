@@ -32,7 +32,7 @@ namespace JosephM.Xrm.MigrateInternal
             
             //migrate internal data
             var importService = new MappedImportService(XrmRecordService);
-            var responseItems = importService.DoImport(dictionary, false, request.MatchRecordsByName, false, controller, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit, forceSubmitAllFields: request.SubmitUnchangedFields, parallelImportProcessCount: request.ParallelImportProcessCount ?? 1, bypassWorkflowsAndPlugins: request.BypassFlowsPluginsAndWorkflows);
+            var responseItems = importService.DoImport(dictionary, false, request.MatchRecordsByName, false, controller, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit, forceSubmitAllFields: request.SubmitUnchangedFields, parallelImportProcessCount: request.ParallelImportProcessCount ?? 1, bypassWorkflowsAndPlugins: request.BypassFlowsPluginsAndWorkflows, trustSourceLookupGuids: true);
             response.LoadSpreadsheetImport(responseItems);
 
             //copy lookup fields

@@ -27,7 +27,7 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
         public XrmRecordService XrmRecordService { get; }
         public IApplicationController ApplicationController { get; }
 
-        public MappedImportResponse DoImport(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, bool updateOnly, ServiceRequestController controller, int? executeMultipleSetSize = null, bool useAmericanDates = false, int? targetCacheLimit = null, bool ignoreNullValues = false, bool onlyFieldMatchActive = false, bool forceSubmitAllFields = false, int parallelImportProcessCount = 1, bool bypassWorkflowsAndPlugins = false)
+        public MappedImportResponse DoImport(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, bool updateOnly, ServiceRequestController controller, int? executeMultipleSetSize = null, bool useAmericanDates = false, int? targetCacheLimit = null, bool ignoreNullValues = false, bool onlyFieldMatchActive = false, bool forceSubmitAllFields = false, int parallelImportProcessCount = 1, bool bypassWorkflowsAndPlugins = false, bool trustSourceLookupGuids = false)
         {
             var response = new MappedImportResponse();
             var parseResponse = ParseIntoEntities(mappings, controller.Controller, useAmericanDates: useAmericanDates, ignoreNullValues: ignoreNullValues);
@@ -67,7 +67,7 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
                     }
                 }
             }
-            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? MatchOption.PrimaryKeyThenName : MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems, altMatchKeyDictionary: matchKeyDictionary, altLookupMatchKeyDictionary: lookupKeyDictionary, updateOnly: updateOnly, includeOwner: true, includeOverrideCreatedOn: true, containsExportedConfigFields: false, executeMultipleSetSize: executeMultipleSetSize, targetCacheLimit: targetCacheLimit, onlyFieldMatchActive: onlyFieldMatchActive, forceSubmitAllFields: forceSubmitAllFields, displayTimeEstimations: true, parallelImportProcessCount: parallelImportProcessCount, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins));
+            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? MatchOption.PrimaryKeyThenName : MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems, altMatchKeyDictionary: matchKeyDictionary, altLookupMatchKeyDictionary: lookupKeyDictionary, updateOnly: updateOnly, includeOwner: true, includeOverrideCreatedOn: true, containsExportedConfigFields: false, executeMultipleSetSize: executeMultipleSetSize, targetCacheLimit: targetCacheLimit, onlyFieldMatchActive: onlyFieldMatchActive, forceSubmitAllFields: forceSubmitAllFields, displayTimeEstimations: true, parallelImportProcessCount: parallelImportProcessCount, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins, trustSourceLookupGuids: trustSourceLookupGuids));
             return response;
         }
 
@@ -191,8 +191,11 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
                                 //for lookups am going to set to a empty guid and allow the import part to replace with a correct guid
                                 if (objectValue is Lookup lk)
                                 {
-                                    fieldValues[targetField] = new EntityReference(XrmRecordService.XrmService.GetLookupTargetEntity(targetField, targetType),
-                                                new Guid(lk.Id))
+                                    var lkid = new Guid(lk.Id);
+                                    var lktype = string.IsNullOrWhiteSpace(lk.RecordType)
+                                        ? XrmRecordService.XrmService.GetLookupTargetEntity(targetField, targetType)
+                                        : lk.RecordType;
+                                    fieldValues[targetField] = new EntityReference(lktype, lkid)
                                     {
                                         Name = stringValue
                                     };
@@ -264,9 +267,9 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
                     {
                         if (result.Any(r => r.GetFieldsInEntity().Except(new[] { "Sheet.RowNumber" }).All(f =>
                         {
-                        //since for entity references we may load the name with empty guid
-                        //check the display name for them
-                        var fieldValue1 = r.GetField(f);
+                            //since for entity references we may load the name with empty guid
+                            //check the display name for them
+                            var fieldValue1 = r.GetField(f);
                             var fieldValue2 = entity.GetField(f);
                             if (fieldValue1 is EntityReference && fieldValue2 is EntityReference)
                             {
