@@ -35,7 +35,7 @@ namespace JosephM.Xrm.DataImportExport.XmlExport
             controller.UpdateProgress(0, 1, "Loading XML Files");
             var entities = request.GetOrLoadEntitiesForImport(controller.Controller).Values.ToArray();
             var matchOption = matchByName ? MatchOption.PrimaryKeyThenName : MatchOption.PrimaryKeyOnly;
-            var importResponse = DataImportService.DoImport(entities, controller, maskEmails, matchOption: matchOption, includeOwner: includeOwner, executeMultipleSetSize: executeMultipleSetSize, targetCacheLimit: targetCacheLimit, displayTimeEstimations: displayTimeEstimations);
+            var importResponse = DataImportService.DoImport(XrmRecordService.ToIRecords(entities), controller, maskEmails, matchOption: matchOption, includeOwner: includeOwner, executeMultipleSetSize: executeMultipleSetSize, targetCacheLimit: targetCacheLimit, displayTimeEstimations: displayTimeEstimations);
             response.Connection = XrmRecordService.XrmRecordConfiguration;
             response.LoadDataImport(importResponse);
             response.Message = "The Import Process Has Completed";

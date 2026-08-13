@@ -276,7 +276,8 @@ namespace JosephM.Record.Extentions
 
         public static bool IsLookup(this IRecordService recordService, string fieldName, string recordType)
         {
-            return recordService.GetFieldType(fieldName, recordType) == RecordFieldType.Lookup;
+            var fieldType = recordService.GetFieldType(fieldName, recordType);
+            return fieldType == RecordFieldType.Lookup || fieldType == RecordFieldType.Owner || fieldType == RecordFieldType.Customer;
         }
 
         public static IEnumerable<PicklistOption> GetPicklistKeyValues(this IRecordService recordService,

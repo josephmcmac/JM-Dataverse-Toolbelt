@@ -19,6 +19,10 @@ namespace JosephM.Record.Query
             SubFilters = new List<Filter>();
         }
 
+        public void AddCondition(string fieldname, ConditionType conditionType)
+        {
+            Conditions.Add(new Condition(fieldname, conditionType));
+        }
 
         public void AddCondition(string fieldname, ConditionType conditionType, object value)
         {

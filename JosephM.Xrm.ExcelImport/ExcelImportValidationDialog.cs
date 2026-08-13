@@ -27,14 +27,12 @@ namespace JosephM.Xrm.ExcelImport
 
         protected override void LoadDialogExtention()
         {
-            //okay lets load the spreadsheet
-            //and if there are any error display them
-            //else continue
             var logController = new LogController(LoadingViewModel);
-            var dictionary = ImportExcelService.LoadMappingDictionary(Request, logController);
-
+            var dictionary = ImportExcelService.LoadMappingDictionaryWithSourceData(Request, logController);
             var importService = new MappedImportService(XrmRecordService);
-            var parseResponse = importService.ParseIntoEntities(dictionary, logController, ignoreNullValues: Request.IgnoreEmptyCells);
+            var parseResponse = importService.TransformMappingDictionaryDataForTarget(dictionary, logController, ignoreNullValues: Request.IgnoreEmptyCells);
+            Request.LoadMappingDictionary(dictionary);
+            Request.LoadValidationResponse(parseResponse);
             if (parseResponse.ResponseItems.Any())
             {
                 AddObjectToUi(parseResponse
@@ -47,6 +45,8 @@ namespace JosephM.Xrm.ExcelImport
                     , nextActionLabel: "Import"
                     , backAction: () =>
                     {
+                        Request.UnloadMappingDictionary();
+                        Request.UnloadValidationResponse();
                         RemoveObjectFromUi(parseResponse);
                         MoveBackToPrevious();
                     });

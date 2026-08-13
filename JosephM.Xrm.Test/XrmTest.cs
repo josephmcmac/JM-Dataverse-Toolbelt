@@ -571,6 +571,33 @@ namespace JosephM.Xrm.Test
                     {
                         return currentValueNull ? Guid.NewGuid() : currentRecord.Id;
                     }
+                case (AttributeTypeCode.Virtual):
+                    {
+                        var virtualFieldMetadata = XrmService.GetFieldMetadata(fieldName, recordType);
+                        if(virtualFieldMetadata is MultiSelectPicklistAttributeMetadata picklistAttributeMetadata)
+                        {
+                            var options = XrmService.GetPicklistKeyValues(recordType, fieldName);
+                            var option1 = options.First().Key;
+                            var option2 = options.Count() > 1 ? options.ElementAt(1).Key : options.First().Key;
+                            if (currentValueNull)
+                            {
+                                return new OptionSetValueCollection
+                                {
+                                    new OptionSetValue(option1)
+                                };
+                            }
+                            else
+                            {
+                                return currentRecord.GetOptionSetCollectionValues(fieldName).Contains(option1)
+                                    ? new OptionSetValueCollection { new OptionSetValue(option2) }
+                                    : new OptionSetValueCollection { new OptionSetValue(option1) };
+                            }
+                        }
+                        else
+                        {
+                            throw new ArgumentOutOfRangeException("Virtual field type not implemented " + virtualFieldMetadata.GetType().Name);
+                        }
+                    }
                 default:
                     {
                         throw new ArgumentOutOfRangeException("Unmatched field type " + fieldType);

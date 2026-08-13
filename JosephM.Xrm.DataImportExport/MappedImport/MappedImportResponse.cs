@@ -23,7 +23,7 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
             _importedRecords.AddRange(dataImportResponse.GetImportSummary());
         }
 
-        public void LoadParseResponse(ParseIntoEntitiesResponse parseResponse)
+        public void LoadParseResponse(MappedImportValidationResponse parseResponse)
         {
             AddResponseItems(parseResponse.ResponseItems.Select(ri => new DataImportResponseItem(ri.TargetType,
                 ri.TargetField,

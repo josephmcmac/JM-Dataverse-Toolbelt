@@ -124,5 +124,10 @@ namespace JosephM.Record.IService
         ///     Gets A Lookupo Field Value
         /// </summary>
         Lookup GetLookupField(string fieldName);
+
+        /// <summary>
+        ///     Removes field from those stored in the record
+        /// </summary>
+        void RemoveFields(params string[] fieldNames);
     }
 }

@@ -158,6 +158,11 @@ namespace JosephM.Record.Xrm.XrmRecord
             return new XrmRecord(recordType);
         }
 
+        public IRecord NewRecord(string recordType, string id)
+        {
+            return new XrmRecord(recordType) {  Id = id };
+        }
+
         public IEnumerable<IRecord> GetLinkedRecords(string linkedrecordType, string recordTypeFrom,
             string linkedEntityLookup, string entityFromId)
         {
@@ -204,6 +209,117 @@ namespace JosephM.Record.Xrm.XrmRecord
                     result.Add(i, new FaultException<OrganizationServiceFault>(item.Fault, item.Fault.Message));
                 }
                 i++;
+            }
+            return result;
+        }
+
+        public IDictionary<int, Exception> UpdateMultipleRecordStatus(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null, bool bypassWorkflowsAndPlugins = false)
+        {
+            var requests = new List<OrganizationRequest>();
+            foreach(var record in updateRecords)
+            {
+                var entity = ToEntity(record);
+                if (_customSetStateConfigurations.ContainsKey(entity.LogicalName))
+                {
+                    requests.Add(_customSetStateConfigurations[entity.LogicalName](entity));
+                }
+                else
+                {
+                    var theState = entity.GetOptionSetValue("statecode");
+                    var theStatus = entity.GetOptionSetValue("statuscode");
+                    var request = new SetStateRequest()
+                    {
+                        EntityMoniker = entity.ToEntityReference(),
+                        State = new OptionSetValue(theState),
+                        Status = new OptionSetValue(theStatus)
+                    };
+                    if (bypassWorkflowsAndPlugins)
+                    {
+                        request.Parameters.Add("SuppressCallbackRegistrationExpanderJob", true);
+                        request.Parameters.Add("BypassBusinessLogicExecution", "CustomSync,CustomAsync");
+                    }
+                    requests.Add(request);
+                }
+            }
+
+
+            var result = new Dictionary<int, Exception>();
+            var response = XrmService.ExecuteMultiple(requests);
+            var i = 0;
+            foreach (var item in response)
+            {
+                if (item.Fault != null)
+                {
+                    result.Add(i, new FaultException<OrganizationServiceFault>(item.Fault, item.Fault.Message));
+                }
+                i++;
+            }
+            return result;
+        }
+
+        public bool HasCustomSetStateConfiguration(string recordType)
+        {
+            return _customSetStateConfigurations.ContainsKey(recordType);
+        }
+
+        private static Dictionary<string, Func<Entity, OrganizationRequest>> _customSetStateConfigurations = new Dictionary<string, Func<Entity, OrganizationRequest>>
+        {
+            {
+                Entities.incident,
+                (e) =>
+                {
+                    var theState = e.GetOptionSetValue("statecode");
+                    var theStatus = e.GetOptionSetValue("statuscode");
+                    if (theState == OptionSets.Case.Status.Resolved)
+                    {
+                        var closeIt = new Entity(Entities.incidentresolution);
+                        closeIt.SetLookupField(Fields.incidentresolution_.incidentid, e);
+                        closeIt.SetField(Fields.incidentresolution_.subject, "Close By Data Import");
+                        return new CloseIncidentRequest
+                        {
+                            IncidentResolution = closeIt,
+                            Status = new OptionSetValue(theStatus)
+                        };
+                    }
+                    else
+                    {
+                        return new SetStateRequest()
+                        {
+                            EntityMoniker = e.ToEntityReference(),
+                            State = new OptionSetValue(theState),
+                            Status = new OptionSetValue(theStatus)
+                        };
+                    }
+                }
+            }
+        };
+
+        public IDictionary<int, Exception> AssociateMultiple(string relationshipEntityName, string typeFrom, IEnumerable<string> idsFrom, string typeTo, IEnumerable<string> idsTo, bool isFromReferencing)
+        {
+            var result = new Dictionary<int, Exception>();
+
+            var associateRequests = new List<AssociateRequest>();
+            for(var i = 0; i < idsFrom.Count(); i++)
+            {
+                associateRequests.Add(new AssociateRequest
+                {
+                    Relationship = new Relationship(relationshipEntityName)
+                    {
+                        PrimaryEntityRole = isFromReferencing ? EntityRole.Referencing : EntityRole.Referenced
+                    },
+                    Target = new EntityReference(typeFrom, new Guid(idsFrom.ElementAt(i))),
+                    RelatedEntities = new EntityReferenceCollection(new[] { new EntityReference(typeTo, new Guid(idsTo.ElementAt(i))) })
+                });
+            }
+            var responses = XrmService.ExecuteMultiple(associateRequests);
+            var j = 0;
+            foreach (var response in responses)
+            {
+                if (response.Fault != null)
+                {
+                    result.Add(j, new FaultException<OrganizationServiceFault>(response.Fault, response.Fault.Message));
+                }
+                j++;
             }
             return result;
         }
@@ -320,7 +436,7 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         private IEnumerable<ConditionExpression> ToConditionExpressions(IEnumerable<Condition> conditions, string recordType)
         {
-            return conditions == null ? null : conditions.Select(c => ToConditionExpression(c, recordType));
+            return conditions == null ? null : conditions.Select(c => ToConditionExpression(c, recordType)).ToArray();
         }
 
         private ConditionExpression ToConditionExpression(Condition condition, string recordType)
@@ -373,8 +489,10 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IRecord ToIRecord(Entity entity)
         {
-            var xrmRecord = new XrmRecord(entity.LogicalName);
-            xrmRecord.Id = entity.Id == Guid.Empty ? null : entity.Id.ToString();
+            var xrmRecord = new XrmRecord(entity.LogicalName)
+            {
+                Id = entity.Id == Guid.Empty ? null : entity.Id.ToString()
+            };
 
             //map all the fields
             foreach (var field in entity.Attributes)
@@ -1918,6 +2036,74 @@ namespace JosephM.Record.Xrm.XrmRecord
                 currencyGuid = Guid.Parse(currencyId);
             }
             return XrmService.GetCurrencyPrecision(currencyGuid);
+        }
+
+        public IEnumerable<ExecuteQueryResponse> ExecuteMultipleQueries(IEnumerable<QueryDefinition> queries)
+        {
+            var executeMultipleResponses = XrmService.ExecuteMultiple(queries.Select(ToQueryExpression).Select(q => new RetrieveMultipleRequest {  Query = q }).ToArray());
+            var response = new List<ExecuteQueryResponse>();
+            foreach (var item in executeMultipleResponses)
+            {
+                if (item.Fault != null)
+                {
+                    response.Add(new ExecuteQueryResponse { Exception = new FaultException<OrganizationServiceFault>(item.Fault) });
+                }
+                else
+                {
+                    response.Add(new ExecuteQueryResponse { Records = ToIRecords(((RetrieveMultipleResponse)item.Response).EntityCollection.Entities) });
+                }
+            }
+            return response;
+        }
+
+        public bool IsActivityParty(string fieldName, string recordType)
+        {
+            return XrmService.IsActivityParty(fieldName, recordType);
+        }
+
+        public IRecord GetFirst(string recordType, string field, object fieldValue, string[] fieldsToInclude)
+        {
+            var queryDefinition = new QueryDefinition(recordType);
+            queryDefinition.Top = 1;
+            queryDefinition.Fields = fieldsToInclude;
+            if (fieldValue == null)
+            {
+                queryDefinition.RootFilter.Conditions.Add(new Condition(field, ConditionType.Null));
+            }
+            else
+            {
+                queryDefinition.RootFilter.AddCondition(field, ConditionType.Equal, fieldValue);
+            }
+            var result = RetreiveAll(queryDefinition);
+            return result.Any() ? result.First() : null;
+        }
+
+        public IEnumerable<CreateRecordResponse> CreateMultiple(IEnumerable<IRecord> records, bool bypassWorkflowsAndPlugins)
+        {
+            var results = new List<CreateRecordResponse>();
+            var createMultipleResponses = XrmService.CreateMultiple(ToEntities(records), bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins);
+            foreach(var response in createMultipleResponses)
+            {
+                if (response.Fault != null)
+                {
+                    results.Add(new CreateRecordResponse { Exception = new FaultException<OrganizationServiceFault>(response.Fault) });
+                }
+                else
+                {
+                    results.Add(new CreateRecordResponse { Id = ((CreateResponse)response.Response).id.ToString() });
+                }
+            }
+            return results;
+        }
+
+        public IMany2ManyRelationshipMetadata GetRelationshipMetadataForEntityName(string thisEntityName)
+        {
+            return new XrmManyToManyRelationshipMetadata(XrmService.GetRelationshipMetadataForEntityName(thisEntityName), XrmService);
+        }
+
+        public IEnumerable<string> GetAllNnRelationshipEntityNames()
+        {
+            return XrmService.GetAllNnRelationshipEntityNames();
         }
 
         public class DeleteInCrmResponse

@@ -86,6 +86,25 @@ namespace JosephM.Xrm
         }
 
         /// <summary>
+        ///     -1 if the entity is null, does not contain the field or the field is null
+        /// </summary>
+        public static IEnumerable<int> GetOptionSetCollectionValues(this Entity entity, string fieldName)
+        {
+            return GetOptionSetCollectionValue(GetField(entity, fieldName));
+        }
+
+        /// <summary>
+        ///     -1 if fieldValue is null
+        /// </summary>
+        public static IEnumerable<int> GetOptionSetCollectionValue(object fieldValue)
+        {
+            if (fieldValue is OptionSetValueCollection osvc)
+                return osvc.Select(fv => fv.Value).ToArray();
+            else
+                return new int[0];
+        }
+
+        /// <summary>
         ///     false if the entity is null, does not contain the field or the field is null
         /// </summary>
         public static bool GetBoolean(this Entity entity, string fieldName)

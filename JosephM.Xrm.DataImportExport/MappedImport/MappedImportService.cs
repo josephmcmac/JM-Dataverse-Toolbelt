@@ -8,7 +8,6 @@ using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.DataImportExport.Import;
 using JosephM.Xrm.Schema;
-using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -27,14 +26,16 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
         public XrmRecordService XrmRecordService { get; }
         public IApplicationController ApplicationController { get; }
 
-        public MappedImportResponse DoImport(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, bool updateOnly, ServiceRequestController controller, int? executeMultipleSetSize = null, bool useAmericanDates = false, int? targetCacheLimit = null, bool ignoreNullValues = false, bool onlyFieldMatchActive = false, bool forceSubmitAllFields = false, int parallelImportProcessCount = 1, bool bypassWorkflowsAndPlugins = false, bool trustSourceLookupGuids = false)
+        public MappedImportResponse DoImport(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappingsWithTargetData, MappedImportValidationResponse mappedImportValidationResponse, bool maskEmails, bool matchByName, bool updateOnly, ServiceRequestController controller, int? executeMultipleSetSize = null, bool useAmericanDates = false, int? targetCacheLimit = null, bool ignoreNullValues = false, bool onlyFieldMatchActive = false, bool forceSubmitAllFields = false, int parallelImportProcessCount = 1, bool bypassWorkflowsAndPlugins = false, bool trustSourceLookupGuids = false)
         {
             var response = new MappedImportResponse();
-            var parseResponse = ParseIntoEntities(mappings, controller.Controller, useAmericanDates: useAmericanDates, ignoreNullValues: ignoreNullValues);
-            response.LoadParseResponse(parseResponse);
+            if (mappedImportValidationResponse != null)
+            {
+                response.LoadParseResponse(mappedImportValidationResponse);
+            }
             var dataImportService = new DataImportService(XrmRecordService);
             var matchKeyDictionary = new Dictionary<string, IEnumerable<KeyValuePair<string, bool>>>();
-            foreach(var map in mappings.Keys)
+            foreach(var map in mappingsWithTargetData.Keys)
             {
                 if(map.AltMatchKeys != null && map.AltMatchKeys.Any())
                 {
@@ -46,7 +47,7 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
                 }
             }
             var lookupKeyDictionary = new Dictionary<string, Dictionary<string, KeyValuePair<string, string>>>();
-            foreach (var map in mappings.Keys)
+            foreach (var map in mappingsWithTargetData.Keys)
             {
                 if (map.FieldMappings != null)
                 {
@@ -67,162 +68,158 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
                     }
                 }
             }
-            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? MatchOption.PrimaryKeyThenName : MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems, altMatchKeyDictionary: matchKeyDictionary, altLookupMatchKeyDictionary: lookupKeyDictionary, updateOnly: updateOnly, includeOwner: true, includeOverrideCreatedOn: true, containsExportedConfigFields: false, executeMultipleSetSize: executeMultipleSetSize, targetCacheLimit: targetCacheLimit, onlyFieldMatchActive: onlyFieldMatchActive, forceSubmitAllFields: forceSubmitAllFields, displayTimeEstimations: true, parallelImportProcessCount: parallelImportProcessCount, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins, trustSourceLookupGuids: trustSourceLookupGuids));
+            response.LoadDataImport(dataImportService.DoImport(mappingsWithTargetData.SelectMany(m => m.Value).ToArray(), controller, maskEmails, matchOption: matchByName ? MatchOption.PrimaryKeyThenName : MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems, altMatchKeyDictionary: matchKeyDictionary, altLookupMatchKeyDictionary: lookupKeyDictionary, updateOnly: updateOnly, includeOwner: true, includeOverrideCreatedOn: true, containsExportedConfigFields: false, executeMultipleSetSize: executeMultipleSetSize, targetCacheLimit: targetCacheLimit, onlyFieldMatchActive: onlyFieldMatchActive, forceSubmitAllFields: forceSubmitAllFields, displayTimeEstimations: true, parallelImportProcessCount: parallelImportProcessCount, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins, trustSourceLookupGuids: trustSourceLookupGuids));
             return response;
         }
 
-        public ParseIntoEntitiesResponse ParseIntoEntities(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappings, LogController logController, bool useAmericanDates = false, bool ignoreNullValues = false)
+        public MappedImportValidationResponse TransformMappingDictionaryDataForTarget(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappings, LogController logController, bool useAmericanDates = false, bool ignoreNullValues = false)
         {
-            var response = new ParseIntoEntitiesResponse();
+            var response = TransformMappingIntoTarget(mappings, logController, ignoreNullValues: ignoreNullValues);
             foreach (var mapping in mappings)
             {
-                var mappedToTargetEntities = MapToEntities(mapping.Value, mapping.Key, response, logController, useAmericanDates, ignoreNullValues: ignoreNullValues);
                 if(mapping.Key.ExplicitValuesToSet != null)
                 {
                     foreach (var explicitValueToSet in mapping.Key.ExplicitValuesToSet)
                     {
-                        var parseFieldValue = XrmRecordService.ToEntityValue(explicitValueToSet.ClearValue ? null : explicitValueToSet.ValueToSet);
-                        foreach (var entity in mappedToTargetEntities)
+                        var parseFieldValue = explicitValueToSet.ClearValue
+                            ? null
+                            : XrmRecordService.ParseField(explicitValueToSet.FieldToSet.Key, mapping.Key.TargetType, explicitValueToSet.ValueToSet);
+                        foreach (var record in mapping.Value)
                         {
-                            entity.SetField(explicitValueToSet.FieldToSet.Key, parseFieldValue, XrmRecordService.XrmService);
+                            record[explicitValueToSet.FieldToSet.Key] = parseFieldValue;
                         }
                     }
                 }
-                response.AddEntities(mappedToTargetEntities);
             }
-            var entities = response.GetParsedEntities();
-            PopulateEmptyNameFields(entities);
-            PopulateIds(entities);
+            PopulateContactNameFields(mappings);
+            PopulateIds(mappings);
             return response;
         }
 
-        private void PopulateIds(IEnumerable<Entity> entities)
+        private void PopulateIds(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappings)
         {
-            foreach (var entity in entities)
+            foreach (var mapping in mappings)
             {
-                var primaryKeyField = XrmRecordService.GetPrimaryKey(entity.LogicalName);
-                if(primaryKeyField != null)
+                var primaryKeyField = XrmRecordService.GetPrimaryKey(mapping.Key.TargetType);
+                if (primaryKeyField != null)
                 {
-                    var primarykey = entity.GetGuidField(primaryKeyField);
-                    entity.Id = primarykey;
+                    foreach (var record in mapping.Value)
+                    {
+                        var primarykey = record.GetIdField(primaryKeyField);
+                        record.Id = record.GetIdField(primaryKeyField);
+                    }
                 }
             }
         }
 
-        private IEnumerable<Entity> MapToEntities(IEnumerable<IRecord> queryRows, IMapSourceImport mapping, ParseIntoEntitiesResponse response, LogController logController, bool useAmericanDates, bool ignoreNullValues = false)
+        private MappedImportValidationResponse TransformMappingIntoTarget(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappings, LogController logController, bool ignoreNullValues = false)
         {
-            var result = new List<Entity>();
-
-            var nNRelationshipEntityNames = XrmRecordService
-                .GetManyToManyRelationships()
-                .Select(m => m.IntersectEntityName)
-                .ToArray();
-            var targetType = mapping.TargetType;
-            var isNnRelation = nNRelationshipEntityNames.Contains(targetType);
-
-            var areMappingErrors = false;
-            if (!isNnRelation && !XrmRecordService.RecordTypeExists(targetType))
+            var response = new MappedImportValidationResponse();
+            foreach (var mapping in mappings.Keys.ToArray())
             {
-                response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError(null, targetType, null, null, null, "Record Type Does Not Exist", null));
-                areMappingErrors = true;
-            }
-            if (!areMappingErrors && !isNnRelation)
-            {
-                foreach (var fieldMapping in mapping.FieldMappings)
+                var sourceRecords = new List<IRecord>(mappings[mapping]);
+                var targetRecords = new List<IRecord>();
+                mappings[mapping] = targetRecords;
+
+                var nNRelationshipEntityNames = XrmRecordService
+                    .GetManyToManyRelationships()
+                    .Select(m => m.IntersectEntityName)
+                    .ToArray();
+                var targetType = mapping.TargetType;
+                var isNnRelation = nNRelationshipEntityNames.Contains(targetType);
+
+                var areMappingErrors = false;
+                if (!isNnRelation && !XrmRecordService.RecordTypeExists(targetType))
                 {
-                    var targetField = fieldMapping.TargetField;
-                    if (!XrmRecordService.FieldExists(targetField, targetType))
-                    {
-                        response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError(null, targetType, targetField, null, null, "Field Does Not Exist", null));
-                        areMappingErrors = true;
-                    }
+                    response.AddResponseItem(new MappedImportValidationResponse.MappedImportValidationResponseError(null, targetType, null, null, null, "Record Type Does Not Exist", null));
+                    areMappingErrors = true;
                 }
-            }
-            if(areMappingErrors)
-            {
-                return result;
-            }
-            var rowNumber = 0;
-            var rowCount = queryRows.Count();
-            foreach (var row in queryRows)
-            {           
-                rowNumber++;
-                logController.LogLiteral($"Mapping {targetType} Data Into Records {rowNumber}/{rowCount}");
-                try
+                if (!areMappingErrors && !isNnRelation)
                 {
-                    var rowAsXrmRecord = row as XrmRecord;
-
-                    var hasFieldValue = false;
-                    var fieldValues = new ConcurrentDictionary<string, object>();
-                    //this is used in the import to output the row number
-                    //if the import throws an error
-                    Parallel.ForEach(mapping.FieldMappings, (fieldMapping) =>
-                    //foreach (var fieldMapping in mapping.FieldMappings)
+                    foreach (var fieldMapping in mapping.FieldMappings)
                     {
                         var targetField = fieldMapping.TargetField;
-                        if (fieldMapping.TargetField != null)
+                        if (!XrmRecordService.FieldExists(targetField, targetType))
                         {
-                            var objectValue = row.GetField(fieldMapping.SourceField);
-                            var stringValue = row.GetStringField(fieldMapping.SourceField);
-                            if (stringValue != null)
-                                stringValue = stringValue.Trim();
+                            response.AddResponseItem(new MappedImportValidationResponse.MappedImportValidationResponseError(null, targetType, targetField, null, null, "Field Does Not Exist", null));
+                            areMappingErrors = true;
+                        }
+                    }
+                }
+                if (areMappingErrors)
+                {
+                    return response;
+                }
+                var rowCount = sourceRecords.Count();
+
+                // Precompute mapping info once per mapping to avoid repeated service calls inside the row loop
+                var mappingInfos = (mapping.FieldMappings ?? Enumerable.Empty<IMapSourceField>())
+                    .Select(fm => new
+                    {
+                        TargetField = fm.TargetField,
+                        SourceField = fm.SourceField,
+                        UseAltMatch = fm.UseAltMatchField,
+                        AltMatchFieldType = fm.AltMatchFieldType,
+                        IsLookup = fm.TargetField != null && XrmRecordService.IsLookup(fm.TargetField, targetType),
+                        LookupTargetType = fm.TargetField == null ? null : (fm.UseAltMatchField ? fm.AltMatchFieldType : XrmRecordService.GetLookupTargetType(fm.TargetField, targetType)),
+                        ParseFunc = (Func<string, object>)(s => XrmRecordService.ParseField(fm.TargetField, targetType, s))
+                    })
+                    .ToArray();
+
+                // Snapshot rows and process them in parallel. Results kept in array to preserve order.
+                var rows = sourceRecords.ToList();
+                var results = new IRecord[rows.Count];
+                var parseErrors = new ConcurrentBag<MappedImportValidationResponse.MappedImportValidationResponseError>();
+                var processed = 0;
+
+                var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, Environment.ProcessorCount - 1) };
+
+                Parallel.ForEach(rows.Select((r, i) => new { Row = r, Index = i }), parallelOptions, item =>
+                {
+                    var row = item.Row;
+                    var idx = item.Index;
+                    var newRecord = XrmRecordService.NewRecord(targetType);
+                    newRecord.Id = row.Id;
+                    try
+                    {
+                        var hasFieldValue = false;
+                        var fieldValues = new Dictionary<string, object>();
+
+                        foreach (var fm in mappingInfos)
+                        {
+                            var targetField = fm.TargetField;
+                            if (targetField == null)
+                                continue;
+
+                            var objectValue = row.GetField(fm.SourceField);
+                            var stringValue = row.GetStringField(fm.SourceField)?.Trim();
 
                             if (!stringValue.IsNullOrWhiteSpace())
-                            {
                                 hasFieldValue = true;
-                            }
+
                             if (isNnRelation)
                             {
-                                //bit of hack
-                                //for csv relationships just set to a string and map it later
-                                //as the referenced record may not be created yet
-                                Guid t;
-                                if (Guid.TryParse(stringValue, out t))
-                                {
-                                    fieldValues[targetField] = t;
-                                }
-                                else
-                                {
-                                    fieldValues[targetField] = stringValue;
-                                }
+                                fieldValues[targetField] = stringValue;
+                                continue;
                             }
-                            else if (XrmRecordService.XrmService.IsLookup(targetField, targetType))
+
+                            if (fm.IsLookup)
                             {
-                                //for lookups am going to set to a empty guid and allow the import part to replace with a correct guid
                                 if (objectValue is Lookup lk)
                                 {
-                                    var lkid = new Guid(lk.Id);
-                                    var lktype = string.IsNullOrWhiteSpace(lk.RecordType)
-                                        ? XrmRecordService.XrmService.GetLookupTargetEntity(targetField, targetType)
-                                        : lk.RecordType;
-                                    fieldValues[targetField] = new EntityReference(lktype, lkid)
-                                    {
-                                        Name = stringValue
-                                    };
+                                    var lktype = string.IsNullOrWhiteSpace(lk.RecordType) ? fm.LookupTargetType : lk.RecordType;
+                                    fieldValues[targetField] = new Lookup(lktype, lk.Id, stringValue);
                                 }
-                                else if (!stringValue.IsNullOrWhiteSpace())
+                                else if (!string.IsNullOrWhiteSpace(stringValue))
                                 {
-                                    var lookupTargetType = fieldMapping.UseAltMatchField
-                                        ? fieldMapping.AltMatchFieldType
-                                        : XrmRecordService.XrmService.GetLookupTargetEntity(targetField, targetType);
-                                    var isGuid = Guid.Empty;
-                                    if (Guid.TryParse(stringValue, out isGuid))
+                                    var lookupTargetType = fm.UseAltMatch ? fm.AltMatchFieldType : fm.LookupTargetType;
+                                    if (Guid.TryParse(stringValue, out Guid isGuid))
                                     {
-                                        fieldValues[targetField] =
-                                            new EntityReference(lookupTargetType,
-                                                isGuid)
-                                            {
-                                                Name = stringValue
-                                            };
+                                        fieldValues[targetField] = new Lookup(lookupTargetType, isGuid.ToString(), stringValue);
                                     }
                                     else
                                     {
-                                        fieldValues[targetField] =
-                                            new EntityReference(lookupTargetType,
-                                                Guid.Empty)
-                                            {
-                                                Name = stringValue
-                                            };
+                                        fieldValues[targetField] = new Lookup(lookupTargetType, null, stringValue);
                                     }
                                 }
                                 else
@@ -234,46 +231,64 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
                             {
                                 try
                                 {
-                                    fieldValues[targetField] = XrmRecordService.XrmService.ParseField(targetField, targetType, stringValue, useAmericanDates);
+                                    fieldValues[targetField] = fm.ParseFunc(stringValue);
                                 }
                                 catch (Exception ex)
                                 {
-                                    response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError(rowNumber, targetType, targetField, null, stringValue, "Error Parsing Field - " + ex.Message, ex));
+                                    parseErrors.Add(new MappedImportValidationResponse.MappedImportValidationResponseError(idx + 1, targetType, targetField, null, stringValue, "Error Parsing Field - " + ex.Message, ex));
                                 }
                             }
                         }
-                    });
-                    var entity = new Entity(targetType);
-                    if (rowAsXrmRecord != null && rowAsXrmRecord.Id != null)
-                    {
-                        entity.Id = new Guid(rowAsXrmRecord.Id);
-                    }
 
-                    foreach (var fieldValue in fieldValues)
-                    {
-                        if (!ignoreNullValues || fieldValue.Value != null)
+                        foreach (var fieldValue in fieldValues)
                         {
-                            entity[fieldValue.Key] = fieldValue.Value;
+                            if (!ignoreNullValues || fieldValue.Value != null)
+                            {
+                                newRecord[fieldValue.Key] = fieldValue.Value;
+                            }
+                        }
+                        if (!hasFieldValue)
+                        {
+                            // no useful data
+                            results[idx] = null;
+                        }
+                        else
+                        {
+                            results[idx] = newRecord;
                         }
                     }
-                    if(!hasFieldValue)
+                    catch (Exception ex)
                     {
-                        //ignore any where all fields emopty
-                        continue;
+                        parseErrors.Add(new MappedImportValidationResponse.MappedImportValidationResponseError("Unknown Mapping Error", ex));
                     }
-                    //okay if remove duplicates
-                    //any which are exact duplicates to previous ones lets ignore
+
+                    var proc = System.Threading.Interlocked.Increment(ref processed);
+                    if (proc % 1000 == 0 || proc == rows.Count)
+                    {
+                        logController.LogLiteral($"Mapping {targetType} Data Into Records {proc}/{rows.Count}");
+                    }
+                });
+
+                // Add parse errors to response
+                if (parseErrors.Count > 0)
+                    response.AddResponseItems(parseErrors);
+
+                // Post-process deduplication (outer loop): preserve original order and apply duplicates removal
+                for (var i = 0; i < results.Length; i++)
+                {
+                    var newRecord = results[i];
+                    if (newRecord == null)
+                        continue;
+
                     if (mapping.IgnoreDuplicates)
                     {
-                        if (result.Any(r => r.GetFieldsInEntity().Except(new[] { "Sheet.RowNumber" }).All(f =>
+                        if (targetRecords.Any(r => r.GetFieldsInEntity().Except(new[] { "Sheet.RowNumber" }).All(f =>
                         {
-                            //since for entity references we may load the name with empty guid
-                            //check the display name for them
                             var fieldValue1 = r.GetField(f);
-                            var fieldValue2 = entity.GetField(f);
-                            if (fieldValue1 is EntityReference && fieldValue2 is EntityReference)
+                            var fieldValue2 = newRecord.GetField(f);
+                            if (fieldValue1 is Lookup && fieldValue2 is Lookup)
                             {
-                                return ((EntityReference)fieldValue1).Name == ((EntityReference)fieldValue2).Name;
+                                return ((Lookup)fieldValue1).Name == ((Lookup)fieldValue2).Name;
                             }
                             else
                                 return XrmRecordService.FieldsEqual(fieldValue1, fieldValue2);
@@ -282,51 +297,53 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
                             continue;
                         }
                     }
-                    result.Add(entity);
-                }
-                catch (Exception ex)
-                {
-                    response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError("Unknown Mapping Error", ex));
+                    targetRecords.Add(newRecord);
                 }
             }
-            return result;
+            return response;
         }
 
-        private void PopulateEmptyNameFields(IEnumerable<Entity> entities)
+        private void PopulateContactNameFields(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappings)
         {
-            foreach (var contact in entities.Where(e => e.LogicalName == Entities.contact))
+            foreach (var mapping in mappings)
             {
-                if (contact.Contains(Fields.contact_.fullname)
-                    && !contact.Contains(Fields.contact_.firstname)
-                    && !contact.Contains(Fields.contact_.lastname))
+                if (mapping.Key.TargetType == Entities.contact)
                 {
-                    //okay for these dudes lets split their name into first and last name somehow
-                    var name = contact.GetStringField(Fields.contact_.fullname);
-                    if (name != null)
+                    foreach (var contact in mapping.Value)
                     {
-                        name = name.Trim();
-                        var lastSpaceIndex = name.LastIndexOf(" ");
-                        if (lastSpaceIndex == -1)
+                        if (contact.ContainsField(Fields.contact_.fullname)
+                            && !contact.ContainsField(Fields.contact_.firstname)
+                            && !contact.ContainsField(Fields.contact_.lastname))
                         {
-                            contact.SetField(Fields.contact_.firstname, name);
+                            //okay for these dudes lets split their name into first and last name somehow
+                            var name = contact.GetStringField(Fields.contact_.fullname);
+                            if (name != null)
+                            {
+                                name = name.Trim();
+                                var lastSpaceIndex = name.LastIndexOf(" ");
+                                if (lastSpaceIndex == -1)
+                                {
+                                    contact.SetField(Fields.contact_.firstname, name, XrmRecordService);
+                                }
+                                else
+                                {
+                                    contact.SetField(Fields.contact_.firstname, name.Substring(0, lastSpaceIndex), XrmRecordService);
+                                    contact.SetField(Fields.contact_.lastname, name.Substring(lastSpaceIndex + 1), XrmRecordService);
+                                }
+                            }
                         }
-                        else
+                        if (!contact.ContainsField(Fields.contact_.fullname)
+                            && (contact.ContainsField(Fields.contact_.firstname)
+                                || contact.ContainsField(Fields.contact_.lastname)))
                         {
-                            contact.SetField(Fields.contact_.firstname, name.Substring(0, lastSpaceIndex));
-                            contact.SetField(Fields.contact_.lastname, name.Substring(lastSpaceIndex + 1));
+                            //okay for these dudes lets split their name into first and last name somehow
+                            var name = contact.GetStringField(Fields.contact_.firstname) + " " + contact.GetStringField(Fields.contact_.lastname);
+                            if (name != null)
+                            {
+                                name = name.Trim();
+                                contact.SetField(Fields.contact_.fullname, name, XrmRecordService);
+                            }
                         }
-                    }
-                }
-                if (!contact.Contains(Fields.contact_.fullname)
-                    && (contact.Contains(Fields.contact_.firstname)
-                        || contact.Contains(Fields.contact_.lastname)))
-                {
-                    //okay for these dudes lets split their name into first and last name somehow
-                    var name = contact.GetStringField(Fields.contact_.firstname) + " " + contact.GetStringField(Fields.contact_.lastname);
-                    if (name != null)
-                    {
-                        name = name.Trim();
-                        contact.SetField(Fields.contact_.fullname, name);
                     }
                 }
             }

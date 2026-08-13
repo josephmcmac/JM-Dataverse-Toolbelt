@@ -7,6 +7,7 @@ using JosephM.Record.IService;
 using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.DataImportExport.MappedImport;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
@@ -27,14 +28,10 @@ namespace JosephM.Xrm.MigrateInternal
         public override void ExecuteExtention(MigrateInternalRequest request, MigrateInternalResponse response,
             ServiceRequestController controller)
         {
-            controller.Controller.UpdateProgress(0, 1, "Loading Records For Import");
-            var dictionary = LoadMappingDictionary(request, controller.Controller);
-            
-            //migrate internal data
+            var dictionary = request.UnloadMappingDictionary();
             var importService = new MappedImportService(XrmRecordService);
-            var responseItems = importService.DoImport(dictionary, false, request.MatchRecordsByName, false, controller, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit, forceSubmitAllFields: request.SubmitUnchangedFields, parallelImportProcessCount: request.ParallelImportProcessCount ?? 1, bypassWorkflowsAndPlugins: request.BypassFlowsPluginsAndWorkflows, trustSourceLookupGuids: true);
+            var responseItems = importService.DoImport(dictionary, request.UnloadValidationResponse(), false, request.MatchRecordsByName, false, controller, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit, forceSubmitAllFields: request.SubmitUnchangedFields, parallelImportProcessCount: request.ParallelImportProcessCount ?? 1, bypassWorkflowsAndPlugins: request.BypassFlowsPluginsAndWorkflows, trustSourceLookupGuids: true);
             response.LoadSpreadsheetImport(responseItems);
-
             //copy lookup fields
             if (request.ReferenceFieldReplacements != null)
             {
@@ -81,7 +78,7 @@ namespace JosephM.Xrm.MigrateInternal
             response.Message = "The Import Process Has Completed";
         }
 
-        public Dictionary<IMapSourceImport, IEnumerable<IRecord>> LoadMappingDictionary(MigrateInternalRequest request, LogController logController)
+        public Dictionary<IMapSourceImport, IEnumerable<IRecord>> LoadMappingDictionaryWithSourceData(MigrateInternalRequest request, LogController logController)
         {
             var dictionary = new Dictionary<IMapSourceImport, IEnumerable<IRecord>>();
 
@@ -90,15 +87,15 @@ namespace JosephM.Xrm.MigrateInternal
             var countDone = 0;
             foreach (var sourceMapping in toIterate)
             {
-                logController.LogLiteral($"Reading Source Data {++countDone}/{countToDo} {sourceMapping.SourceType.Key}");
-                IEnumerable<IRecord> records = new IRecord[0];
+                logController.LogLiteral($"Reading Source Data {countDone}/{countToDo} {sourceMapping.SourceType.Key}");
+                var records = new List<IRecord>();
                 var requiredFields = new List<string>();
-                if(sourceMapping.FieldMappings != null)
+                if (sourceMapping.FieldMappings != null)
                 {
                     requiredFields.AddRange(sourceMapping.FieldMappings.Select(k => k.SourceField.Key));
                 }
                 var primaryKey = XrmRecordService.GetPrimaryKey(sourceMapping.SourceType.Key);
-                if(!string.IsNullOrWhiteSpace(primaryKey))
+                if (!string.IsNullOrWhiteSpace(primaryKey))
                 {
                     requiredFields.Add(primaryKey);
                 }
@@ -110,19 +107,23 @@ namespace JosephM.Xrm.MigrateInternal
                 requiredFields = requiredFields.Distinct().ToList();
                 switch (sourceMapping.SourceDatasetType)
                 {
-                    case SourceDatasetType.AllRecords:
-                        {
-                            records = XrmRecordService.RetrieveAll(sourceMapping.SourceType.Key, requiredFields);
-                            break;
-                        }
                     case SourceDatasetType.FetchXml:
                         {
                             var queryExpression = XrmRecordService.XrmService.ConvertFetchToQueryExpression(sourceMapping.FetchXml);
                             queryExpression.ColumnSet = new ColumnSet(requiredFields.ToArray());
-                            var temp = queryExpression.PageInfo != null && queryExpression.PageInfo.Count > 0
-                                ? XrmRecordService.XrmService.RetrieveFirstX(queryExpression, queryExpression.PageInfo.Count)
-                                : XrmRecordService.XrmService.RetrieveAll(queryExpression);
-                            records = XrmRecordService.ToIRecords(temp);
+                            if (queryExpression.PageInfo != null && queryExpression.PageInfo.Count > 0)
+                            {
+                                records.AddRange(XrmRecordService.XrmService.RetrieveFirstX(queryExpression, queryExpression.PageInfo.Count).Select(XrmRecordService.ToIRecord));
+                            }
+                            else
+                            {
+                                XrmRecordService.XrmService.ProcessQueryResults(queryExpression, (IEnumerable<Entity> ie) =>
+                                {
+                                    records.AddRange(ie.Select(XrmRecordService.ToIRecord));
+                                    logController.LogLiteral($"Reading Source Data {countDone}/{countToDo} {sourceMapping.SourceType.Key} Count={records.Count}");
+                                    return true;
+                                });
+                            }
                             break;
                         }
                     case SourceDatasetType.SpecificRecords:
@@ -132,23 +133,34 @@ namespace JosephM.Xrm.MigrateInternal
                                 : new HashSet<string>(sourceMapping.SpecificRecordsToExport
                                     .Select(r => r.Record == null ? null : r.Record.Id)
                                     .Where(s => !s.IsNullOrWhiteSpace()).Distinct());
-                            records = ids.Any()
-                                ? XrmRecordService.RetrieveAllOrClauses(sourceMapping.SourceType.Key,
+                            if (ids.Any())
+                            {
+                                var temp = XrmRecordService.RetrieveAllOrClauses(sourceMapping.SourceType.Key,
                                     ids.Select(
-                                        i => new Condition(primaryKey, ConditionType.Equal, new Guid(i))), requiredFields)
-                                : new IRecord[0];
-                            records = records.Where(e => ids.Contains(e.Id.ToString())).ToArray();
+                                        i => new Condition(primaryKey, ConditionType.Equal, new Guid(i))), requiredFields);
+
+                                records.AddRange(temp.Where(e => ids.Contains(e.Id.ToString())));
+                            }
                             break;
                         }
                     default:
                         {
-                            records = XrmRecordService.RetrieveAll(sourceMapping.SourceType.Key, requiredFields);
+                            var queryExpression = new QueryExpression(sourceMapping.SourceType.Key)
+                            {
+                                ColumnSet = new ColumnSet(requiredFields.ToArray())
+                            };
+                            XrmRecordService.XrmService.ProcessQueryResults(queryExpression, (IEnumerable<Entity> ie) =>
+                            {
+                                records.AddRange(ie.Select(XrmRecordService.ToIRecord));
+                                logController.LogLiteral($"Reading Source Data {countDone}/{countToDo} {sourceMapping.SourceType.Key} Count={records.Count}");
+                                return true;
+                            });
                             break;
                         }
                 }
-                if(!request.RetainPrimaryKey)
+                if (!request.RetainPrimaryKey)
                 {
-                    foreach(var record in records)
+                    foreach (var record in records)
                     {
                         record.Id = null;
                     }

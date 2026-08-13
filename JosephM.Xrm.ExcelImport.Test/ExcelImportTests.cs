@@ -54,7 +54,7 @@ namespace JosephM.Deployment.Test
             //check validation results displayed
             var validationResults = dialog.Controller.UiItems.First() as ObjectDisplayViewModel;
             Assert.IsNotNull(validationResults);
-            Assert.IsTrue(validationResults.GetObject() is ParseIntoEntitiesResponse);
+            Assert.IsTrue(validationResults.GetObject() is MappedImportValidationResponse);
 
             //navigate back to entry form
             validationResults.BackButtonViewModel.Invoke();
@@ -66,7 +66,7 @@ namespace JosephM.Deployment.Test
             entryViewmodel.SaveButtonViewModel.Invoke();
             validationResults = dialog.Controller.UiItems.First() as ObjectDisplayViewModel;
             Assert.IsNotNull(validationResults);
-            Assert.IsTrue(validationResults.GetObject() is ParseIntoEntitiesResponse);
+            Assert.IsTrue(validationResults.GetObject() is MappedImportValidationResponse);
 
             //at validation display proceed anyway
             validationResults.SaveButtonViewModel.Invoke();

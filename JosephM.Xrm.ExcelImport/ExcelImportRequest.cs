@@ -4,6 +4,7 @@ using JosephM.Core.Constants;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Record.Excel;
+using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Xrm.DataImportExport.Import;
 using JosephM.Xrm.DataImportExport.MappedImport;
@@ -97,6 +98,32 @@ namespace JosephM.Xrm.ExcelImport
                 return new IsValidResponse();
 
             return Mappings.Validate(MatchRecordsByName, UpdateOnly);
+        }
+
+        private Dictionary<IMapSourceImport, IEnumerable<IRecord>> _mappingDictionary;
+        public void LoadMappingDictionary(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappingDictionary)
+        {
+            _mappingDictionary = mappingDictionary;
+        }
+
+        public Dictionary<IMapSourceImport, IEnumerable<IRecord>> UnloadMappingDictionary()
+        {
+            var dictionary = _mappingDictionary;
+            _mappingDictionary = null;
+            return dictionary;
+        }
+
+        private MappedImportValidationResponse _validationResponse;
+        public void LoadValidationResponse(MappedImportValidationResponse validationResponse)
+        {
+            _validationResponse = validationResponse;
+        }
+
+        public MappedImportValidationResponse UnloadValidationResponse()
+        {
+            var validationResponse = _validationResponse;
+            _validationResponse = null;
+            return validationResponse;
         }
 
         private static class Sections

@@ -1,5 +1,5 @@
 ﻿using JosephM.Core.Attributes;
-using Microsoft.Xrm.Sdk;
+using JosephM.Record.IService;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,23 +11,23 @@ namespace JosephM.Xrm.DataImportExport.Import
     public class ImportingRecords : INotifyPropertyChanged
     {
         private object _lockObject = new object();
-        private IDictionary<Guid, Entity> _createdEntities = new SortedDictionary<Guid, Entity>();
-        private List<Entity> _updatedEntities = new List<Entity>();
-        private List<Entity> _skippedNoChangeEntities = new List<Entity>();
-        private IDictionary<Entity, List<string>> _fieldsForRetry = new Dictionary<Entity, List<string>>();
+        private IDictionary<string, IRecord> _createdEntities = new SortedDictionary<string, IRecord>();
+        private List<IRecord> _updatedEntities = new List<IRecord>();
+        private List<IRecord> _skippedNoChangeEntities = new List<IRecord>();
+        private IDictionary<IRecord, List<string>> _fieldsForRetry = new Dictionary<IRecord, List<string>>();
         private int _errors;
 
-        public IDictionary<Guid, Entity> GetCreatedEntities()
+        public IDictionary<string, IRecord> GetCreatedEntities()
         {
             return _createdEntities;
         }
 
-        public bool HasBeenCreated(Guid id)
+        public bool HasBeenCreated(string id)
         {
             return _createdEntities.ContainsKey(id);
         }
 
-        public void AddedCreated(Entity entity)
+        public void AddedCreated(IRecord entity)
         {
             lock (_lockObject)
             {
@@ -39,7 +39,7 @@ namespace JosephM.Xrm.DataImportExport.Import
             }
         }
 
-        public void AddedUpdated(Entity entity)
+        public void AddedUpdated(IRecord entity)
         {
             lock (_lockObject)
             {
@@ -142,7 +142,7 @@ namespace JosephM.Xrm.DataImportExport.Import
             Errors++;
         }
 
-        public void AddFieldForRetry(Entity entity, string field)
+        public void AddFieldForRetry(IRecord entity, string field)
         {
             lock (_lockObject)
             {
@@ -153,7 +153,7 @@ namespace JosephM.Xrm.DataImportExport.Import
             }
         }
 
-        public void AddSkippedNoChange(Entity entity)
+        public void AddSkippedNoChange(IRecord entity)
         {
             lock (_lockObject)
             {
@@ -165,7 +165,7 @@ namespace JosephM.Xrm.DataImportExport.Import
             }
         }
 
-        public void RemoveFieldForRetry(Entity entity, string field)
+        public void RemoveFieldForRetry(IRecord entity, string field)
         {
             lock (_lockObject)
             {
@@ -180,7 +180,7 @@ namespace JosephM.Xrm.DataImportExport.Import
             }
         }
 
-        public void RemoveForRetry(Entity entity)
+        public void RemoveForRetry(IRecord entity)
         {
             lock (_lockObject)
             {

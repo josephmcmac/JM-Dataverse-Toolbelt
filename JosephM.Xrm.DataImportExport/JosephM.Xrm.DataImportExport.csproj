@@ -81,7 +81,7 @@
     <Compile Include="MappedImport\IMapSourceField.cs" />
     <Compile Include="MappedImport\IMapSourceImport.cs" />
     <Compile Include="MappedImport\IMapSourceMatchKey.cs" />
-    <Compile Include="MappedImport\ParseIntoEntitiesResponse.cs" />
+    <Compile Include="MappedImport\MappedImportValidationResponse.cs" />
     <Compile Include="MappedImport\MappedImportResponse.cs" />
     <Compile Include="MappedImport\MappedImportService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

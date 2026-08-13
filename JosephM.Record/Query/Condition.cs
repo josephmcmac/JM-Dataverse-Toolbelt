@@ -45,7 +45,17 @@ namespace JosephM.Record.Query
                     if (fieldValue is Lookup && Value is string)
                         return ((Lookup) fieldValue).Id.Equals(Value);
                     return Value.Equals(fieldValue);
-                }
+                    }
+                case ConditionType.NotEqual:
+                    {
+                        if (fieldValue == Value)
+                            return false;
+                        if (fieldValue == null)
+                            return Value != null;
+                        if (fieldValue is Lookup && Value is string)
+                            return !((Lookup)fieldValue).Id.Equals(Value);
+                        return !Value.Equals(fieldValue);
+                    }
                 case ConditionType.GreaterThan:
                 {
                     if (fieldValue == null)

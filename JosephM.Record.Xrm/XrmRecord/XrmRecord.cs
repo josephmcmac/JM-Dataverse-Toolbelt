@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using JosephM.Record.Extentions;
+﻿using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Service;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
@@ -66,6 +67,15 @@ namespace JosephM.Record.Xrm.XrmRecord
                 Fields[fieldName] = value;
             else
                 Fields.Add(fieldName, value);
+        }
+
+        public void RemoveFields(params string[] fieldNames)
+        {
+            foreach (var fieldName in fieldNames)
+            {
+                if (Fields.ContainsKey(fieldName))
+                    Fields.Remove(fieldName);
+            }
         }
     }
 }

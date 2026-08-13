@@ -1,41 +1,31 @@
 ﻿using JosephM.Core.Attributes;
-using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 
 namespace JosephM.Xrm.DataImportExport.MappedImport
 {
-    [Instruction("Warning - Potential Errors Were Encountered Parsing The Source Data. Please Review Before Proceeding With The Import")]
-    public class ParseIntoEntitiesResponse
+    [Instruction("Warning - potential errors when validating the data for import. Please review before proceeding with the import")]
+    public class MappedImportValidationResponse
     {
-        private List<Entity> _parsedEntities = new List<Entity>();
-        public void AddEntities(IEnumerable<Entity> entitiesToAdd)
-        {
-            _parsedEntities.AddRange(entitiesToAdd);
-        }
+        private readonly List<MappedImportValidationResponseError> _errors = new List<MappedImportValidationResponseError>();
 
-        public IEnumerable<Entity> GetParsedEntities()
-        { return _parsedEntities; }
-
-        private readonly List<ParseIntoEntitiesError> _errors = new List<ParseIntoEntitiesError>();
-
-        public void AddResponseItem(ParseIntoEntitiesError responseItem)
+        public void AddResponseItem(MappedImportValidationResponseError responseItem)
         {
             _errors.Add(responseItem);
         }
 
-        public void AddResponseItems(IEnumerable<ParseIntoEntitiesError> responseItems)
+        public void AddResponseItems(IEnumerable<MappedImportValidationResponseError> responseItems)
         {
             _errors.AddRange(responseItems);
         }
 
         [AllowDownload]
-        public IEnumerable<ParseIntoEntitiesError> ResponseItems
+        public IEnumerable<MappedImportValidationResponseError> ResponseItems
         {
             get { return _errors; }
         }
 
-        public class ParseIntoEntitiesError
+        public class MappedImportValidationResponseError
         {
             [GridWidth(125)]
             [DisplayOrder(10)]
@@ -55,13 +45,13 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
             [Hidden]
             public Exception Exception { get; }
 
-            public ParseIntoEntitiesError(string message, Exception ex)
+            public MappedImportValidationResponseError(string message, Exception ex)
             {
                 Message = message;
                 Exception = ex;
             }
 
-            public ParseIntoEntitiesError(int? rowNumber, string targetType, string targetField, string name, string stringValue, string message, Exception ex)
+            public MappedImportValidationResponseError(int? rowNumber, string targetType, string targetField, string name, string stringValue, string message, Exception ex)
             {
                 RowNumber = rowNumber;
                 TargetType = targetType;

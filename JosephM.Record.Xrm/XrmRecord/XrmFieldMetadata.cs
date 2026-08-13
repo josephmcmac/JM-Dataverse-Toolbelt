@@ -6,7 +6,6 @@ using JosephM.Xrm;
 using Microsoft.Xrm.Sdk.Metadata;
 using System;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
@@ -31,9 +30,23 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             get
             {
-                return XrmService.GetFieldMetadata(FieldName, RecordType) is MultiSelectPicklistAttributeMetadata
-                ? RecordFieldType.Picklist
-                : new FieldTypeMapper().Map(XrmService.GetFieldType(FieldName, RecordType));
+                var fieldMetadata = XrmService.GetFieldMetadata(FieldName, RecordType);
+                if(fieldMetadata is MultiSelectPicklistAttributeMetadata)
+                {
+                    return RecordFieldType.Picklist;
+                }
+                else if (fieldMetadata is ImageAttributeMetadata)
+                {
+                    return RecordFieldType.Image;
+                }
+                else if (fieldMetadata is FileAttributeMetadata)
+                {
+                    return RecordFieldType.FileRef;
+                }
+                else
+                {
+                    return new FieldTypeMapper().Map(XrmService.GetFieldType(FieldName, RecordType));
+                }
             }
         }
 

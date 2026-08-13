@@ -1,5 +1,5 @@
 ﻿using JosephM.Core.Attributes;
-using Microsoft.Xrm.Sdk;
+using JosephM.Record.IService;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -10,10 +10,10 @@ namespace JosephM.Xrm.DataImportExport.Import
     {
         private List<ImportingRecords> _importedRecords = new List<ImportingRecords>();
 
-        public DataImportResponse(IEnumerable<Entity> entitiesToProcess, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary)
+        public DataImportResponse(IEnumerable<IRecord> entitiesToProcess, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary)
         {
-            var types = entitiesToProcess.Select(e => e.LogicalName).Distinct().ToArray();
-            _importedRecords.AddRange(types.OrderBy(s => s).Select(s => new ImportingRecords() { Type = s, Total = entitiesToProcess.Count(e => e.LogicalName == s) }));
+            var types = entitiesToProcess.Select(e => e.Type).Distinct().ToArray();
+            _importedRecords.AddRange(types.OrderBy(s => s).Select(s => new ImportingRecords() { Type = s, Total = entitiesToProcess.Count(e => e.Type == s) }));
             if(loadExistingErrorsIntoSummary != null)
             {
                 foreach(var item in loadExistingErrorsIntoSummary)
@@ -44,9 +44,9 @@ namespace JosephM.Xrm.DataImportExport.Import
             }
         }
 
-        public void AddCreated(Entity thisEntity)
+        public void AddCreated(IRecord thisEntity)
         {
-            var importObject = GetImportForType(thisEntity.LogicalName);
+            var importObject = GetImportForType(thisEntity.Type);
             importObject.AddedCreated(thisEntity);
         }
 
@@ -57,9 +57,9 @@ namespace JosephM.Xrm.DataImportExport.Import
             return _importedRecords.First(ir => ir.Type == logicalName);
         }
 
-        public void AddUpdated(Entity thisEntity)
+        public void AddUpdated(IRecord thisEntity)
         {
-            var importObject = GetImportForType(thisEntity.LogicalName);
+            var importObject = GetImportForType(thisEntity.Type);
             importObject.AddedUpdated(thisEntity);
         }
 
@@ -84,9 +84,9 @@ namespace JosephM.Xrm.DataImportExport.Import
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void AddImportError(Entity entity, DataImportResponseItem dataImportResponseItem)
+        public void AddImportError(IRecord entity, DataImportResponseItem dataImportResponseItem)
         {
-            var importObject = GetImportForType(entity.LogicalName);
+            var importObject = GetImportForType(entity.Type);
             importObject.AddError();
             _errors.Add(dataImportResponseItem);
         }
@@ -98,27 +98,27 @@ namespace JosephM.Xrm.DataImportExport.Import
 
         private List<DataImportResponseItem> _errors = new List<DataImportResponseItem>();
 
-        internal void AddFieldForRetry(Entity thisEntity, string field)
+        internal void AddFieldForRetry(IRecord thisEntity, string field)
         {
-            var importObject = GetImportForType(thisEntity.LogicalName);
+            var importObject = GetImportForType(thisEntity.Type);
             importObject.AddFieldForRetry(thisEntity, field);
         }
 
-        internal void AddSkippedNoChange(Entity thisEntity)
+        internal void AddSkippedNoChange(IRecord thisEntity)
         {
-            var importObject = GetImportForType(thisEntity.LogicalName);
+            var importObject = GetImportForType(thisEntity.Type);
             importObject.AddSkippedNoChange(thisEntity);
         }
 
-        internal void RemoveFieldForRetry(Entity thisEntity, string field)
+        internal void RemoveFieldForRetry(IRecord thisEntity, string field)
         {
-            var importObject = GetImportForType(thisEntity.LogicalName);
+            var importObject = GetImportForType(thisEntity.Type);
             importObject.RemoveFieldForRetry(thisEntity, field);
         }
 
-        internal void RemoveFieldForRetry(Entity thisEntity)
+        internal void RemoveFieldForRetry(IRecord thisEntity)
         {
-            var importObject = GetImportForType(thisEntity.LogicalName);
+            var importObject = GetImportForType(thisEntity.Type);
             importObject.RemoveForRetry(thisEntity);
         }
     }

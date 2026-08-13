@@ -55,5 +55,14 @@ namespace JosephM.Record.Service
             var fieldValue = GetField(field);
             return fieldValue == null ? new IRecord[0] : (IEnumerable<IRecord>) fieldValue;
         }
+
+        public override void RemoveFields(params string[] fieldNames)
+        {
+            foreach (var fieldName in fieldNames)
+            {
+                if (_fields.ContainsKey(fieldName))
+                    _fields.Remove(fieldName);
+            }
+        }
     }
 }

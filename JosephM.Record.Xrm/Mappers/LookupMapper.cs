@@ -12,7 +12,7 @@ namespace JosephM.Record.Xrm.Mappers
     {
         public LookupMapper()
         {
-            AddPropertyMap<EntityReference, Lookup>("LogicalName", "RecordType");
+            AddPropertyMap<EntityReference, Lookup>(nameof(EntityReference.LogicalName), nameof(Lookup.RecordType));
         }
     }
 }

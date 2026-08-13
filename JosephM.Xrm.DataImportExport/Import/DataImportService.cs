@@ -1,18 +1,14 @@
+using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
+using JosephM.Record.IService;
+using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
-using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Messages;
-using Microsoft.Xrm.Sdk.Metadata;
-using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
-using System.ServiceModel;
 
 namespace JosephM.Xrm.DataImportExport.Import
 {
@@ -25,19 +21,9 @@ namespace JosephM.Xrm.DataImportExport.Import
 
         public XrmRecordService XrmRecordService { get; set; }
 
-        protected XrmService XrmService
+        public DataImportResponse DoImport(IEnumerable<IRecord> records, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary = null, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary = null, bool updateOnly = false, bool includeOwner = false, bool includeOverrideCreatedOn = false, bool containsExportedConfigFields = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null, bool onlyFieldMatchActive = false, bool forceSubmitAllFields = false, bool displayTimeEstimations = false, int parallelImportProcessCount = 1, bool bypassWorkflowsAndPlugins = false, bool trustSourceLookupGuids = false) 
         {
-            get
-            {
-                return XrmRecordService.XrmService;
-            }
-        }
-
-        private readonly Dictionary<string, Dictionary<string, Dictionary<string, List<Entity>>>> _cachedRecords = new Dictionary<string, Dictionary<string, Dictionary<string, List<Entity>>>>();
-
-        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary = null, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary = null, bool updateOnly = false, bool includeOwner = false, bool includeOverrideCreatedOn = false, bool containsExportedConfigFields = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null, bool onlyFieldMatchActive = false, bool forceSubmitAllFields = false, bool displayTimeEstimations = false, int parallelImportProcessCount = 1, bool bypassWorkflowsAndPlugins = false, bool trustSourceLookupGuids = false) 
-        {
-            var response = new DataImportResponse(entities, loadExistingErrorsIntoSummary);
+            var response = new DataImportResponse(records, loadExistingErrorsIntoSummary);
             controller.AddObjectToUi(response);
             try
             {
@@ -46,7 +32,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                     XrmRecordService,
                     altMatchKeyDictionary ?? new Dictionary<string, IEnumerable<KeyValuePair<string, bool>>>(),
                     altLookupMatchKeyDictionary ?? new Dictionary<string, Dictionary<string, KeyValuePair<string, string>>>(),
-                    entities,
+                    records,
                     controller,
                     includeOwner,
                     includeOverrideCreatedOn,
@@ -84,15 +70,15 @@ namespace JosephM.Xrm.DataImportExport.Import
             {
                 var thisEntityName = relationshipEntityName;
 
-                var relationship = XrmService.GetRelationshipMetadataForEntityName(thisEntityName);
-                var type1 = relationship.Entity1LogicalName;
+                var relationship = XrmRecordService.GetRelationshipMetadataForEntityName(thisEntityName);
+                var type1 = relationship.RecordType1;
                 var field1 = relationship.Entity1IntersectAttribute;
-                var type2 = relationship.Entity2LogicalName;
+                var type2 = relationship.RecordType2;
                 var field2 = relationship.Entity2IntersectAttribute;
 
                 dataImportContainer.Controller.UpdateProgress(countImported++, countToImport, $"Associating {thisEntityName} Records");
                 dataImportContainer.Controller.UpdateLevel2Progress(0, 1, "Loading");
-                var thisTypeEntities = dataImportContainer.EntitiesToImport.Where(e => e.LogicalName == thisEntityName).ToList();
+                var thisTypeEntities = dataImportContainer.EntitiesToImport.Where(e => e.Type == thisEntityName).ToList();
                 var countRecordsToImport = thisTypeEntities.Count;
                 var countRecordsImported = 0;
                 var estimator = new TaskEstimator(countRecordsToImport);
@@ -106,7 +92,7 @@ namespace JosephM.Xrm.DataImportExport.Import
 
                     thisTypeEntities.RemoveRange(0, thisSetOfEntities.Count());
 
-                    var copiesForAssociate = new List<Entity>();
+                    var copiesForAssociate = new List<IRecord>();
 
                     foreach (var thisEntity in thisSetOfEntities)
                     {
@@ -118,29 +104,29 @@ namespace JosephM.Xrm.DataImportExport.Import
                             //so either string when csv or guid when xml import/export
                             string matchType1 = type1;
                             string matchField1 = XrmRecordService.GetPrimaryField(type1);
-                            if (dataImportContainer.AltLookupMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
-                                && dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName].ContainsKey(relationship.Entity1IntersectAttribute))
+                            if (dataImportContainer.AltLookupMatchKeyDictionary.ContainsKey(thisEntity.Type)
+                                && dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.Type].ContainsKey(relationship.Entity1IntersectAttribute))
                             {
-                                matchType1 = dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName][relationship.Entity1IntersectAttribute].Key;
-                                matchField1 = dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName][relationship.Entity1IntersectAttribute].Value;
+                                matchType1 = dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.Type][relationship.Entity1IntersectAttribute].Key;
+                                matchField1 = dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.Type][relationship.Entity1IntersectAttribute].Value;
                             }
                             var value1 = thisEntity.GetField(relationship.Entity1IntersectAttribute);
                             var id1 = value1 is string
-                                ? dataImportContainer.GetUniqueMatchingEntity(matchType1, matchField1, (string)value1).Id
-                                : thisEntity.GetGuidField(relationship.Entity1IntersectAttribute);
+                                ? dataImportContainer.GetUniqueMatchingEntity(matchType1, matchField1, (string)value1).Id.ToString()
+                                : thisEntity.GetIdField(relationship.Entity1IntersectAttribute);
 
                             string matchType2 = type2;
                             string matchField2 = XrmRecordService.GetPrimaryField(type2);
-                            if (dataImportContainer.AltLookupMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
-                                && dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName].ContainsKey(relationship.Entity2IntersectAttribute))
+                            if (dataImportContainer.AltLookupMatchKeyDictionary.ContainsKey(thisEntity.Type)
+                                && dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.Type].ContainsKey(relationship.Entity2IntersectAttribute))
                             {
-                                matchType2 = dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName][relationship.Entity2IntersectAttribute].Key;
-                                matchField2 = dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName][relationship.Entity2IntersectAttribute].Value;
+                                matchType2 = dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.Type][relationship.Entity2IntersectAttribute].Key;
+                                matchField2 = dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.Type][relationship.Entity2IntersectAttribute].Value;
                             }
                             var value2 = thisEntity.GetField(relationship.Entity2IntersectAttribute);
                             var id2 = value2 is string
-                                ? dataImportContainer.GetUniqueMatchingEntity(matchType2, matchField2, (string)value2).Id
-                                : thisEntity.GetGuidField(relationship.Entity2IntersectAttribute);
+                                ? dataImportContainer.GetUniqueMatchingEntity(matchType2, matchField2, (string)value2).Id.ToString()
+                                : thisEntity.GetIdField(relationship.Entity2IntersectAttribute);
 
                             //add a where field lookup reference then look it up
                             if (dataImportContainer.IdSwitches.ContainsKey(type1) && dataImportContainer.IdSwitches[type1].ContainsKey(id1))
@@ -148,9 +134,10 @@ namespace JosephM.Xrm.DataImportExport.Import
                             if (dataImportContainer.IdSwitches.ContainsKey(type2) && dataImportContainer.IdSwitches[type2].ContainsKey(id2))
                                 id2 = dataImportContainer.IdSwitches[type2][id2];
 
-                            var copyForAssociate = new Entity(thisEntity.LogicalName) { Id = thisEntity.Id };
-                            copyForAssociate.SetField(field1, id1);
-                            copyForAssociate.SetField(field2, id2);
+                            var copyForAssociate = XrmRecordService.NewRecord(thisEntity.Type);
+                            copyForAssociate.Id = thisEntity.Id;
+                            copyForAssociate.SetField(field1, id1, XrmRecordService);
+                            copyForAssociate.SetField(field2, id2, XrmRecordService);
                             copiesForAssociate.Add(copyForAssociate);
                         }
                         catch (Exception ex)
@@ -164,71 +151,48 @@ namespace JosephM.Xrm.DataImportExport.Import
                     var existingAssociationsQueries = copiesForAssociate.
                         Select(c =>
                         {
-                            var q = new QueryByAttribute(relationship.IntersectEntityName);
-                            q.AddAttributeValue(field1, c.GetGuidField(field1));
-                            q.AddAttributeValue(field2, c.GetGuidField(field2));
-                            return new RetrieveMultipleRequest()
-                            {
-                                Query = q
-                            };
+                            var q = new QueryDefinition(relationship.IntersectEntityName);
+                            q.RootFilter.AddCondition(field1, ConditionType.Equal, c.GetIdField(field1));
+                            q.RootFilter.AddCondition(field2, ConditionType.Equal, c.GetIdField(field2));
+                            return q;
                         })
                         .ToArray();
+                    var executeQueryResponses = XrmRecordService.ExecuteMultipleQueries(existingAssociationsQueries);
 
-                    var executeMultipleResponses = XrmService.ExecuteMultiple(existingAssociationsQueries);
-
-                    var notYetAssociated = new List<Entity>();
+                    var notYetAssociated = new List<IRecord>();
                     var i = 0;
-                    foreach (var queryResponse in executeMultipleResponses)
+                    foreach (var queryResponse in executeQueryResponses)
                     {
                         var associationEntity = copiesForAssociate[i];
-                        if (queryResponse.Fault != null)
+                        if (queryResponse.Exception != null)
                         {
-                            dataImportContainer.LogAssociationError(associationEntity, new FaultException<OrganizationServiceFault>(queryResponse.Fault, queryResponse.Fault.Message));
+                            dataImportContainer.LogAssociationError(associationEntity, queryResponse.Exception);
                         }
-                        else if (!((RetrieveMultipleResponse)queryResponse.Response).EntityCollection.Entities.Any())
+                        else if (!queryResponse.Records.Any())
                         {
                             notYetAssociated.Add(associationEntity);
                         }
                         else
                         {
-                            associationEntity.Id = Guid.NewGuid();
+                            associationEntity.Id = Guid.NewGuid().ToString();
                             dataImportContainer.Response.AddSkippedNoChange(associationEntity);
                         }
                         i++;
                     }
 
-                    var associateRequests = notYetAssociated.
-                        Select(e =>
-                        {
-                            var isReferencing = relationship.Entity1IntersectAttribute == field1;
+                    var is1Referencing = relationship.Entity1IntersectAttribute == field1;
+                    var associateMultipleResponses = XrmRecordService.AssociateMultiple(relationship.IntersectEntityName, type1, notYetAssociated.Select(a => a.GetIdField(field1)), type2, notYetAssociated.Select(a => a.GetIdField(field2)), is1Referencing);
 
-                            var r = new AssociateRequest
-                            {
-                                Relationship = new Relationship(relationship.SchemaName)
-                                {
-                                    PrimaryEntityRole =
-                                    isReferencing ? EntityRole.Referencing : EntityRole.Referenced
-                                },
-                                Target = new EntityReference(type1, e.GetGuidField(field1)),
-                                RelatedEntities = new EntityReferenceCollection(new[] { new EntityReference(type2, e.GetGuidField(field2)) })
-                            };
-                            return r;
-                        })
-                        .ToArray();
-
-                    var associateMultipleResponses = XrmService.ExecuteMultiple(associateRequests);
-
-                    i = 0;
-                    foreach (var associateResponse in associateMultipleResponses)
+                    for (var j = 0; j < notYetAssociated.Count(); j++)
                     {
-                        var associationEntity = notYetAssociated[i];
-                        if (associateResponse.Fault != null)
+                        var associationEntity = notYetAssociated[j];
+                        if (associateMultipleResponses.ContainsKey(j) && associateMultipleResponses[j] != null)
                         {
-                            dataImportContainer.LogAssociationError(associationEntity, new FaultException<OrganizationServiceFault>(associateResponse.Fault, associateResponse.Fault.Message));
+                            dataImportContainer.LogAssociationError(associationEntity, associateMultipleResponses[j]);
                         }
                         else
                         {
-                            associationEntity.Id = Guid.NewGuid();
+                            associationEntity.Id = Guid.NewGuid().ToString();
                             dataImportContainer.Response.AddCreated(associationEntity);
                         }
                         i++;
@@ -245,11 +209,11 @@ namespace JosephM.Xrm.DataImportExport.Import
 
             dataImportContainer.Controller.UpdateProgress(countImported, countToImport, "Retrying Unresolved Fields");
 
-            var types = dataImportContainer.FieldsToRetry.Keys.Select(e => e.LogicalName).Distinct().ToArray();
+            var types = dataImportContainer.FieldsToRetry.Keys.Select(e => e.Type).Distinct().ToArray();
 
             foreach(var type in types)
             {
-                var thisTypeForRetry = dataImportContainer.FieldsToRetry.Where(kv => kv.Key.LogicalName == type).ToList();
+                var thisTypeForRetry = dataImportContainer.FieldsToRetry.Where(kv => kv.Key.Type == type).ToList();
 
                 while (thisTypeForRetry.Any())
                 {
@@ -261,10 +225,10 @@ namespace JosephM.Xrm.DataImportExport.Import
 
                     var distinctFields = thisSetOfEntities.SelectMany(kv => kv.Value).Distinct().ToArray();
 
-                    var indexToUpdateCopy = new Dictionary<Entity, Entity>();
+                    var indexToUpdateCopy = new Dictionary<IRecord, IRecord>();
                     foreach (var kv in thisSetOfEntities)
                     {
-                        indexToUpdateCopy.Add(kv.Key, new Entity(kv.Key.LogicalName) { Id = kv.Key.Id });
+                        indexToUpdateCopy.Add(kv.Key, XrmRecordService.NewRecord(kv.Key.Type, kv.Key.Id));
                     }
 
                     foreach (var field in distinctFields)
@@ -273,7 +237,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                             .Where(e => dataImportContainer.FieldsToRetry[e.Key].Contains(field))
                             .Select(e => e.Key)
                             .ToList();
-                        ParseLookupFields(XrmRecordService, dataImportContainer, itemsWithThisFieldPopulated, new[] { field }, isRetry: true, allowAddForRetry: false, doWhenResolved: (e, f) => indexToUpdateCopy[e].SetField(f, e.GetField(f)));
+                        ParseLookupFields(XrmRecordService, dataImportContainer, itemsWithThisFieldPopulated, new[] { field }, isRetry: true, allowAddForRetry: false, doWhenResolved: (e, f) => indexToUpdateCopy[e].SetField(f, e.GetField(f), XrmRecordService));
                     }
 
                     var itemsForUpdate = indexToUpdateCopy.Where(kv => kv.Value.GetFieldsInEntity().Any()).ToArray();
@@ -281,18 +245,18 @@ namespace JosephM.Xrm.DataImportExport.Import
                     if (itemsForUpdate.Any())
                     {
                         var updateEntities = itemsForUpdate.Select(kv => kv.Value).ToArray();
-                        var responses = XrmService.UpdateMultiple(updateEntities, null, bypassWorkflowsAndPlugins: dataImportContainer.BypassFlowsPluginsAndWorkflows);
-
-                        var i = 0;
-                        foreach (var updateResponse in responses)
+                        var responses = XrmRecordService.UpdateMultiple(updateEntities, null, bypassWorkflowsAndPlugins: dataImportContainer.BypassFlowsPluginsAndWorkflows);
+                        for (var i = 0; i < updateEntities.Count(); i++)
                         {
                             var updateEntity = updateEntities[i];
                             var originalEntity = itemsForUpdate[i].Key;
                             foreach (var updatedField in updateEntity.GetFieldsInEntity())
-                                dataImportContainer.Response.RemoveFieldForRetry(originalEntity, updatedField);
-                            if (updateResponse.Fault != null)
                             {
-                                dataImportContainer.LogEntityError(originalEntity, new FaultException<OrganizationServiceFault>(updateResponse.Fault, updateResponse.Fault.Message));
+                                dataImportContainer.Response.RemoveFieldForRetry(originalEntity, updatedField);
+                            }
+                            if (responses.ContainsKey(i) && responses[i] != null)
+                            {
+                                dataImportContainer.LogEntityError(originalEntity, responses[i]);
                             }
                             else
                             {
@@ -315,18 +279,18 @@ namespace JosephM.Xrm.DataImportExport.Import
             {
                 dataImportContainer.Controller.UpdateLevel2Progress(0, 1, "Loading");
 
-                if (_cachedRecords.ContainsKey(recordType))
-                {
-                    _cachedRecords.Remove(recordType);
-                }
+                dataImportContainer.RemoveFromCache(recordType);
                 try
                 {
-                    dataImportContainer.LoadTargetsToCache(recordType);
+                    if (!dataImportContainer.TrustSourceLookupGuids)
+                    {
+                        dataImportContainer.LoadTargetsToCache(recordType);
+                    }
 
-                    var thisTypeEntities = new List<Entity>();
+                    var thisTypeEntities = new List<IRecord>();
                     foreach (var entity in dataImportContainer.EntitiesToImport)
                     {
-                        if (entity.LogicalName == recordType)
+                        if (entity.Type == recordType)
                         {
                             thisTypeEntities.Add(entity);
                         }
@@ -339,7 +303,11 @@ namespace JosephM.Xrm.DataImportExport.Import
                     var countRecordsImported = 0;
                     var estimator = new TaskEstimator(countRecordsToImport);
 
-
+                    if (dataImportContainer.DisplayTimeEstimations)
+                    {
+                        dataImportContainer.Controller.UpdateProgress(countRecordsImported, countRecordsToImport, estimator.GetProgressString(countRecordsImported, taskName: $"Importing {recordType} Records"));
+                    }
+                    dataImportContainer.Controller.UpdateLevel2Progress(countRecordsImported, countRecordsToImport, estimator.GetProgressString(countRecordsImported));
                     if (dataImportContainer.ParallelImportProcessCount <= 1)
                     {
                         ImportEntitiesNestedProcess(dataImportContainer, recordType, thisTypeEntities, importFieldsForEntity, countRecordsToImport, ref countRecordsImported, estimator, XrmRecordService);
@@ -358,15 +326,12 @@ namespace JosephM.Xrm.DataImportExport.Import
                     dataImportContainer.Response.AddImportError(
                         new DataImportResponseItem(recordType, null, null, null, string.Format("Error Importing Type {0}", recordType), ex));
                 }
-                if (_cachedRecords.ContainsKey(recordType))
-                {
-                    _cachedRecords.Remove(recordType);
-                }
+                dataImportContainer.RemoveFromCache(recordType);
             }
             dataImportContainer.Controller.TurnOffLevel2();
         }
 
-        private static void ImportEntitiesNestedProcess(DataImportContainer dataImportContainer, string recordType, List<Entity> thisTypeEntities, string[] importFieldsForEntity, int countRecordsToImport, ref int countRecordsImported, TaskEstimator estimator, XrmRecordService xrmRecordService)
+        private static void ImportEntitiesNestedProcess(DataImportContainer dataImportContainer, string recordType, List<IRecord> thisTypeEntities, string[] importFieldsForEntity, int countRecordsToImport, ref int countRecordsImported, TaskEstimator estimator, XrmRecordService xrmRecordService)
         {
             while (thisTypeEntities.Any())
             {
@@ -374,7 +339,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                 var countThisSet = thisSetOfEntities.Count;
                 try
                 {
-                    var matchDictionary = new Dictionary<Entity, Entity>();
+                    var matchDictionary = new Dictionary<IRecord, IRecord>();
 
                     MatchEntitiesToTarget(dataImportContainer, thisSetOfEntities, matchDictionary, xrmRecordService);
 
@@ -385,13 +350,13 @@ namespace JosephM.Xrm.DataImportExport.Import
                         .ToArray();
 
                     var lookupFields = currentEntityFields
-                        .Where(f => xrmRecordService.XrmService.IsLookup(f, recordType))
+                        .Where(f => xrmRecordService.IsLookup(f, recordType))
                         .ToArray();
 
                     ParseLookupFields(xrmRecordService, dataImportContainer, thisSetOfEntities, lookupFields, isRetry: false, allowAddForRetry: true);
 
                     var activityPartyFields = currentEntityFields
-                        .Where(f => xrmRecordService.XrmService.IsActivityParty(f, recordType))
+                        .Where(f => xrmRecordService.IsActivityParty(f, recordType))
                         .ToArray();
 
                     foreach (var field in activityPartyFields)
@@ -405,7 +370,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                             matchField = dataImportContainer.AltLookupMatchKeyDictionary[recordType][field].Value;
                         }
 
-                        var dictionaryPartiesToParent = new Dictionary<Entity, Entity>();
+                        var dictionaryPartiesToParent = new Dictionary<IRecord, IRecord>();
                         foreach (var entity in thisSetOfEntities.ToArray())
                         {
                             var parties = entity.GetActivityParties(field);
@@ -418,13 +383,12 @@ namespace JosephM.Xrm.DataImportExport.Import
                         ParseLookupFields(xrmRecordService, dataImportContainer, dictionaryPartiesToParent.Keys.ToList(), new[] { Fields.activityparty_.partyid }, isRetry: false, allowAddForRetry: false, doWhenNotResolved: (e, f) => thisSetOfEntities.Remove(dictionaryPartiesToParent[e]), getPartyParent: (e) => dictionaryPartiesToParent[e], usetargetType: matchType, usetargetField: matchField);
                     }
 
-                    var forCreateEntitiesCopy = new Dictionary<Entity, Entity>();
-                    var forUpdateEntitiesCopy = new Dictionary<Entity, Entity>();
+                    var forCreateEntitiesCopy = new Dictionary<IRecord, IRecord>();
+                    var forUpdateEntitiesCopy = new Dictionary<IRecord, IRecord>();
 
-                    var recordTypeFileFields = xrmRecordService.XrmService
-                        .GetEntityFieldMetadata(recordType)
-                        .Where(fmt => fmt.Value is ImageAttributeMetadata || fmt.Value is FileAttributeMetadata)
-                        .Select(kv => kv.Value)
+                    var recordTypeFileFields = xrmRecordService
+                        .GetFieldMetadata(recordType)
+                        .Where(fmt => fmt.FieldType == Record.Metadata.RecordFieldType.FileRef || fmt.FieldType == Record.Metadata.RecordFieldType.Image)
                         .ToArray();
 
                     foreach (var entity in thisSetOfEntities.ToArray())
@@ -443,7 +407,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                                 var theEmail = entity.GetStringField(field);
                                 if (!string.IsNullOrWhiteSpace(theEmail))
                                 {
-                                    entity.SetField(field, theEmail.Replace("@", "_AT_") + "_@fakemaskedemail.com");
+                                    entity.SetField(field, theEmail.Replace("@", "_AT_") + "_@fakemaskedemail.com", xrmRecordService);
                                 }
                             }
                         }
@@ -462,10 +426,15 @@ namespace JosephM.Xrm.DataImportExport.Import
                                 thisSetOfEntities.Remove(entity);
                                 continue;
                             }
-                            var copyEntity = XrmEntity.ReplicateToNewEntity(entity);
+                            var copyEntity = xrmRecordService.NewRecord(entity.Type);
                             copyEntity.Id = entity.Id;
-                            copyEntity.RemoveFields(copyEntity.GetFieldsInEntity().Except(fieldsToSet));
-                            copyEntity.RemoveFields(copyEntity.GetFieldsInEntity().Where(f => copyEntity.GetField(f) == null));
+                            foreach (var field in entity.GetFieldsInEntity())
+                            {
+                                if (fieldsToSet.Contains(field) && entity.GetField(field) != null)
+                                {
+                                    copyEntity.SetField(field, entity.GetField(field), xrmRecordService);
+                                }
+                            }
                             forCreateEntitiesCopy.Add(copyEntity, entity);
                         }
                         else
@@ -481,9 +450,9 @@ namespace JosephM.Xrm.DataImportExport.Import
                                     }
                                     var newValue = entity.GetField(f);
                                     var oldValue = existingRecord.GetField(f);
-                                    if (oldValue is EntityReference er
-                                        && newValue is EntityReference erNew
-                                        && erNew.Id == Guid.Empty && er.Id != Guid.Empty
+                                    if (oldValue is Lookup er
+                                        && newValue is Lookup erNew
+                                        && ((erNew.Id == null || erNew.Id.ToString() == Guid.Empty.ToString()) && (er.Id != null && er.Id.ToString() != Guid.Empty.ToString()))
                                         && erNew.Name == er.Name)
                                     {
                                         return false;
@@ -494,14 +463,20 @@ namespace JosephM.Xrm.DataImportExport.Import
                                     }
                                     else
                                     {
-                                        return !XrmEntity.FieldsEqual(newValue, oldValue);
+                                        return !xrmRecordService.FieldsEqual(newValue, oldValue);
                                     }
                                 }).ToArray();
                             if (fieldsToSubmit.Any())
                             {
-                                var copyEntity = XrmEntity.ReplicateToNewEntity(entity);
+                                var copyEntity = xrmRecordService.NewRecord(entity.Type);
                                 copyEntity.Id = entity.Id;
-                                copyEntity.RemoveFields(copyEntity.GetFieldsInEntity().Except(fieldsToSubmit));
+                                foreach (var fieldToSubmit in fieldsToSubmit)
+                                {
+                                    if (entity.ContainsField(fieldToSubmit))
+                                    {
+                                        copyEntity.SetField(fieldToSubmit, entity.GetField(fieldToSubmit), xrmRecordService);
+                                    }
+                                }
                                 forUpdateEntitiesCopy.Add(copyEntity, entity);
                             }
                             else
@@ -523,38 +498,34 @@ namespace JosephM.Xrm.DataImportExport.Import
                         //remove status on create if product or not inactive state set
                         foreach (var forCreate in forCreateEntitiesCopy)
                         {
-                            if (forCreate.Key.Contains("statuscode")
-                                && forCreate.Key.GetOptionSetValue("statecode") > -1
-                                    && (forCreate.Key.GetOptionSetValue("statecode") > 0
-                                    || (forCreate.Key.LogicalName == Entities.product || forCreate.Key.GetOptionSetValue("statecode") != 2)))
+                            if (forCreate.Key.ContainsField("statuscode")
+                                && forCreate.Key.GetOptionKey("statecode") != null
+                                && forCreate.Key.GetOptionKey("statecode") != "-1"
+                                    && (string.CompareOrdinal(forCreate.Key.GetOptionKey("statecode"), "0") > 0 || (forCreate.Key.Type == Entities.product || forCreate.Key.GetOptionKey("statecode") != "2")))
                             {
                                 forCreate.Key.RemoveFields(new[] { "statuscode" });
                             }
                         }
-                        IEnumerable<ExecuteMultipleResponseItem> responses = null;
+                        IEnumerable<CreateRecordResponse> responses = null;
                         try
                         {
-                            responses = xrmRecordService.XrmService.CreateMultiple(forCreateEntitiesCopy.Keys, bypassWorkflowsAndPlugins: dataImportContainer.BypassFlowsPluginsAndWorkflows);
-                        }
-                        catch (FaultException<OrganizationServiceFault> fex)
-                        {
-                            responses = forUpdateEntitiesCopy.Select(e => new ExecuteMultipleResponseItem() { Fault = fex.Detail }).ToArray();
+                            responses = xrmRecordService.CreateMultiple(forCreateEntitiesCopy.Keys, bypassWorkflowsAndPlugins: dataImportContainer.BypassFlowsPluginsAndWorkflows);
                         }
                         catch (Exception ex)
                         {
-                            responses = forUpdateEntitiesCopy.Select(e => new ExecuteMultipleResponseItem() { Fault = new OrganizationServiceFault { Message = ex.Message } });
+                            responses = forUpdateEntitiesCopy.Select(e => new CreateRecordResponse() { Exception = ex });
                         }
                         var i = 0;
                         foreach (var createResponse in responses)
                         {
                             var originalEntity = forCreateEntitiesCopy.ElementAt(i).Value;
-                            if (createResponse.Fault != null)
+                            if (createResponse.Exception != null)
                             {
-                                dataImportContainer.LogEntityError(originalEntity, new FaultException<OrganizationServiceFault>(createResponse.Fault, createResponse.Fault.Message));
+                                dataImportContainer.LogEntityError(originalEntity, createResponse.Exception);
                             }
                             else
                             {
-                                originalEntity.Id = ((CreateResponse)createResponse.Response).id;
+                                originalEntity.Id = createResponse.Id;
                                 dataImportContainer.AddCreated(originalEntity);
 
                                 ImportFileFields(originalEntity, recordTypeFileFields, dataImportContainer, xrmRecordService);
@@ -567,32 +538,31 @@ namespace JosephM.Xrm.DataImportExport.Import
                         //if a custom set state message dont include state and status code in updates
                         foreach (var forUpdate in forUpdateEntitiesCopy)
                         {
-                            if (forUpdate.Key.Contains("statecode")
-                                && _customSetStateConfigurations.ContainsKey(forUpdate.Key.LogicalName))
+                            if (forUpdate.Key.ContainsField("statecode")
+                                && xrmRecordService.HasCustomSetStateConfiguration(forUpdate.Key.Type))
                             {
                                 forUpdate.Key.RemoveFields(new[] { "statuscode", "statecode" });
                             }
                         }
-                        IEnumerable<ExecuteMultipleResponseItem> responses = null;
+                        IDictionary<int, Exception> responses = new Dictionary<int, Exception>();
                         try
                         {
-                            responses = xrmRecordService.XrmService.UpdateMultiple(forUpdateEntitiesCopy.Keys, null, bypassWorkflowsAndPlugins: dataImportContainer.BypassFlowsPluginsAndWorkflows);
-                        }
-                        catch (FaultException<OrganizationServiceFault> fex)
-                        {
-                            responses = forUpdateEntitiesCopy.Select(e => new ExecuteMultipleResponseItem() { Fault = fex.Detail }).ToArray();
+                            responses = xrmRecordService.UpdateMultiple(forUpdateEntitiesCopy.Keys, null, bypassWorkflowsAndPlugins: dataImportContainer.BypassFlowsPluginsAndWorkflows);
                         }
                         catch (Exception ex)
                         {
-                            responses = forUpdateEntitiesCopy.Select(e => new ExecuteMultipleResponseItem() { Fault = new OrganizationServiceFault { Message = ex.Message } });
+                            for (var j = 0; j < forUpdateEntitiesCopy.Count; j++)
+                            {
+                                responses.Add(j, ex);
+                            }
                         }
                         var i = 0;
-                        foreach (var updateResponse in responses)
+                        foreach (var forUpdateEntity in forUpdateEntitiesCopy)
                         {
                             var originalEntity = forUpdateEntitiesCopy.ElementAt(i).Value;
-                            if (updateResponse.Fault != null)
+                            if (responses.ContainsKey(i))
                             {
-                                dataImportContainer.LogEntityError(originalEntity, new FaultException<OrganizationServiceFault>(updateResponse.Fault, updateResponse.Fault.Message));
+                                dataImportContainer.LogEntityError(originalEntity, responses[i]);
                             }
                             else
                             {
@@ -603,52 +573,48 @@ namespace JosephM.Xrm.DataImportExport.Import
                         }
                     }
 
-                    var checkStateForEntities = new List<Entity>();
+                    var updateStateForEntities = new List<IRecord>();
                     foreach (var entity in forCreateEntitiesCopy.Values.Union(forUpdateEntitiesCopy.Values).ToArray())
                     {
                         var isUpdate = matchDictionary.ContainsKey(entity);
                         if (!isUpdate)
                         {
-                            if (dataImportContainer.Response.GetImportForType(entity.LogicalName).HasBeenCreated(entity.Id))
+                            if (dataImportContainer.Response.GetImportForType(entity.Type).HasBeenCreated(entity.Id))
                             {
-                                if (entity.GetOptionSetValue("statecode") > -1
-                                    && (entity.GetOptionSetValue("statecode") > 0
-                                    || (entity.LogicalName == Entities.product || entity.GetOptionSetValue("statecode") != 2)))
+                                if (entity.GetOptionKey("statecode") != null
+                                    && (string.CompareOrdinal(entity.GetOptionKey("statecode"), "0") > 0
+                                    || (entity.Type == Entities.product || entity.GetOptionKey("statecode") != "2")))
                                 {
-                                    checkStateForEntities.Add(entity);
+                                    updateStateForEntities.Add(entity);
                                 }
                             }
                         }
                         else
                         {
                             var originalEntity = matchDictionary[entity];
-                            if (entity.Contains("statecode") &&
-                                (entity.GetOptionSetValue("statecode") != originalEntity.GetOptionSetValue("statecode")
-                                    || (entity.Contains("statuscode") && entity.GetOptionSetValue("statuscode") != originalEntity.GetOptionSetValue("statuscode"))))
+                            if (xrmRecordService.HasCustomSetStateConfiguration(entity.Type) &&
+                                entity.ContainsField("statecode") &&
+                                (entity.GetOptionKey("statecode") != originalEntity.GetOptionKey("statecode")
+                                    || (entity.ContainsField("statuscode") && entity.GetOptionKey("statuscode") != originalEntity.GetOptionKey("statuscode"))))
                             {
-                                checkStateForEntities.Add(entity);
+                                updateStateForEntities.Add(entity);
                             }
                         }
                     }
-                    var setStateMessages = checkStateForEntities
-                        .Select(e => GetSetStateRequest(e, dataImportContainer.BypassFlowsPluginsAndWorkflows))
-                        .ToArray();
-                    if (setStateMessages.Any())
+                    if (updateStateForEntities.Any())
                     {
-                        var responses = xrmRecordService.XrmService.ExecuteMultiple(setStateMessages);
-                        var i = 0;
-                        foreach (var updateResponse in responses)
+                        var responses = xrmRecordService.UpdateMultipleRecordStatus(updateStateForEntities, fieldsToUpdate: new[] { "statecode", "statuscode"}, bypassWorkflowsAndPlugins: dataImportContainer.BypassFlowsPluginsAndWorkflows);
+                        for(var i = 0; i < updateStateForEntities.Count; i++)
                         {
-                            var originalEntity = checkStateForEntities.ElementAt(i);
-                            if (updateResponse.Fault != null)
+                            var originalEntity = updateStateForEntities.ElementAt(i);
+                            if (responses.ContainsKey(i) && responses[i] != null)
                             {
-                                dataImportContainer.LogEntityError(originalEntity, new FaultException<OrganizationServiceFault>(updateResponse.Fault, updateResponse.Fault.Message));
+                                dataImportContainer.LogEntityError(originalEntity, responses[i]);
                             }
                             else
                             {
                                 dataImportContainer.Response.AddUpdated(originalEntity);
                             }
-                            i++;
                         }
                     }
                 }
@@ -668,44 +634,44 @@ namespace JosephM.Xrm.DataImportExport.Import
             }
         }
 
-        private static bool ImportFileFields(Entity importEntity, IEnumerable<AttributeMetadata> recordTypeFileFields, DataImportContainer dataImportContainer, XrmRecordService xrmRecordService)
+        private static bool ImportFileFields(IRecord importEntity, IEnumerable<IFieldMetadata> recordTypeFileFields, DataImportContainer dataImportContainer, XrmRecordService xrmRecordService)
         {
             var fileFieldUpdated = false;
             foreach(var fileField in recordTypeFileFields)
             {
-                var importBase64String = importEntity.GetStringField($"{fileField.LogicalName}.base64");
-                var importFileName = importEntity.GetStringField($"{fileField.LogicalName}.filename");
+                var importBase64String = importEntity.GetStringField($"{fileField.SchemaName}.base64");
+                var importFileName = importEntity.GetStringField($"{fileField.SchemaName}.filename");
                 if (!string.IsNullOrWhiteSpace(importBase64String))
                 {
                     try
                     {
                         string targetFileName = null;
-                            var targetBase64String = xrmRecordService.XrmService.GetFileFieldBase64(importEntity.LogicalName, importEntity.Id, fileField.LogicalName, out targetFileName);
+                            var targetBase64String = xrmRecordService.XrmService.GetFileFieldBase64(importEntity.Type, new Guid(importEntity.Id), fileField.SchemaName, out targetFileName);
                         if (importBase64String != targetFileName || importBase64String != targetBase64String)
                         {
-                            xrmRecordService.XrmService.SetFileFieldBase64(importEntity.LogicalName, importEntity.Id, fileField.LogicalName, importFileName, importBase64String);
+                            xrmRecordService.XrmService.SetFileFieldBase64(importEntity.Type, new Guid(importEntity.Id), fileField.SchemaName, importFileName, importBase64String);
                             fileFieldUpdated = true;
                         }
                     }
                     catch (Exception ex)
                     {
-                        var recordName = importEntity.GetStringField(xrmRecordService.GetPrimaryField(importEntity.LogicalName)) ?? importEntity.Id.ToString();
+                        var recordName = importEntity.GetStringField(xrmRecordService.GetPrimaryField(importEntity.Type)) ?? importEntity.Id.ToString();
                         dataImportContainer.Response.AddImportError(importEntity,
-                                 new DataImportResponseItem(importEntity.LogicalName,
-                                 fileField.LogicalName, recordName, importFileName, "Error setting file", ex));
+                                 new DataImportResponseItem(importEntity.Type,
+                                 fileField.SchemaName, recordName, importFileName, "Error setting file", ex));
                     }
                 }
             }
             return fileFieldUpdated;
         }
 
-        private static void ParseLookupFields(XrmRecordService xrmRecordService, DataImportContainer dataImportContainer, IEnumerable<Entity> thisSetOfEntities, IEnumerable<string> lookupFields, bool isRetry, bool allowAddForRetry, Action<Entity, string> doWhenResolved = null,
-            Action<Entity, string> doWhenNotResolved = null,
-            Func<Entity, Entity> getPartyParent = null, string usetargetType = null, string usetargetField = null)
+        private static void ParseLookupFields(XrmRecordService xrmRecordService, DataImportContainer dataImportContainer, IEnumerable<IRecord> thisSetOfEntities, IEnumerable<string> lookupFields, bool isRetry, bool allowAddForRetry, Action<IRecord, string> doWhenResolved = null,
+            Action<IRecord, string> doWhenNotResolved = null,
+            Func<IRecord, IRecord> getPartyParent = null, string usetargetType = null, string usetargetField = null)
         {
             if (thisSetOfEntities.Any())
             {
-                var recordType = thisSetOfEntities.First().LogicalName;
+                var recordType = thisSetOfEntities.First().Type;
                 foreach (var lookupField in lookupFields)
                 {
                     var recordsNotYetResolved = thisSetOfEntities
@@ -728,9 +694,9 @@ namespace JosephM.Xrm.DataImportExport.Import
                     {
                         foreach(var recordNotYetResolved in recordsNotYetResolved.ToArray())
                         {
-                            var lookupGuid = recordNotYetResolved.GetLookupGuid(lookupField);
+                            var lookupGuid = recordNotYetResolved.GetLookupId(lookupField);
                             var lookupType = recordNotYetResolved.GetLookupType(lookupField) ?? null;
-                            if (lookupGuid.HasValue && lookupGuid.Value != Guid.Empty && !string.IsNullOrWhiteSpace(lookupType) && !lookupType.Contains(","))
+                            if (lookupGuid != null && !string.IsNullOrWhiteSpace(lookupType) && !lookupType.Contains(","))
                             {
                                 recordsNotYetResolved.Remove(recordNotYetResolved);
                             }
@@ -758,7 +724,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                                     return referenceType == null
                                         || referenceType.Contains(",")
                                         || referenceType == targetType
-                                        || (altMatchField != lookupField && (xrmRecordService.GetLookupTargetType(altMatchField, targetType)?.Contains(referenceType) ?? false));
+                                        || isAltFieldLookup;
                                 })
                                 .ToArray();
 
@@ -767,30 +733,29 @@ namespace JosephM.Xrm.DataImportExport.Import
 
                             //if has type config of not cached
                             //we will query the matches
-                            var querySetResponses = targetTypesConfig != null || !isCached
-                                ? xrmRecordService.XrmService.ExecuteMultiple(recordsToTry
+                            var executeQueryResponses = targetTypesConfig != null || !isCached
+                                ? xrmRecordService.ExecuteMultipleQueries(recordsToTry
                                     .Select(e => dataImportContainer.GetParseLookupQuery(e, lookupField, targetType, thisTargetField))
-                                    .Select(q => new RetrieveMultipleRequest() { Query = q })
                                     .ToArray())
-                                : new ExecuteMultipleResponseItem[0];
+                                : new ExecuteQueryResponse[0];
 
                             var i = 0;
                             foreach (var entity in recordsToTry)
                             {
                                 var thisEntity = entity;
                                 var referencedName = thisEntity.GetLookupName(lookupField);
-                                var referencedId = thisEntity.GetLookupGuid(lookupField) ?? Guid.Empty;
+                                var referencedId = thisEntity.GetLookupId(lookupField) ?? Guid.Empty.ToString();
                                 try
                                 {
-                                    IEnumerable<Entity> matchRecords = new Entity[0];
-                                    if (querySetResponses.Any())
+                                    IEnumerable<IRecord> matchRecords = new IRecord[0];
+                                    if (executeQueryResponses.Any())
                                     {
-                                        var thisOnesExecuteMultipleResponse = querySetResponses.ElementAt(i);
-                                        if (thisOnesExecuteMultipleResponse.Fault != null)
-                                            throw new Exception("Error Querying For Match - " + thisOnesExecuteMultipleResponse.Fault.Message);
+                                        var thisOnesQueryResponse = executeQueryResponses.ElementAt(i);
+                                        if (thisOnesQueryResponse.Exception != null)
+                                            throw new Exception("Error querying for match: " + thisOnesQueryResponse.Exception.Message);
                                         else
                                         {
-                                            matchRecords = ((RetrieveMultipleResponse)thisOnesExecuteMultipleResponse.Response).EntityCollection.Entities;
+                                            matchRecords = thisOnesQueryResponse.Records;
                                             if (matchRecords.Count() != 1)
                                             {
                                                 if (matchRecords.Any(e => e.Id == referencedId))
@@ -808,7 +773,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                                     else
                                     {
                                         matchRecords = isAltFieldLookup ?
-                                            new Entity[0]
+                                            new IRecord[0]
                                             : dataImportContainer.GetMatchingEntities(targetType, new Dictionary<string, object>
                                                     {
                                                         { thisTargetPrimarykey, referencedId }
@@ -833,7 +798,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                                         }
                                         else
                                         {
-                                            var activeMatches = matchRecords.Where(m => m.GetOptionSetValue("statecode") == 0);
+                                            var activeMatches = matchRecords.Where(m => m.GetOptionKey("statecode") == "0");
                                             if (activeMatches.Count() == 1)
                                             {
                                                 matchRecords = activeMatches.ToArray();
@@ -847,16 +812,16 @@ namespace JosephM.Xrm.DataImportExport.Import
                                     if (matchRecords.Count() == 1)
                                     {
                                         var matchedRecord = matchRecords.First();
-                                        var matchedRecordEntityReference = matchedRecord.ToEntityReference();
-                                        thisEntity.SetField(lookupField, matchedRecordEntityReference);
+                                        var matchedRecordEntityReference = matchedRecord.ToLookup();
+                                        thisEntity.SetField(lookupField, matchedRecordEntityReference, xrmRecordService);
                                         string name = null;
-                                        if(xrmRecordService.IsString(thisTargetField, matchedRecord.LogicalName))
+                                        if(xrmRecordService.IsString(thisTargetField, matchedRecord.Type))
                                         {
                                             name = matchedRecord.GetStringField(thisTargetField);
                                         }
                                         else
                                         {
-                                            name = matchedRecord.GetStringField(xrmRecordService.GetPrimaryField(matchedRecordEntityReference.LogicalName));
+                                            name = matchedRecord.GetStringField(xrmRecordService.GetPrimaryField(matchedRecordEntityReference.RecordType));
                                         }
                                         matchedRecordEntityReference.Name = name;
                                         recordsNotYetResolved.Remove(thisEntity);
@@ -865,7 +830,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                                 }
                                 catch (Exception ex)
                                 {
-                                    thisEntity.Attributes.Remove(lookupField);
+                                    thisEntity.RemoveFields(lookupField);
                                     dataImportContainer.LogEntityError(thisEntity, ex);
                                     recordsNotYetResolved.Remove(thisEntity);
                                 }
@@ -880,15 +845,15 @@ namespace JosephM.Xrm.DataImportExport.Import
                             doWhenNotResolved?.Invoke(notResolved, lookupField);
                             if (isRetry || !allowAddForRetry)
                             {
-                                var rowNumber = notResolved.Contains("Sheet.RowNumber")
-                                    ? notResolved.GetInt("Sheet.RowNumber")
+                                var rowNumber = notResolved.ContainsField("Sheet.RowNumber")
+                                    ? notResolved.GetIntegerField("Sheet.RowNumber")
                                     : (int?)null;
                                 var notResolvedLogEntity = getPartyParent != null
                                     ? getPartyParent(notResolved)
                                     : notResolved;
-                                var notResolvedLogEntityPrimaryField = xrmRecordService.GetPrimaryField(notResolvedLogEntity.LogicalName);
+                                var notResolvedLogEntityPrimaryField = xrmRecordService.GetPrimaryField(notResolvedLogEntity.Type);
                                 dataImportContainer.Response.AddImportError(notResolvedLogEntity,
-                                     new DataImportResponseItem(notResolvedLogEntity.LogicalName,
+                                     new DataImportResponseItem(notResolvedLogEntity.Type,
                                      lookupField,
                                      notResolvedLogEntity.GetStringField(notResolvedLogEntityPrimaryField) ?? notResolvedLogEntity.Id.ToString(), notResolved.GetLookupName(lookupField),
                                         "No Match Found For Lookup Field", null, rowNumber: rowNumber));
@@ -907,14 +872,14 @@ namespace JosephM.Xrm.DataImportExport.Import
         }
 
         private static readonly object _loadNextSetToProcessLock = new object();
-        private static List<Entity> LoadNextSetToProcess(DataImportContainer dataImportContainer, List<Entity> orderedEntitiesForImport, XrmRecordService xrmRecordService)
+        private static List<IRecord> LoadNextSetToProcess(DataImportContainer dataImportContainer, List<IRecord> orderedEntitiesForImport, XrmRecordService xrmRecordService)
         {
             lock (_loadNextSetToProcessLock)
             {
-                var thisSetOfEntities = new List<Entity>();
+                var thisSetOfEntities = new List<IRecord>();
                 if (orderedEntitiesForImport.Any())
                 {
-                    var recordType = orderedEntitiesForImport[0].LogicalName;
+                    var recordType = orderedEntitiesForImport[0].Type;
                     var takeSomeCountDown = dataImportContainer.ExecuteMultipleSetSize;
                     while (takeSomeCountDown > 0 && orderedEntitiesForImport.Any())
                     {
@@ -923,13 +888,13 @@ namespace JosephM.Xrm.DataImportExport.Import
                         var addToSet = orderedEntitiesForImport[0];
 
                         var referenceFields = addToSet
-                            .Attributes
-                            .Where(kv => kv.Value is EntityReference)
-                            .Select(kv => kv.Value as EntityReference)
+                            .GetFields()
+                            .Where(kv => kv.Value is Core.FieldType.Lookup)
+                            .Select(kv => kv.Value as Core.FieldType.Lookup)
                             .ToArray();
                         foreach (var referenceField in referenceFields)
                         {
-                            var logicalName = referenceField.LogicalName;
+                            var logicalName = referenceField.RecordType;
                             if (logicalName != null)
                             {
                                 var targets = logicalName.Split(',');
@@ -941,7 +906,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                                         var name = referenceField.Name;
                                         var primaryField = xrmRecordService.GetPrimaryField(recordType);
                                         if (thisSetOfEntities.Exists(e =>
-                                            (id != Guid.Empty && e.Id == id)
+                                            (id != null && id != Guid.Empty.ToString() && e.Id == id)
                                             || (primaryField != null && e.GetStringField(primaryField) == name)))
                                         {
                                             dontGetMoreThisSet = true;
@@ -966,11 +931,11 @@ namespace JosephM.Xrm.DataImportExport.Import
             }
         }
 
-        private static void MatchEntitiesToTarget(DataImportContainer dataImportContainer, List<Entity> thisSetOfEntities, Dictionary<Entity, Entity> matchDictionary, XrmRecordService xrmRecordService)
+        private static void MatchEntitiesToTarget(DataImportContainer dataImportContainer, List<IRecord> thisSetOfEntities, Dictionary<IRecord, IRecord> matchDictionary, XrmRecordService xrmRecordService)
         {
             if (!thisSetOfEntities.Any())
                 return;
-            var recordType = thisSetOfEntities[0].LogicalName;
+            var recordType = thisSetOfEntities[0].Type;
             var primaryField = xrmRecordService.GetPrimaryField(recordType);
 
             var thisTypesConfig = xrmRecordService.GetTypeConfigs().GetFor(recordType);
@@ -978,12 +943,11 @@ namespace JosephM.Xrm.DataImportExport.Import
 
             //if has type config of not cached
             //we will query the matches
-            var querySetResponses = thisTypesConfig != null || !isCached
-                ? xrmRecordService.XrmService.ExecuteMultiple(thisSetOfEntities
-                    .Select(e => dataImportContainer.GetMatchQueryExpression(e, dataImportContainer))
-                    .Select(q => new RetrieveMultipleRequest() { Query = q })
+            var executeQueryResponses = thisTypesConfig != null || !isCached
+                ? xrmRecordService.ExecuteMultipleQueries(
+                    thisSetOfEntities.Select(e => dataImportContainer.GetMatchQueryExpression(e, dataImportContainer))
                     .ToArray())
-                : new ExecuteMultipleResponseItem[0];
+                : new ExecuteQueryResponse[0];
 
             var i = 0;
             foreach (var entity in thisSetOfEntities.ToArray())
@@ -991,55 +955,55 @@ namespace JosephM.Xrm.DataImportExport.Import
                 var thisEntity = entity;
                 try
                 {
-                    IEnumerable<Entity> matchRecords = new Entity[0];
-                    if (querySetResponses.Any())
+                    IEnumerable<IRecord> matchRecords = new IRecord[0];
+                    if (executeQueryResponses.Any())
                     {
-                        var thisOnesExecuteMultipleResponse = querySetResponses.ElementAt(i);
-                        if (thisOnesExecuteMultipleResponse.Fault != null)
-                            throw new Exception("Error Querying For Match - " + thisOnesExecuteMultipleResponse.Fault.Message);
+                        var thisOnesQueryResponse = executeQueryResponses.ElementAt(i);
+                        if (thisOnesQueryResponse.Exception != null)
+                            throw new Exception("Error querying for match: " + thisOnesQueryResponse.Exception.Message);
                         else
                         {
-                            matchRecords = ((RetrieveMultipleResponse)thisOnesExecuteMultipleResponse.Response).EntityCollection.Entities;
+                            matchRecords = thisOnesQueryResponse.Records;
                             if (matchRecords.Any(e => e.Id == entity.Id))
                                 matchRecords = matchRecords.Where(e => e.Id == entity.Id).ToArray();
                         }
                     }
                     //else the cache will be used
-                    else if (dataImportContainer.AltMatchKeyDictionary.ContainsKey(thisEntity.LogicalName))
+                    else if (dataImportContainer.AltMatchKeyDictionary.ContainsKey(thisEntity.Type))
                     {
-                        var matchKeyFieldDictionary = dataImportContainer.AltMatchKeyDictionary[thisEntity.LogicalName]
+                        var matchKeyFieldDictionary = dataImportContainer.AltMatchKeyDictionary[thisEntity.Type]
                             .Distinct().ToDictionary(f => f.Key, f => thisEntity.GetField(f.Key));
-                        if (matchKeyFieldDictionary.Any(kv => XrmEntity.FieldsEqual(null, kv.Value)))
+                        if (matchKeyFieldDictionary.Any(kv => xrmRecordService.FieldsEqual(null, kv.Value)))
                         {
                             throw new Exception("Match Key Field Is Empty");
                         }
-                        matchRecords = dataImportContainer.GetMatchingEntities(thisEntity.LogicalName, matchKeyFieldDictionary);
+                        matchRecords = dataImportContainer.GetMatchingEntities(thisEntity.Type, matchKeyFieldDictionary);
                     }
                     else if (dataImportContainer.MatchOption == MatchOption.PrimaryKeyThenName || thisTypesConfig != null)
                     {
-                        matchRecords = dataImportContainer.GetMatchingEntities(thisEntity.LogicalName, new Dictionary<string, object>
+                        matchRecords = dataImportContainer.GetMatchingEntities(thisEntity.Type, new Dictionary<string, object>
                             {
-                                {  xrmRecordService.GetPrimaryKey(thisEntity.LogicalName), thisEntity.Id }
+                                {  xrmRecordService.GetPrimaryKey(thisEntity.Type), thisEntity.Id }
                             });
                         if (!matchRecords.Any())
                         {
-                            matchRecords = dataImportContainer.GetMatchingEntities(thisEntity.LogicalName, new Dictionary<string, object>
+                            matchRecords = dataImportContainer.GetMatchingEntities(thisEntity.Type, new Dictionary<string, object>
                                         {
                                             { primaryField, thisEntity.GetStringField(primaryField) }
                                         });
                             matchRecords = dataImportContainer.FilterForNameMatch(matchRecords);
                         }
                     }
-                    else if (dataImportContainer.MatchOption == MatchOption.PrimaryKeyOnly && thisEntity.Id != Guid.Empty)
+                    else if (dataImportContainer.MatchOption == MatchOption.PrimaryKeyOnly && thisEntity.Id != null && thisEntity.Id != Guid.Empty.ToString())
                     {
-                        matchRecords = dataImportContainer.GetMatchingEntities(thisEntity.LogicalName, new Dictionary<string, object>
+                        matchRecords = dataImportContainer.GetMatchingEntities(thisEntity.Type, new Dictionary<string, object>
                                     {
-                                        {  xrmRecordService.GetPrimaryKey(thisEntity.LogicalName), thisEntity.Id }
+                                        {  xrmRecordService.GetPrimaryKey(thisEntity.Type), thisEntity.Id }
                                     });
                     }
 
                     //special case for business unit
-                    if (!matchRecords.Any() && thisEntity.LogicalName == Entities.businessunit && thisEntity.GetField(Fields.businessunit_.parentbusinessunitid) == null)
+                    if (!matchRecords.Any() && thisEntity.Type == Entities.businessunit && thisEntity.GetField(Fields.businessunit_.parentbusinessunitid) == null)
                     {
                         matchRecords = new[] { dataImportContainer.GetRootBusinessUnit() };
                     }
@@ -1049,9 +1013,9 @@ namespace JosephM.Xrm.DataImportExport.Import
                     {
                         throw new Exception("Updates Only And No Matching Record Found");
                     }
-                    if(dataImportContainer.AltMatchKeyDictionary.ContainsKey(thisEntity.LogicalName))
+                    if(dataImportContainer.AltMatchKeyDictionary.ContainsKey(thisEntity.Type))
                     {
-                        var caseSensitiveMatches = dataImportContainer.AltMatchKeyDictionary[thisEntity.LogicalName]
+                        var caseSensitiveMatches = dataImportContainer.AltMatchKeyDictionary[thisEntity.Type]
                             .Where(kv => kv.Value).ToArray();
                         if(caseSensitiveMatches.Any())
                         {
@@ -1063,8 +1027,8 @@ namespace JosephM.Xrm.DataImportExport.Import
                     }
                     if (matchRecords.Count() > 1)
                     {
-                        var matchStringFields = (dataImportContainer.AltMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
-                            ? dataImportContainer.AltMatchKeyDictionary[thisEntity.LogicalName].Select(kv => kv.Key)
+                        var matchStringFields = (dataImportContainer.AltMatchKeyDictionary.ContainsKey(thisEntity.Type)
+                            ? dataImportContainer.AltMatchKeyDictionary[thisEntity.Type].Select(kv => kv.Key)
                             : new[] { primaryField })
                             .Where(s => xrmRecordService.IsString(s, recordType)).ToArray();
 
@@ -1084,28 +1048,28 @@ namespace JosephM.Xrm.DataImportExport.Import
                     if (matchRecords.Any())
                     {
                         var matchRecord = matchRecords.First();
-                        if (thisEntity.Id != Guid.Empty)
+                        if (thisEntity.Id != null && thisEntity.Id != Guid.Empty.ToString())
                             dataImportContainer.IdSwitches[recordType].Add(thisEntity.Id, matchRecord.Id);
                         thisEntity.Id = matchRecord.Id;
-                        thisEntity.SetField(xrmRecordService.GetPrimaryKey(thisEntity.LogicalName), thisEntity.Id);
+                        thisEntity.SetField(xrmRecordService.GetPrimaryKey(thisEntity.Type), thisEntity.Id, xrmRecordService);
                         if (thisTypesConfig != null)
                         {
                             if (thisTypesConfig.ParentLookupField != null)
-                                thisEntity.SetField(thisTypesConfig.ParentLookupField, matchRecord.GetField(thisTypesConfig.ParentLookupField));
+                                thisEntity.SetField(thisTypesConfig.ParentLookupField, matchRecord.GetField(thisTypesConfig.ParentLookupField), xrmRecordService);
                             if (thisTypesConfig.UniqueChildFields != null)
                             {
                                 foreach (var childField in thisTypesConfig.UniqueChildFields)
                                 {
                                     var oldValue = thisEntity.GetField(childField);
                                     var newValue = matchRecord.GetField(childField);
-                                    if (oldValue is EntityReference oldEr
-                                        && newValue is EntityReference newEr
+                                    if (oldValue is Lookup oldEr
+                                        && newValue is Lookup newEr
                                         && newEr.Name == null)
                                     {
                                         //this just fixing case on notes where the new query didnt populate trhe reference name
                                         newEr.Name = oldEr.Name;
                                     }
-                                    thisEntity.SetField(childField, matchRecord.GetField(childField));
+                                    thisEntity.SetField(childField, matchRecord.GetField(childField), xrmRecordService);
                                 }
                             }
                         }
@@ -1121,68 +1085,177 @@ namespace JosephM.Xrm.DataImportExport.Import
             }
         }
 
-        private List<Entity> OrderEntitiesForImport(DataImportContainer dataImportContainer, List<Entity> thisTypeEntities, IEnumerable<string> importFieldsForEntity)
+        private List<IRecord> OrderEntitiesForImport(DataImportContainer dataImportContainer, List<IRecord> thisTypeEntities, IEnumerable<string> importFieldsForEntity)
         {
-            var orderedEntities = new List<Entity>();
-            if (thisTypeEntities.Any())
+            var orderedEntities = new List<IRecord>();
+            if (!thisTypeEntities.Any())
             {
-                var recordType = thisTypeEntities.First().LogicalName;
-                var primaryField = XrmService.GetPrimaryNameField(recordType);
-                var ignoreFields = dataImportContainer.GetIgnoreFields(recordType);
-                var fieldsDontExist = dataImportContainer.GetFieldsInEntities(thisTypeEntities)
-                    .Where(f => !f.Contains("."))
-                    .Where(f => !XrmService.FieldExists(f, recordType))
-                    .Where(f => !ignoreFields.Contains(f))
-                    .Distinct()
-                    .ToArray();
-                foreach (var field in fieldsDontExist)
+                return orderedEntities;
+            }
+            var recordType = thisTypeEntities.First().Type;
+            var primaryField = XrmRecordService.GetPrimaryField(recordType);
+            var ignoreFields = dataImportContainer.GetIgnoreFields(recordType);
+            var fieldsDontExist = dataImportContainer.GetFieldsInEntities(thisTypeEntities)
+                .Where(f => !f.Contains("."))
+                .Where(f => !XrmRecordService.FieldExists(f, recordType))
+                .Where(f => !ignoreFields.Contains(f))
+                .Distinct()
+                .ToArray();
+            foreach (var field in fieldsDontExist)
+            {
+                dataImportContainer.Response.AddImportError(
+                    new DataImportResponseItem(recordType, field, null, null,
+                        $"Field {field} On Entity {recordType} Doesn't Exist In Target Instance And Will Be Ignored",
+                        new NullReferenceException($"Field {field} On Entity {recordType} Doesn't Exist In Target Instance And Will Be Ignored")));
+            }
+
+            var selfReferenceFields = importFieldsForEntity.Where(
+                f => XrmRecordService.IsLookup(f, recordType) &&
+                     XrmRecordService.GetLookupTargetType(f, recordType) == recordType)
+                .ToArray();
+
+            if (!selfReferenceFields.Any())
+                return thisTypeEntities.ToList();
+
+            // Build fast lookup indexes
+            var n = thisTypeEntities.Count;
+            var indexById = new Dictionary<string, int>(n);
+            var nameToIndexes = new Dictionary<string, List<int>>(StringComparer.OrdinalIgnoreCase);
+            
+            for (int i = 0; i < n; i++)
+            {
+                var e = thisTypeEntities[i];
+                if (e.Id != null && !indexById.ContainsKey(e.Id))
                 {
-                    dataImportContainer.Response.AddImportError(
-                            new DataImportResponseItem(recordType, field, null, null,
-                            string.Format("Field {0} On Entity {1} Doesn't Exist In Target Instance And Will Be Ignored", field, recordType),
-                            new NullReferenceException(string.Format("Field {0} On Entity {1} Doesn't Exist In Target Instance And Will Be Ignored", field, recordType))));
+                    indexById[e.Id] = i;
                 }
 
-                var selfReferenceFields = importFieldsForEntity.Where(
-                            f =>
-                                XrmService.IsLookup(f, recordType) &&
-                                XrmService.GetLookupTargetEntity(f, recordType) == recordType).ToArray();
-                if (!selfReferenceFields.Any())
+                var pName = e.GetStringField(primaryField) ?? string.Empty;
+                if (!string.IsNullOrEmpty(pName))
                 {
-                    orderedEntities = thisTypeEntities.ToList();
-                }
-                else
-                {
-                    foreach (var entity in thisTypeEntities)
+                    if (!nameToIndexes.TryGetValue(pName, out var list))
                     {
-                        var isAdded = false;
-                        foreach (var entity2 in orderedEntities)
-                        {
-                            foreach (var selfReferenceField in selfReferenceFields)
-                            {
-                                var id = entity2.GetLookupGuid(selfReferenceField);
-                                var name = entity2.GetLookupName(selfReferenceField);
-                                if (id == entity.Id || (id == Guid.Empty && name == entity.GetStringField(primaryField)))
-                                {
-                                    orderedEntities.Insert(orderedEntities.IndexOf(entity2), entity);
-                                    isAdded = true;
-                                    break;
-                                }
-                            }
-                            if (isAdded)
-                            {
-                                break;
-                            }
-                        }
-                        if (!isAdded)
-                        {
-                            orderedEntities.Add(entity);
-                        }
-                        dataImportContainer.Controller.LogLiteral($"Sorting for import {orderedEntities.Count}/{thisTypeEntities.Count}");
-                        dataImportContainer.Controller.UpdateLevel2Progress(0, 1, $"Sorting for import {orderedEntities.Count}/{thisTypeEntities.Count}");
+                        list = new List<int>();
+                        nameToIndexes[pName] = list;
                     }
+                    list.Add(i);
                 }
             }
+
+            // adjacency list: edge from target -> dependent
+            var adj = new List<int>[n];
+            var indegree = new int[n];
+            for (int i = 0; i < n; i++)
+                adj[i] = new List<int>();
+
+            // Build edges
+            // For each entity, inspect its self-reference lookup fields and create directed edges
+            // from the referenced target -> dependent (target must be created before dependent).
+            // Prefer GUID matches when present. If the GUID is present but does not match any
+            // entity in this batch and TrustSourceLookupGuids is false, fall back to name matching.
+            // If TrustSourceLookupGuids is true, do not fall back to name matching for GUIDs that
+            // do not resolve in this batch.
+            for (int i = 0; i < n; i++)
+            {
+                var e = thisTypeEntities[i];
+                foreach (var f in selfReferenceFields)
+                {
+                    var lookupId = e.GetLookupId(f);
+                    if (lookupId != null)
+                    {
+                        // Prefer GUID match
+                        if (indexById.TryGetValue(lookupId, out var targetIdx))
+                        {
+                            adj[targetIdx].Add(i);
+                            indegree[i]++;
+                        }
+                        else if (!dataImportContainer.TrustSourceLookupGuids)
+                        {
+                            // GUID present but didn't resolve in this batch; fall back to name matching
+                            var lookupName = e.GetLookupName(f);
+                            if (!string.IsNullOrEmpty(lookupName) && nameToIndexes.TryGetValue(lookupName, out var targets))
+                            {
+                                foreach (var targetIndex in targets)
+                                {
+                                    adj[targetIndex].Add(i);
+                                    indegree[i]++;
+                                }
+                            }
+                        }
+                        // else: TrustSourceLookupGuids == true -> do not attempt name fallback
+                    }
+                    else
+                    {
+                        // No GUID available, match by primary name
+                        var lookupName = e.GetLookupName(f);
+                        if (!string.IsNullOrEmpty(lookupName) && nameToIndexes.TryGetValue(lookupName, out var targets))
+                        {
+                            foreach (var targetIndex in targets)
+                            {
+                                adj[targetIndex].Add(i);
+                                indegree[i]++;
+                            }
+                        }
+                    }
+                }
+
+                if (i > 0 && i % 10000 == 0)
+                {
+                    dataImportContainer.Controller.LogLiteral($"Building reference graph for sorting {i}/{n}");
+                    dataImportContainer.Controller.UpdateLevel2Progress(0, 1, $"Building reference graph for sorting {i}/{n}");
+                }
+            }
+
+            // Kahn's algorithm
+            var q = new Queue<int>();
+            for (int i = 0; i < n; i++)
+                if (indegree[i] == 0)
+                    q.Enqueue(i);
+
+            var resultIndexes = new List<int>(n);
+            while (q.Count > 0)
+            {
+                var u = q.Dequeue();
+                resultIndexes.Add(u);
+                foreach (var v in adj[u])
+                {
+                    indegree[v]--;
+                    if (indegree[v] == 0)
+                        q.Enqueue(v);
+                }
+
+                if (resultIndexes.Count % 10000 == 0)
+                {
+                    dataImportContainer.Controller.LogLiteral($"Sorting for import {resultIndexes.Count}/{n}");
+                    dataImportContainer.Controller.UpdateLevel2Progress(0, 1, $"Sorting for import {resultIndexes.Count}/{n}");
+                }
+            }
+
+            if (resultIndexes.Count != n)
+            {
+                // Cycles detected: there are remaining nodes with indegree > 0.
+                // We do not treat this as an import error; append remaining items in original input order
+                // so they are still included in the import. This yields a best-effort ordering while
+                // ensuring no items are dropped.
+                var remaining = new List<int>();
+                for (int i = 0; i < n; i++)
+                    if (indegree[i] > 0)
+                        remaining.Add(i);
+
+                if (remaining.Any())
+                {
+                    dataImportContainer.Controller.LogLiteral($"Detected cycles among {remaining.Count} {recordType} records; appending remaining items.");
+                    dataImportContainer.Controller.UpdateLevel2Progress(0, 1, $"Detected cycles among {remaining.Count} {recordType} records; appending remaining items.");
+                    foreach (var idx in remaining)
+                        resultIndexes.Add(idx);
+                }
+            }
+
+            orderedEntities = resultIndexes.Select(i => thisTypeEntities[i]).ToList();
+
+            dataImportContainer.Controller.LogLiteral($"Finished ordering {orderedEntities.Count}/{n}");
+            dataImportContainer.Controller.UpdateLevel2Progress(0, 1, $"Finished ordering {orderedEntities.Count}/{n}");
+
             return orderedEntities;
         }
 
@@ -1201,10 +1274,10 @@ namespace JosephM.Xrm.DataImportExport.Import
             foreach (var type in dataImportContainer.EntityTypesToImport)
             {
                 dataImportContainer.Controller.LogLiteral($"Loading Fields For Import {done++}/{toDo}");
-                var thatTypeEntities = dataImportContainer.EntitiesToImport.Where(e => e.LogicalName == type).ToList();
+                var thatTypeEntities = dataImportContainer.EntitiesToImport.Where(e => e.Type == type).ToList();
                 var fields = dataImportContainer.GetFieldsToImport(thatTypeEntities, type)
-                    .Where(f => XrmService.FieldExists(f, type) &&
-                        (XrmService.IsLookup(f, type) || XrmService.IsActivityParty(f, type)));
+                    .Where(f => XrmRecordService.FieldExists(f, type) &&
+                        (XrmRecordService.IsLookup(f, type) || XrmRecordService.IsActivityParty(f, type)));
                 fieldsToImport.Add(type, fields.ToArray());
             }
 
@@ -1219,12 +1292,12 @@ namespace JosephM.Xrm.DataImportExport.Import
                 foreach (var otherType in dataImportContainer.EntityTypesToImport.Where(s => s != type))
                 {
                     var fields = fieldsToImport[otherType];
-                    var thatTypeEntities = dataImportContainer.EntitiesToImport.Where(e => e.LogicalName == otherType).ToList();
+                    var thatTypeEntities = dataImportContainer.EntitiesToImport.Where(e => e.Type == otherType).ToList();
                     foreach (var field in fields)
                     {
                         if (thatTypeEntities.Any(e =>
-                            (XrmService.IsLookup(field, otherType) && e.GetLookupType(field).Split(',').Contains(type))
-                            || (XrmService.IsActivityParty(field, otherType) && e.GetActivityParties(field).Any(p => p.GetLookupType(Fields.activityparty_.partyid) == type))))
+                            (XrmRecordService.IsLookup(field, otherType) && (e.GetLookupType(field)?.Split(',').Contains(type) ?? false))
+                            || (XrmRecordService.IsActivityParty(field, otherType) && e.GetActivityParties(field).Any(p => p.GetLookupType(Fields.activityparty_.partyid) == type))))
                         {
                             dependencyDictionary[type].Add(otherType);
                             dependentTo[otherType].Add(type);
@@ -1277,90 +1350,33 @@ namespace JosephM.Xrm.DataImportExport.Import
             return orderedTypes;
         }
 
-        private static OrganizationRequest GetSetStateRequest(Entity thisEntity, bool bypassWorkflowsAndPlugins = false)
+        private static void PopulateRequiredCreateFields(DataImportContainer dataImportContainer, IRecord thisEntity, List<string> fieldsToSet, XrmRecordService xrmRecordService)
         {
-            if(_customSetStateConfigurations.ContainsKey(thisEntity.LogicalName))
-            {
-                return _customSetStateConfigurations[thisEntity.LogicalName](thisEntity);
-            }
-            else
-            {
-                var theState = thisEntity.GetOptionSetValue("statecode");
-                var theStatus = thisEntity.GetOptionSetValue("statuscode");
-                var request = new SetStateRequest()
-                {
-                    EntityMoniker = thisEntity.ToEntityReference(),
-                    State = new OptionSetValue(theState),
-                    Status = new OptionSetValue(theStatus)
-                };
-                if (bypassWorkflowsAndPlugins)
-                {
-                    request.Parameters.Add("SuppressCallbackRegistrationExpanderJob", true);
-                    request.Parameters.Add("BypassBusinessLogicExecution", "CustomSync,CustomAsync");
-                }
-                return request;
-            }
-        }
-
-        private static Dictionary<string, Func<Entity, OrganizationRequest>> _customSetStateConfigurations = new Dictionary<string, Func<Entity, OrganizationRequest>>
-        {
-            {
-                Entities.incident,
-                (e) =>
-                {
-                    var theState = e.GetOptionSetValue("statecode");
-                    var theStatus = e.GetOptionSetValue("statuscode");
-                    if (theState == OptionSets.Case.Status.Resolved)
-                    {
-                        var closeIt = new Entity(Entities.incidentresolution);
-                        closeIt.SetLookupField(Fields.incidentresolution_.incidentid, e);
-                        closeIt.SetField(Fields.incidentresolution_.subject, "Close By Data Import");
-                        return new CloseIncidentRequest
-                        {
-                            IncidentResolution = closeIt,
-                            Status = new OptionSetValue(theStatus)
-                        };
-                    }
-                    else
-                    {
-                        return new SetStateRequest()
-                        {
-                            EntityMoniker = e.ToEntityReference(),
-                            State = new OptionSetValue(theState),
-                            Status = new OptionSetValue(theStatus)
-                        };
-                    }
-                }
-            }
-        };
-
-        private static void PopulateRequiredCreateFields(DataImportContainer dataImportContainer, Entity thisEntity, List<string> fieldsToSet, XrmRecordService xrmRecordService)
-        {
-            if (thisEntity.LogicalName == Entities.team
+            if (thisEntity.Type == Entities.team
                 && !fieldsToSet.Contains(Fields.team_.businessunitid)
                 && xrmRecordService.FieldExists(Fields.team_.businessunitid, Entities.team))
             {
-                thisEntity.SetLookupField(Fields.team_.businessunitid, dataImportContainer.GetRootBusinessUnit().Id, Entities.businessunit);
+                thisEntity.SetLookup(Fields.team_.businessunitid, dataImportContainer.GetRootBusinessUnit().Id, Entities.businessunit);
                 fieldsToSet.Add(Fields.team_.businessunitid);
                 if (dataImportContainer.FieldsToRetry.ContainsKey(thisEntity)
                     && dataImportContainer.FieldsToRetry[thisEntity].Contains(Fields.team_.businessunitid))
                     dataImportContainer.FieldsToRetry[thisEntity].Remove(Fields.team_.businessunitid);
             }
-            if (thisEntity.LogicalName == Entities.subject
+            if (thisEntity.Type == Entities.subject
                     && !fieldsToSet.Contains(Fields.subject_.featuremask)
                     && xrmRecordService.FieldExists(Fields.subject_.featuremask, Entities.subject))
             {
-                thisEntity.SetField(Fields.subject_.featuremask, 1);
+                thisEntity.SetField(Fields.subject_.featuremask, 1, xrmRecordService);
                 fieldsToSet.Add(Fields.subject_.featuremask);
                 if (dataImportContainer.FieldsToRetry.ContainsKey(thisEntity)
                     && dataImportContainer.FieldsToRetry[thisEntity].Contains(Fields.subject_.featuremask))
                     dataImportContainer.FieldsToRetry[thisEntity].Remove(Fields.subject_.featuremask);
             }
-            if (thisEntity.LogicalName == Entities.uomschedule)
+            if (thisEntity.Type == Entities.uomschedule)
             {
                 fieldsToSet.Add(Fields.uomschedule_.baseuomname);
             }
-            if (thisEntity.LogicalName == Entities.uom)
+            if (thisEntity.Type == Entities.uom)
             {
                 var unitGroupName = thisEntity.GetLookupName(Fields.uom_.uomscheduleid);
                 if (string.IsNullOrWhiteSpace(unitGroupName))
@@ -1370,7 +1386,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                 fieldsToSet.Add(Fields.uom_.uomscheduleid);
 
                 var baseUnitName = thisEntity.GetLookupName(Fields.uom_.baseuom);
-                var baseUnitMatchQuery = XrmService.BuildQuery(Entities.uom, null, null, null);
+                var baseUnitMatchQuery = new QueryDefinition(Entities.uom);
                 if(dataImportContainer.ContainsExportedConfigFields)
                 {
                     var configUniqueFields = xrmRecordService.GetTypeConfigs().GetFor(Entities.uom).UniqueChildFields;
@@ -1382,11 +1398,12 @@ namespace JosephM.Xrm.DataImportExport.Import
                     {
                         throw new NullReferenceException($"{xrmRecordService.GetFieldLabel(Fields.uom_.baseuom, Entities.uom)} is required");
                     }
-                    baseUnitMatchQuery.Criteria.AddCondition(new ConditionExpression(Fields.uom_.name, ConditionOperator.Equal, baseUnitName));
-                    var unitGroupLink = baseUnitMatchQuery.AddLink(Entities.uomschedule, Fields.uom_.uomscheduleid, Fields.uomschedule_.uomscheduleid);
-                    unitGroupLink.LinkCriteria.AddCondition(new ConditionExpression(Fields.uomschedule_.name, ConditionOperator.Equal, unitGroupName));
+                    baseUnitMatchQuery.RootFilter.AddCondition(Fields.uom_.name, ConditionType.Equal, baseUnitName);
+                    var unitGroupLink = new Join(Fields.uom_.uomscheduleid, Entities.uomschedule, Fields.uomschedule_.uomscheduleid);
+                    baseUnitMatchQuery.Joins.Add(unitGroupLink);
+                    unitGroupLink.RootFilter.AddCondition(Fields.uomschedule_.name, ConditionType.Equal, unitGroupName);
                 }
-                var baseUnitMatches = xrmRecordService.XrmService.RetrieveAll(baseUnitMatchQuery);
+                var baseUnitMatches = xrmRecordService.RetreiveAll(baseUnitMatchQuery);
                 if (!baseUnitMatches.Any())
                 {
                     throw new Exception($"Could Not Identify The {xrmRecordService.GetFieldLabel(Fields.uom_.baseuom, Entities.uom)} {baseUnitName}. No Match Found For The {xrmRecordService.GetFieldLabel(Fields.uom_.uomscheduleid, Entities.uom)}");
@@ -1395,24 +1412,24 @@ namespace JosephM.Xrm.DataImportExport.Import
                 {
                     throw new Exception($"Could Not Identify The {xrmRecordService.GetFieldLabel(Fields.uom_.baseuom, Entities.uom)} {baseUnitName}. Multiple Matches Found For The {xrmRecordService.GetFieldLabel(Fields.uom_.uomscheduleid, Entities.uom)}");
                 }
-                thisEntity.SetLookupField(Fields.uom_.baseuom, baseUnitMatches.First());
-                thisEntity.SetField(Fields.uom_.uomscheduleid, baseUnitMatches.First().GetField(Fields.uom_.uomscheduleid));
+                thisEntity.SetLookup(Fields.uom_.baseuom, baseUnitMatches.First().Id, baseUnitMatches.First().Type);
+                thisEntity.SetField(Fields.uom_.uomscheduleid, baseUnitMatches.First().GetField(Fields.uom_.uomscheduleid), xrmRecordService);
                 fieldsToSet.Add(Fields.uom_.baseuom);
             }
-            if (thisEntity.LogicalName == Entities.product)
+            if (thisEntity.Type == Entities.product)
             {
-                var unitGroupId = thisEntity.GetLookupGuid(Fields.product_.defaultuomscheduleid);
-                if(unitGroupId.HasValue)
+                var unitGroupId = thisEntity.GetLookupId(Fields.product_.defaultuomscheduleid);
+                if(unitGroupId != null)
                     fieldsToSet.Add(Fields.product_.defaultuomscheduleid);
-                var unitId = thisEntity.GetLookupGuid(Fields.product_.defaultuomid);
-                if (unitId.HasValue)
+                var unitId = thisEntity.GetLookupId(Fields.product_.defaultuomid);
+                if (unitId != null)
                     fieldsToSet.Add(Fields.product_.defaultuomid);
             }
-            if (thisEntity.LogicalName == Entities.list)
+            if (thisEntity.Type == Entities.list)
             {
                 if(!fieldsToSet.Contains(Fields.list_.createdfromcode))
                 {
-                    if(!thisEntity.Contains(Fields.list_.createdfromcode))
+                    if(!thisEntity.ContainsField(Fields.list_.createdfromcode))
                     {
                         throw new NullReferenceException($"{xrmRecordService.GetFieldLabel(Fields.list_.createdfromcode, Entities.list)} is required");
                     }
@@ -1420,14 +1437,14 @@ namespace JosephM.Xrm.DataImportExport.Import
                 }
                 if (!fieldsToSet.Contains(Fields.list_.type))
                 {
-                    if (!thisEntity.Contains(Fields.list_.type))
+                    if (!thisEntity.ContainsField(Fields.list_.type))
                     {
                         throw new NullReferenceException($"{xrmRecordService.GetFieldLabel(Fields.list_.type, Entities.list)} is required");
                     }
                     fieldsToSet.Add(Fields.list_.type);
                 }
             }
-            if (thisEntity.LogicalName == Entities.activitymimeattachment)
+            if (thisEntity.Type == Entities.activitymimeattachment)
             {
                 if (fieldsToSet.Contains(Fields.activitymimeattachment_.activityid))
                 {
@@ -1443,26 +1460,22 @@ namespace JosephM.Xrm.DataImportExport.Import
             }
         }
 
-        private static void CheckThrowValidForCreate(Entity thisEntity, List<string> fieldsToSet, XrmRecordService xrmRecordService)
+        private static void CheckThrowValidForCreate(IRecord thisEntity, List<string> fieldsToSet, XrmRecordService xrmRecordService)
         {
             if (thisEntity != null)
             {
-                switch (thisEntity.LogicalName)
+                switch (thisEntity.Type)
                 {
                     case Entities.annotation:
                         {
                             if (!fieldsToSet.Contains(Fields.annotation_.objectid))
-                                throw new NullReferenceException(string.Format("Cannot create {0} {1} as its parent {2} does not exist"
-                                    , xrmRecordService.GetDisplayName(thisEntity.LogicalName), thisEntity.GetStringField(xrmRecordService.GetPrimaryField(thisEntity.LogicalName))
-                                    , thisEntity.GetStringField(Fields.annotation_.objecttypecode) != null ? xrmRecordService.GetDisplayName(thisEntity.GetStringField(Fields.annotation_.objecttypecode)) : "Unknown Type"));
+                                throw new NullReferenceException($"Cannot create {xrmRecordService.GetDisplayName(thisEntity.Type)} {thisEntity.GetStringField(xrmRecordService.GetPrimaryField(thisEntity.Type))} as its parent {(thisEntity.GetStringField(Fields.annotation_.objecttypecode) != null ? xrmRecordService.GetDisplayName(thisEntity.GetStringField(Fields.annotation_.objecttypecode)) : "Unknown Type")} does not exist");
                             break;
                         }
                     case Entities.productpricelevel:
                         {
                             if (!fieldsToSet.Contains(Fields.productpricelevel_.pricelevelid))
-                                throw new NullReferenceException(string.Format("Cannot create {0} {1} as its parent {2} is empty"
-                                    , xrmRecordService.GetDisplayName(thisEntity.LogicalName), thisEntity.GetStringField(xrmRecordService.GetPrimaryField(thisEntity.LogicalName))
-                                    , xrmRecordService.GetDisplayName(Entities.pricelevel)));
+                                throw new NullReferenceException($"Cannot create {xrmRecordService.GetDisplayName(thisEntity.Type)} {thisEntity.GetStringField(xrmRecordService.GetPrimaryField(thisEntity.Type))} as its parent {xrmRecordService.GetDisplayName(Entities.pricelevel)} is empty");
                             break;
                         }
                     case Entities.product:

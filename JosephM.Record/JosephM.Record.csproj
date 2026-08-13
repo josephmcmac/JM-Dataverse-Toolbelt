@@ -104,6 +104,8 @@
     <Compile Include="Attributes\LookupConnectionFor.cs" />
     <Compile Include="Extentions\RecordExtentions.cs" />
     <Compile Include="Extentions\TypeLoader.cs" />
+    <Compile Include="IService\CreateRecordResponse.cs" />
+    <Compile Include="IService\ExecuteQueryResponse.cs" />
     <Compile Include="IService\IFieldMetadata.cs" />
     <Compile Include="IService\IFormService.cs" />
     <Compile Include="IService\IRecordLocalisationService.cs" />

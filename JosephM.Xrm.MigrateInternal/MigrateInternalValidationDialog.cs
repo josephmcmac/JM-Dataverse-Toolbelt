@@ -27,14 +27,12 @@ namespace JosephM.Xrm.MigrateInternal
 
         protected override void LoadDialogExtention()
         {
-            //okay lets load the spreadsheet
-            //and if there are any error display them
-            //else continue
             var logController = new LogController(LoadingViewModel);
-            var dictionary = MigrateInternalService.LoadMappingDictionary(Request, logController);
-
+            var dictionary = MigrateInternalService.LoadMappingDictionaryWithSourceData(Request, logController);
             var importService = new MappedImportService(XrmRecordService);
-            var parseResponse = importService.ParseIntoEntities(dictionary, logController);
+            var parseResponse = importService.TransformMappingDictionaryDataForTarget(dictionary, logController);
+            Request.LoadMappingDictionary(dictionary);
+            Request.LoadValidationResponse(parseResponse);
             if (parseResponse.ResponseItems.Any())
             {
                 AddObjectToUi(parseResponse
@@ -47,6 +45,8 @@ namespace JosephM.Xrm.MigrateInternal
                     , nextActionLabel: "Import"
                     , backAction: () =>
                     {
+                        Request.UnloadMappingDictionary();
+                        Request.UnloadValidationResponse();
                         RemoveObjectFromUi(parseResponse);
                         MoveBackToPrevious();
                     });

@@ -26,15 +26,14 @@ namespace JosephM.Xrm.SqlImport
         public override void ExecuteExtention(SqlImportRequest request, SqlImportResponse response,
             ServiceRequestController controller)
         {
-            Exception tempEx = null; ;
+            Exception tempEx = null;
             try
             {
-                controller.Controller.UpdateProgress(0, 1, "Loading Records For Import");
-                var dictionary = LoadMappingDictionary(request);
+                var dictionary = request.UnloadMappingDictionary();
                 var importService = new MappedImportService(XrmRecordService);
-                var responseItems = importService.DoImport(dictionary, request.MaskEmails, request.MatchRecordsByName, request.UpdateOnly, controller, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit);
-                response.Connection = XrmRecordService.XrmRecordConfiguration;
+                var responseItems = importService.DoImport(dictionary, request.UnloadValidationResponse(), request.MaskEmails, request.MatchRecordsByName, request.UpdateOnly, controller, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit);
                 response.LoadSpreadsheetImport(responseItems);
+                response.Connection = XrmRecordService.XrmRecordConfiguration;
                 response.Message = "The Import Process Has Completed";
             }
             catch (Exception ex)
@@ -84,21 +83,18 @@ namespace JosephM.Xrm.SqlImport
             }
         }
 
-        public Dictionary<IMapSourceImport, IEnumerable<IRecord>> LoadMappingDictionary(SqlImportRequest request)
+        public Dictionary<IMapSourceImport, IEnumerable<IRecord>> LoadMappingDictionaryWithSourceData(SqlImportRequest request)
         {
-            var excelService = new SqlRecordService(new SqlConnectionString(request.ConnectionString));
-
+            var sqlService = new SqlRecordService(new SqlConnectionString(request.ConnectionString));
             var dictionary = new Dictionary<IMapSourceImport, IEnumerable<IRecord>>();
-
             foreach (var tabMapping in request.Mappings)
             {
                 if (tabMapping.TargetType != null)
                 {
-                    var queryRows = excelService.RetrieveAll(tabMapping.SourceTable.Key, null);
+                    var queryRows = sqlService.RetrieveAll(tabMapping.SourceTable.Key, null);
                     dictionary.Add(tabMapping, queryRows);
                 }
             }
-
             return dictionary;
         }
     }

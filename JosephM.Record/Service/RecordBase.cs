@@ -168,5 +168,10 @@ namespace JosephM.Record.Service
         {
             return (DateTime?)GetField(field);
         }
+
+        public virtual void RemoveFields(params string[] fieldNames)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
