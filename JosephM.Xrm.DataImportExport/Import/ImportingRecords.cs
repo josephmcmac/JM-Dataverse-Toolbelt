@@ -24,7 +24,7 @@ namespace JosephM.Xrm.DataImportExport.Import
 
         public bool HasBeenCreated(string id)
         {
-            return _createdEntities.ContainsKey(id);
+            return !string.IsNullOrWhiteSpace(id) && _createdEntities.ContainsKey(id);
         }
 
         public void AddedCreated(IRecord entity)
