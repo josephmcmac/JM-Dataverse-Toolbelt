@@ -25,7 +25,7 @@ namespace JosephM.Xrm.ExcelImport
         {
             var dictionary = request.UnloadMappingDictionary();
             var importService = new MappedImportService(XrmRecordService);
-            var responseItems = importService.DoImport(dictionary, request.UnloadValidationResponse(), request.MaskEmails, request.MatchRecordsByName, request.UpdateOnly, controller, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit, ignoreNullValues: request.IgnoreEmptyCells, onlyFieldMatchActive: request.OnlyFieldMatchActive, parallelImportProcessCount: request.ParallelImportProcessCount ?? 1, bypassWorkflowsAndPlugins: request.BypassFlowsPluginsAndWorkflows);
+            var responseItems = importService.DoImport(dictionary, request.UnloadValidationResponse(), request.MaskEmails, request.MatchRecordsByName, request.UpdateOnly, controller, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit, ignoreNullValues: request.IgnoreEmptyCells, onlyFieldMatchActive: request.OnlyFieldMatchActive, parallelImportProcessCount: request.ParallelImportProcessCount ?? 1, bypassWorkflowsAndPlugins: request.BypassFlowsPluginsAndWorkflows, trustSourceLookupGuids: true);
             response.LoadSpreadsheetImport(responseItems);
             response.Connection = XrmRecordService.XrmRecordConfiguration;
             response.Message = "The Import Process Has Completed";

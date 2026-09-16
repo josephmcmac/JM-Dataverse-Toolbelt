@@ -690,7 +690,8 @@ namespace JosephM.Xrm.DataImportExport.Import
                     }
 
 
-                    if (dataImportContainer.TrustSourceLookupGuids && string.IsNullOrWhiteSpace(altMatchField))
+                    if (dataImportContainer.TrustSourceLookupGuids &&
+                        (string.IsNullOrWhiteSpace(altMatchField) || altMatchField == xrmRecordService.GetPrimaryKey(altMatchType)))
                     {
                         foreach(var recordNotYetResolved in recordsNotYetResolved.ToArray())
                         {
