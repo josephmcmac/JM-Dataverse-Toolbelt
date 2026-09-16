@@ -1918,11 +1918,6 @@ namespace JosephM.Record.Xrm.XrmRecord
                 },
              new TypeConfigs.Config()
                 {
-                    Type = Entities.annotation,
-                    UniqueChildFields = new [] { Fields.annotation_.objectid, Fields.annotation_.subject, Fields.annotation_.filename }
-                },
-             new TypeConfigs.Config()
-                {
                     Type = Entities.knowledgearticle,
                     UniqueChildFields = new [] { Fields.knowledgearticle_.articlepublicnumber, Fields.knowledgearticle_.minorversionnumber, Fields.knowledgearticle_.majorversionnumber, Fields.knowledgearticle_.isrootarticle, Fields.knowledgearticle_.languagelocaleid }
                 },
