@@ -98,22 +98,22 @@ namespace JosephM.XrmModule.Crud
                         new CustomGridFunction("ADDROLESALL", "All Results", (g) =>
                             {
                                 TriggerAddRoles(false);
-                            }, (g) => g.RecordType == Entities.systemuser),
+                            }, (g) => g.RecordType == Entities.systemuser || g.RecordType == Entities.team),
                         new CustomGridFunction("ADDROLESSELECTED", "Selected Only", (g) =>
                             {
                                 TriggerAddRoles(true);
-                            }, (g) => g.RecordType == Entities.systemuser),
+                            }, (g) => g.RecordType == Entities.systemuser || g.RecordType == Entities.team),
                     }),
                     new CustomGridFunction("REMOVEROLES", "Remove Security Role", new[]
                     {
                         new CustomGridFunction("REMOVEROLESALL", "All Results", (g) =>
                             {
                                 TriggerRemoveRoles(false);
-                            }, (g) => g.RecordType == Entities.systemuser),
+                            }, (g) => g.RecordType == Entities.systemuser || g.RecordType == Entities.team),
                         new CustomGridFunction("REMOVEROLESSELECTED", "Selected Only", (g) =>
                             {
                                 TriggerRemoveRoles(true);
-                            }, (g) => g.RecordType == Entities.systemuser),
+                            }, (g) => g.RecordType == Entities.systemuser || g.RecordType == Entities.team),
                     }),
                     new CustomGridFunction("BULKWORKFLOW", "Run Workflow", new[]
                     {

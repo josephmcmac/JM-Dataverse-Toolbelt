@@ -8,30 +8,42 @@ using System.Linq;
 
 namespace JosephM.XrmModule.Crud.AddRoles
 {
-    [Group(Sections.UsersDetails, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10, displayLabel: false)]
+    [Group(Sections.PrincipalDetails, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10, displayLabel: false)]
     [Group(Sections.Role, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20, displayLabel: false)]
     public class AddRolesRequest : ServiceRequestBase
     {
-        public AddRolesRequest(IEnumerable<IRecord> usersToUpdate)
+        public AddRolesRequest(IEnumerable<IRecord> principalsToUpdate)
             : this()
         {
-            _usersToUpdate = usersToUpdate;
+            _principalsToUpdate = principalsToUpdate;
         }
 
         public AddRolesRequest()
         {
         }
 
-        private IEnumerable<IRecord> _usersToUpdate { get; set; }
+        private IEnumerable<IRecord> _principalsToUpdate { get; set; }
 
-        public IEnumerable<IRecord> GetUsersToUpdate()
+        public IEnumerable<IRecord> GetPrincipalsToUpdate()
         {
-            return _usersToUpdate;
+            return _principalsToUpdate;
         }
 
-        [Group(Sections.UsersDetails)]
+        [Group(Sections.PrincipalDetails)]
         [DisplayOrder(20)]
-        public int UserCount { get { return _usersToUpdate?.Count() ?? 0; } }
+        [PropertyInContextByPropertyValue(nameof(IsUsers), true)]
+        public int UserCount { get { return _principalsToUpdate?.Count(p => p.Type == Entities.systemuser) ?? 0; } }
+
+        [Group(Sections.PrincipalDetails)]
+        [DisplayOrder(20)]
+        [PropertyInContextByPropertyValue(nameof(IsTeams), true)]
+        public int TeamCount { get { return _principalsToUpdate?.Count(p => p.Type == Entities.team) ?? 0; } }
+
+        [Hidden]
+        public bool IsUsers { get { return _principalsToUpdate.All(p => p.Type == Entities.systemuser); } }
+
+        [Hidden]
+        public bool IsTeams { get { return _principalsToUpdate.All(p => p.Type == Entities.team); } }
 
         [Group(Sections.Role)]
         [DisplayOrder(24)]
@@ -42,7 +54,7 @@ namespace JosephM.XrmModule.Crud.AddRoles
 
         private static class Sections
         {
-            public const string UsersDetails = "Users Update";
+            public const string PrincipalDetails = "Security Role to Remove";
             public const string Role = "Security Role to Add";
         }
     }
