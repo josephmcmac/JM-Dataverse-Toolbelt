@@ -68,7 +68,7 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
                     }
                 }
             }
-            response.LoadDataImport(dataImportService.DoImport(mappingsWithTargetData.SelectMany(m => m.Value).ToArray(), controller, maskEmails, matchOption: matchByName ? MatchOption.PrimaryKeyThenName : MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems, altMatchKeyDictionary: matchKeyDictionary, altLookupMatchKeyDictionary: lookupKeyDictionary, updateOnly: updateOnly, includeOwner: true, includeOverrideCreatedOn: true, containsExportedConfigFields: false, executeMultipleSetSize: executeMultipleSetSize, targetCacheLimit: targetCacheLimit, onlyFieldMatchActive: onlyFieldMatchActive, forceSubmitAllFields: forceSubmitAllFields, displayTimeEstimations: true, parallelImportProcessCount: parallelImportProcessCount, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins, trustSourceLookupGuids: trustSourceLookupGuids));
+            response.LoadDataImport(dataImportService.DoImport(mappingsWithTargetData.SelectMany(m => m.Value).ToArray(), controller, maskEmails, matchOption: matchByName ? MatchOption.PrimaryKeyThenName : MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems, altMatchKeyDictionary: matchKeyDictionary, altLookupMatchKeyDictionary: lookupKeyDictionary, updateOnly: updateOnly, includeOwner: true, includeOverrideCreatedOn: true, containsExportedConfigFields: false, executeMultipleSetSize: executeMultipleSetSize, targetCacheLimit: targetCacheLimit, onlyFieldMatchActive: onlyFieldMatchActive, forceSubmitAllFields: forceSubmitAllFields, displayTimeEstimations: true, parallelImportProcessCount: parallelImportProcessCount, bypassWorkflowsAndPlugins: bypassWorkflowsAndPlugins, trustSourceLookupGuids: trustSourceLookupGuids, processAllSourceFields: true));
             return response;
         }
 
@@ -162,7 +162,7 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
                         AltMatchFieldType = fm.AltMatchFieldType,
                         IsLookup = fm.TargetField != null && XrmRecordService.IsLookup(fm.TargetField, targetType),
                         LookupTargetType = fm.TargetField == null ? null : (fm.UseAltMatchField ? fm.AltMatchFieldType : XrmRecordService.GetLookupTargetType(fm.TargetField, targetType)),
-                        ParseFunc = (Func<string, object>)(s => XrmRecordService.ParseField(fm.TargetField, targetType, s))
+                        ParseFunc = (Func<object, object>)(s => XrmRecordService.ParseField(fm.TargetField, targetType, s))
                     })
                     .ToArray();
 
@@ -231,7 +231,7 @@ namespace JosephM.Xrm.DataImportExport.MappedImport
                             {
                                 try
                                 {
-                                    fieldValues[targetField] = fm.ParseFunc(stringValue);
+                                    fieldValues[targetField] = fm.ParseFunc(objectValue);
                                 }
                                 catch (Exception ex)
                                 {

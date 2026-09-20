@@ -21,7 +21,7 @@ namespace JosephM.Xrm.DataImportExport.Import
 
         public XrmRecordService XrmRecordService { get; set; }
 
-        public DataImportResponse DoImport(IEnumerable<IRecord> records, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary = null, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary = null, bool updateOnly = false, bool includeOwner = false, bool includeOverrideCreatedOn = false, bool containsExportedConfigFields = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null, bool onlyFieldMatchActive = false, bool forceSubmitAllFields = false, bool displayTimeEstimations = false, int parallelImportProcessCount = 1, bool bypassWorkflowsAndPlugins = false, bool trustSourceLookupGuids = false) 
+        public DataImportResponse DoImport(IEnumerable<IRecord> records, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary = null, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary = null, bool updateOnly = false, bool includeOwner = false, bool includeOverrideCreatedOn = false, bool containsExportedConfigFields = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null, bool onlyFieldMatchActive = false, bool forceSubmitAllFields = false, bool displayTimeEstimations = false, int parallelImportProcessCount = 1, bool bypassWorkflowsAndPlugins = false, bool trustSourceLookupGuids = false, bool processAllSourceFields = false) 
         {
             var response = new DataImportResponse(records, loadExistingErrorsIntoSummary);
             controller.AddObjectToUi(response);
@@ -47,7 +47,8 @@ namespace JosephM.Xrm.DataImportExport.Import
                     displayTimeEstimations,
                     parallelImportProcessCount,
                     bypassWorkflowsAndPlugins,
-                    trustSourceLookupGuids);
+                    trustSourceLookupGuids,
+                    processAllSourceFields);
 
                 ImportEntities(dataImportContainer);
 

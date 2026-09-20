@@ -14,7 +14,7 @@ namespace JosephM.Xrm.DataImportExport.Import
     public class DataImportContainer
     {
         private readonly Dictionary<IRecord, List<string>> _fieldsToRetry = new Dictionary<IRecord, List<string>>();
-        public DataImportContainer(DataImportResponse response, XrmRecordService xrmRecordService, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary, IEnumerable<IRecord> entities, ServiceRequestController controller, bool includeOwner, bool includeOverrideCreatedOn,bool maskEmails, MatchOption matchOption, bool updateOnly, bool containsExportedConfigFields, int executeMultipleSetSize, int targetCacheLimit, bool onlyFieldMatchActive, bool forceSubmitAllFields, bool displayTimeEstimations, int parallelImportProcessCount, bool bypassWorkflowsAndPlugins = false, bool trustSourceLookupGuids = false)
+        public DataImportContainer(DataImportResponse response, XrmRecordService xrmRecordService, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary, IEnumerable<IRecord> entities, ServiceRequestController controller, bool includeOwner, bool includeOverrideCreatedOn,bool maskEmails, MatchOption matchOption, bool updateOnly, bool containsExportedConfigFields, int executeMultipleSetSize, int targetCacheLimit, bool onlyFieldMatchActive, bool forceSubmitAllFields, bool displayTimeEstimations, int parallelImportProcessCount, bool bypassWorkflowsAndPlugins = false, bool trustSourceLookupGuids = false, bool processAllSourceFields = false)
         {
             Response = response;
             XrmRecordService = xrmRecordService;
@@ -34,6 +34,7 @@ namespace JosephM.Xrm.DataImportExport.Import
             ParallelImportProcessCount = parallelImportProcessCount;
             BypassFlowsPluginsAndWorkflows = bypassWorkflowsAndPlugins;
             TrustSourceLookupGuids = trustSourceLookupGuids;
+            ProcessAllSourceFields = processAllSourceFields;
             _maxCacheCount = targetCacheLimit;
             EntitiesToImport = entities;
             var typesToImport = entities.Select(e => e.Type).Distinct();
@@ -68,7 +69,7 @@ namespace JosephM.Xrm.DataImportExport.Import
         public int ParallelImportProcessCount { get; private set; }
         public bool BypassFlowsPluginsAndWorkflows { get; private set; }
         public bool TrustSourceLookupGuids { get; private set; }
-
+        public bool ProcessAllSourceFields { get; private set; }
         public IDictionary<IRecord, List<string>> FieldsToRetry {  get { return _fieldsToRetry; } }
         public IEnumerable<string> AssociationTypesToImport { get; }
 
@@ -118,7 +119,7 @@ namespace JosephM.Xrm.DataImportExport.Import
         public IEnumerable<string> GetFieldsToImport(IEnumerable<IRecord> thisTypeEntities, string type)
         {
             var fields = GetFieldsInEntities(thisTypeEntities)
-                .Where(f => ForceSubmitAllFields || IsIncludeField(f, type, XrmRecordService, IncludeOwner, IncludeOverrideCreatedOn))
+                .Where(f => ForceSubmitAllFields || ProcessAllSourceFields || IsIncludeField(f, type, XrmRecordService, IncludeOwner, IncludeOverrideCreatedOn))
                 .Distinct()
                 .ToList();
             return fields;
