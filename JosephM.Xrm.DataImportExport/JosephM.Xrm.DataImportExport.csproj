@@ -60,6 +60,7 @@
     <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Import\ImportingRecords.cs" />
     <Compile Include="Modules\ExportDataTypeUsabilitiesModule.cs" />
     <Compile Include="Import\ExplicitFieldValues.cs" />
     <Compile Include="XmlExport\ExportRecordType.cs" />
@@ -75,7 +76,6 @@
     <Compile Include="Import\DataImportResponseItem.cs" />
     <Compile Include="Import\DataImportService.cs" />
     <Compile Include="Import\ImportedRecords.cs" />
-    <Compile Include="Import\ImportingRecords.cs" />
     <Compile Include="Import\MatchOption.cs" />
     <Compile Include="MappedImport\Extensions.cs" />
     <Compile Include="MappedImport\IMapSourceField.cs" />

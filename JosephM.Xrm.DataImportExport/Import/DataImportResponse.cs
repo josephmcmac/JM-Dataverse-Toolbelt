@@ -44,10 +44,13 @@ namespace JosephM.Xrm.DataImportExport.Import
             }
         }
 
-        public void AddCreated(IRecord thisEntity)
+        public void AddCreated(IEnumerable<IRecord> recordsCreated)
         {
-            var importObject = GetImportForType(thisEntity.Type);
-            importObject.AddedCreated(thisEntity);
+            if (recordsCreated.Any())
+            {
+                var importObject = GetImportForType(recordsCreated.First().Type);
+                importObject.AddedCreated(recordsCreated);
+            }
         }
 
         public ImportingRecords GetImportForType(string logicalName)
@@ -57,10 +60,13 @@ namespace JosephM.Xrm.DataImportExport.Import
             return _importedRecords.First(ir => ir.Type == logicalName);
         }
 
-        public void AddUpdated(IRecord thisEntity)
+        public void AddUpdated(IEnumerable<IRecord> recordsUpdated)
         {
-            var importObject = GetImportForType(thisEntity.Type);
-            importObject.AddedUpdated(thisEntity);
+            if (recordsUpdated.Any())
+            {
+                var importObject = GetImportForType(recordsUpdated.First().Type);
+                importObject.AddedUpdated(recordsUpdated);
+            }
         }
 
         public IEnumerable<ImportedRecords> GetImportSummary()
@@ -104,10 +110,13 @@ namespace JosephM.Xrm.DataImportExport.Import
             importObject.AddFieldForRetry(thisEntity, field);
         }
 
-        internal void AddSkippedNoChange(IRecord thisEntity)
+        internal void AddSkippedNoChange(IEnumerable<IRecord> recordsSkipped)
         {
-            var importObject = GetImportForType(thisEntity.Type);
-            importObject.AddSkippedNoChange(thisEntity);
+            if (recordsSkipped.Any())
+            {
+                var importObject = GetImportForType(recordsSkipped.First().Type);
+                importObject.AddSkippedNoChange(recordsSkipped);
+            }
         }
 
         internal void RemoveFieldForRetry(IRecord thisEntity, string field)

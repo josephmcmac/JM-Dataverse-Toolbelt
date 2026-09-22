@@ -161,6 +161,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                     var executeQueryResponses = XrmRecordService.ExecuteMultipleQueries(existingAssociationsQueries);
 
                     var notYetAssociated = new List<IRecord>();
+                    var skippedNoChange = new List<IRecord>();
                     var i = 0;
                     foreach (var queryResponse in executeQueryResponses)
                     {
@@ -176,14 +177,16 @@ namespace JosephM.Xrm.DataImportExport.Import
                         else
                         {
                             associationEntity.Id = Guid.NewGuid().ToString();
-                            dataImportContainer.Response.AddSkippedNoChange(associationEntity);
+                            skippedNoChange.Add(associationEntity);
                         }
                         i++;
                     }
+                    dataImportContainer.Response.AddSkippedNoChange(skippedNoChange);
 
                     var is1Referencing = relationship.Entity1IntersectAttribute == field1;
                     var associateMultipleResponses = XrmRecordService.AssociateMultiple(relationship.IntersectEntityName, type1, notYetAssociated.Select(a => a.GetIdField(field1)), type2, notYetAssociated.Select(a => a.GetIdField(field2)), is1Referencing);
 
+                    var created = new List<IRecord>();
                     for (var j = 0; j < notYetAssociated.Count(); j++)
                     {
                         var associationEntity = notYetAssociated[j];
@@ -194,10 +197,11 @@ namespace JosephM.Xrm.DataImportExport.Import
                         else
                         {
                             associationEntity.Id = Guid.NewGuid().ToString();
-                            dataImportContainer.Response.AddCreated(associationEntity);
+                            created.Add(associationEntity);
                         }
                         i++;
                     }
+                    dataImportContainer.Response.AddCreated(created);
                 }
             }
         }
@@ -247,6 +251,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                     {
                         var updateEntities = itemsForUpdate.Select(kv => kv.Value).ToArray();
                         var responses = XrmRecordService.UpdateMultiple(updateEntities, null, bypassWorkflowsAndPlugins: dataImportContainer.BypassFlowsPluginsAndWorkflows);
+                        var updated = new List<IRecord>();
                         for (var i = 0; i < updateEntities.Count(); i++)
                         {
                             var updateEntity = updateEntities[i];
@@ -261,10 +266,11 @@ namespace JosephM.Xrm.DataImportExport.Import
                             }
                             else
                             {
-                                dataImportContainer.Response.AddUpdated(originalEntity);
+                                updated.Add(originalEntity);
                             }
                             i++;
                         }
+                        dataImportContainer.Response.AddUpdated(updated);
                     }
                     countImported += countThisSet;
                     dataImportContainer.Controller.UpdateProgress(countImported, countToImport, estimator.GetProgressString(countImported, taskName: $"Retrying Unresolved Fields"));
@@ -467,6 +473,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                                         return !xrmRecordService.FieldsEqual(newValue, oldValue);
                                     }
                                 }).ToArray();
+                            var skippedNoChange = new List<IRecord>();
                             if (fieldsToSubmit.Any())
                             {
                                 var copyEntity = xrmRecordService.NewRecord(entity.Type);
@@ -484,13 +491,14 @@ namespace JosephM.Xrm.DataImportExport.Import
                             {
                                 if (ImportFileFields(entity, recordTypeFileFields, dataImportContainer, xrmRecordService))
                                 {
-                                    dataImportContainer.Response.AddUpdated(entity);
+                                    dataImportContainer.Response.AddUpdated(new[] { entity });
                                 }
                                 else
                                 {
-                                    dataImportContainer.Response.AddSkippedNoChange(entity);
+                                    skippedNoChange.Add(entity);
                                 }
                             }
+                            dataImportContainer.Response.AddSkippedNoChange(skippedNoChange);
                         }
                     }
 
@@ -517,6 +525,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                             responses = forUpdateEntitiesCopy.Select(e => new CreateRecordResponse() { Exception = ex });
                         }
                         var i = 0;
+                        var created = new List<IRecord>();
                         foreach (var createResponse in responses)
                         {
                             var originalEntity = forCreateEntitiesCopy.ElementAt(i).Value;
@@ -527,12 +536,13 @@ namespace JosephM.Xrm.DataImportExport.Import
                             else
                             {
                                 originalEntity.Id = createResponse.Id;
-                                dataImportContainer.AddCreated(originalEntity);
+                                created.Add(originalEntity);
 
                                 ImportFileFields(originalEntity, recordTypeFileFields, dataImportContainer, xrmRecordService);
                             }
                             i++;
                         }
+                        dataImportContainer.AddCreated(created);
                     }
                     if (forUpdateEntitiesCopy.Any())
                     {
@@ -558,6 +568,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                             }
                         }
                         var i = 0;
+                        var updated = new List<IRecord>();
                         foreach (var forUpdateEntity in forUpdateEntitiesCopy)
                         {
                             var originalEntity = forUpdateEntitiesCopy.ElementAt(i).Value;
@@ -567,11 +578,12 @@ namespace JosephM.Xrm.DataImportExport.Import
                             }
                             else
                             {
-                                dataImportContainer.Response.AddUpdated(originalEntity);
+                                updated.Add(originalEntity);
                                 ImportFileFields(originalEntity, recordTypeFileFields, dataImportContainer, xrmRecordService);
                             }
                             i++;
                         }
+                        dataImportContainer.Response.AddUpdated(updated);
                     }
 
                     var updateStateForEntities = new List<IRecord>();
@@ -605,6 +617,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                     if (updateStateForEntities.Any())
                     {
                         var responses = xrmRecordService.UpdateMultipleRecordStatus(updateStateForEntities, fieldsToUpdate: new[] { "statecode", "statuscode"}, bypassWorkflowsAndPlugins: dataImportContainer.BypassFlowsPluginsAndWorkflows);
+                        var updated = new List<IRecord>();
                         for(var i = 0; i < updateStateForEntities.Count; i++)
                         {
                             var originalEntity = updateStateForEntities.ElementAt(i);
@@ -614,9 +627,10 @@ namespace JosephM.Xrm.DataImportExport.Import
                             }
                             else
                             {
-                                dataImportContainer.Response.AddUpdated(originalEntity);
+                                updated.Add(originalEntity);
                             }
                         }
+                        dataImportContainer.Response.AddUpdated(updated);
                     }
                 }
                 catch (Exception ex)

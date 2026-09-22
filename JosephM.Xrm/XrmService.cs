@@ -316,7 +316,7 @@ namespace JosephM.Xrm
             return Execute(request, true);
         }
 
-        public virtual OrganizationResponse Execute(OrganizationRequest request, bool retry)
+        public virtual OrganizationResponse Execute(OrganizationRequest request, bool allowRetry)
         {
             OrganizationResponse result;
             try
@@ -325,7 +325,7 @@ namespace JosephM.Xrm
             }
             catch (FaultException<OrganizationServiceFault>)
             {
-                if (!retry)
+                if (!allowRetry)
                     throw;
                 if (request is ImportSolutionRequest)
                     throw;
@@ -338,7 +338,7 @@ namespace JosephM.Xrm
             }
             catch (CommunicationException)
             {
-                if (!retry)
+                if (!allowRetry)
                     throw;
                 lock (_lockObject)
                 {
@@ -3433,12 +3433,12 @@ string recordType)
                     for (var i = 0; i < requestsArrayCount; i++)
                     {
                         var organizationRequest = requestsArray.ElementAt(i);
-
                         request.Requests.Add(organizationRequest);
                         currentSetSize++;
                         if (currentSetSize == 1000 || i == requestsArrayCount - 1)
                         {
-                            var response = (ExecuteMultipleResponse)Execute(request);
+                            var hasCreateRequest = request.Requests.Any(r => r is CreateRequest);
+                            var response = (ExecuteMultipleResponse)Execute(request, allowRetry: !hasCreateRequest);
                             foreach (var r in response.Responses)
                                 r.RequestIndex = i - currentSetSize + r.RequestIndex + 1;
                             responses.AddRange(response.Responses);

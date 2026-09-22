@@ -621,21 +621,27 @@ namespace JosephM.Xrm.DataImportExport.Import
             }
         }
 
-        public void AddCreated(IRecord originalEntity)
+        public void AddCreated(IEnumerable<IRecord> created)
         {
-            Response.AddCreated(originalEntity);
-            var thisRecordType = originalEntity.Type;
-            if (_cachedRecords.ContainsKey(thisRecordType))
+            if (created.Any())
             {
-                foreach(var fieldDictionary in _cachedRecords[thisRecordType])
+                Response.AddCreated(created);
+                var thisRecordType = created.First().Type;
+                if (_cachedRecords.ContainsKey(thisRecordType))
                 {
-                    var indexedField = fieldDictionary.Key;
-                    var matchString = XrmRecordService.GetFieldAsMatchString(thisRecordType, indexedField, originalEntity.GetField(indexedField));
-                    if (!_cachedRecords[thisRecordType][indexedField].ContainsKey(matchString))
+                    foreach (var fieldDictionary in _cachedRecords[thisRecordType])
                     {
-                        _cachedRecords[thisRecordType][indexedField].Add(matchString, new List<IRecord>());
+                        var indexedField = fieldDictionary.Key;
+                        foreach (var create in created)
+                        {
+                            var matchString = XrmRecordService.GetFieldAsMatchString(thisRecordType, indexedField, create.GetField(indexedField));
+                            if (!_cachedRecords[thisRecordType][indexedField].ContainsKey(matchString))
+                            {
+                                _cachedRecords[thisRecordType][indexedField].Add(matchString, new List<IRecord>());
+                            }
+                            _cachedRecords[thisRecordType][indexedField][matchString].Add(create);
+                        }
                     }
-                    _cachedRecords[thisRecordType][indexedField][matchString].Add(originalEntity);
                 }
             }
         }
