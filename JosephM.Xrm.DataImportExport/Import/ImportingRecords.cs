@@ -23,6 +23,8 @@ namespace JosephM.Xrm.DataImportExport.Import
         private readonly HashSet<string> _updatedIds = new HashSet<string>();
         private readonly HashSet<string> _skippedNoChangeIds = new HashSet<string>();
         private readonly Dictionary<string, List<string>> _fieldsForRetryById = new Dictionary<string, List<string>>();
+        // small lock to protect synchronous reads/writes when needed
+        private readonly object _stateLock = new object();
 
         // simple counters exposed to UI (atomic reads/writes)
         private int _createdCount;
@@ -55,8 +57,12 @@ namespace JosephM.Xrm.DataImportExport.Import
         // Public API - these return quickly and enqueue mutations
         public bool HasBeenCreated(string id)
         {
-            // best-effort: check counter-based existence via created ids may be slightly stale
-            return !string.IsNullOrWhiteSpace(id) && VolatileReadHashContains(_createdIds, id);
+            if (string.IsNullOrWhiteSpace(id))
+                return false;
+            lock (_stateLock)
+            {
+                return _createdIds.Contains(id);
+            }
         }
 
         public void AddedCreated(IEnumerable<IRecord> recordsCreated)
@@ -64,9 +70,10 @@ namespace JosephM.Xrm.DataImportExport.Import
             if (recordsCreated == null) return;
             var ids = recordsCreated.Where(r => r != null && !string.IsNullOrWhiteSpace(r.Id)).Select(r => r.Id).ToArray();
             if (!ids.Any()) return;
-            Enqueue(() =>
+            // update created ids synchronously so HasBeenCreated sees them immediately
+            var added = 0;
+            lock (_stateLock)
             {
-                var added = 0;
                 foreach (var id in ids)
                 {
                     if (_createdIds.Add(id))
@@ -77,7 +84,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                     _createdCount = _createdIds.Count;
                     PostNotify(nameof(Created));
                 }
-            });
+            }
         }
 
         public void AddedUpdated(IEnumerable<IRecord> recordsUpdated)
@@ -87,24 +94,27 @@ namespace JosephM.Xrm.DataImportExport.Import
             if (!ids.Any()) return;
             Enqueue(() =>
             {
-                var addedUpdated = 0;
-                var removedFromSkipped = 0;
-                foreach (var id in ids)
+                lock (_stateLock)
                 {
-                    if (!_createdIds.Contains(id) && _updatedIds.Add(id))
-                        addedUpdated++;
-                    if (_skippedNoChangeIds.Remove(id))
-                        removedFromSkipped--;
-                }
-                if (addedUpdated > 0)
-                {
-                    _updatedCount = _updatedIds.Count;
-                    PostNotify(nameof(Updated));
-                }
-                if (removedFromSkipped > 0)
-                {
-                    _noChangeCount = _skippedNoChangeIds.Count;
-                    PostNotify(nameof(NoChange));
+                    var addedUpdated = 0;
+                    var removedFromSkipped = 0;
+                    foreach (var id in ids)
+                    {
+                        if (_createdIds.Contains(id) && _updatedIds.Add(id))
+                            addedUpdated++;
+                        if (_skippedNoChangeIds.Remove(id))
+                            removedFromSkipped++;
+                    }
+                    if (addedUpdated > 0)
+                    {
+                        _updatedCount = _updatedIds.Count;
+                        PostNotify(nameof(Updated));
+                    }
+                    if (removedFromSkipped > 0)
+                    {
+                        _noChangeCount = _skippedNoChangeIds.Count;
+                        PostNotify(nameof(NoChange));
+                    }
                 }
             });
         }
@@ -116,16 +126,19 @@ namespace JosephM.Xrm.DataImportExport.Import
             if (!ids.Any()) return;
             Enqueue(() =>
             {
-                var added = 0;
-                foreach (var id in ids)
+                lock (_stateLock)
                 {
-                    if (_skippedNoChangeIds.Add(id))
-                        added++;
-                }
-                if (added > 0)
-                {
-                    _noChangeCount = _skippedNoChangeIds.Count;
-                    PostNotify(nameof(NoChange));
+                    var added = 0;
+                    foreach (var id in ids)
+                    {
+                        if (_skippedNoChangeIds.Add(id))
+                            added++;
+                    }
+                    if (added > 0)
+                    {
+                        _noChangeCount = _skippedNoChangeIds.Count;
+                        PostNotify(nameof(NoChange));
+                    }
                 }
             });
         }
@@ -136,14 +149,17 @@ namespace JosephM.Xrm.DataImportExport.Import
             var id = entity.Id;
             Enqueue(() =>
             {
-                if (!_fieldsForRetryById.TryGetValue(id, out var list))
+                lock (_stateLock)
                 {
-                    list = new List<string>();
-                    _fieldsForRetryById[id] = list;
+                    if (!_fieldsForRetryById.TryGetValue(id, out var list))
+                    {
+                        list = new List<string>();
+                        _fieldsForRetryById[id] = list;
+                    }
+                    list.Add(field);
+                    _fieldsForRetryCount = _fieldsForRetryById.Sum(kv => kv.Value.Count);
+                    PostNotify(nameof(FieldsToRetry));
                 }
-                list.Add(field);
-                _fieldsForRetryCount = _fieldsForRetryById.Sum(kv => kv.Value.Count);
-                PostNotify(nameof(FieldsToRetry));
             });
         }
 
@@ -153,12 +169,15 @@ namespace JosephM.Xrm.DataImportExport.Import
             var id = entity.Id;
             Enqueue(() =>
             {
-                if (!_fieldsForRetryById.TryGetValue(id, out var list)) return;
-                if (list.Remove(field))
+                lock (_stateLock)
                 {
-                    if (list.Count == 0) _fieldsForRetryById.Remove(id);
-                    _fieldsForRetryCount = _fieldsForRetryById.Sum(kv => kv.Value.Count);
-                    PostNotify(nameof(FieldsToRetry));
+                    if (!_fieldsForRetryById.TryGetValue(id, out var list)) return;
+                    if (list.Remove(field))
+                    {
+                        if (list.Count == 0) _fieldsForRetryById.Remove(id);
+                        _fieldsForRetryCount = _fieldsForRetryById.Sum(kv => kv.Value.Count);
+                        PostNotify(nameof(FieldsToRetry));
+                    }
                 }
             });
         }
@@ -169,11 +188,14 @@ namespace JosephM.Xrm.DataImportExport.Import
             var id = entity.Id;
             Enqueue(() =>
             {
-                if (_fieldsForRetryById.TryGetValue(id, out var list))
+                lock (_stateLock)
                 {
-                    _fieldsForRetryById.Remove(id);
-                    _fieldsForRetryCount = _fieldsForRetryById.Sum(kv => kv.Value.Count);
-                    PostNotify(nameof(FieldsToRetry));
+                    if (_fieldsForRetryById.TryGetValue(id, out var list))
+                    {
+                        _fieldsForRetryById.Remove(id);
+                        _fieldsForRetryCount = _fieldsForRetryById.Sum(kv => kv.Value.Count);
+                        PostNotify(nameof(FieldsToRetry));
+                    }
                 }
             });
         }
@@ -220,11 +242,8 @@ namespace JosephM.Xrm.DataImportExport.Import
         // Add an error count (quick, non-blocking)
         public void AddError()
         {
-            Enqueue(() =>
-            {
-                _errors++;
-                PostNotify(nameof(Errors));
-            });
+            Interlocked.Increment(ref _errors);
+            PostNotify(nameof(Errors));
         }
 
         // Best-effort check on worker-mutated hash sets

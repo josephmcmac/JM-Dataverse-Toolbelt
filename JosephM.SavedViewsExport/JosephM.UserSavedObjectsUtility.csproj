@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CF4985B6-8479-4679-95B9-4F7A9542290A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JosephM.UserSavedObjectsUtility</RootNamespace>
+    <AssemblyName>JosephM.UserSavedObjectsUtility</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>JosephM.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.50\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.50\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Text.Encodings.Web, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.6.0.0\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=6.0.0.7, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.6.0.7\lib\net461\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SolutionItems\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Charts\Clone\CloneSavedChartsDialog.cs" />
+    <Compile Include="Charts\Clone\CloneSavedChartsRequest.cs" />
+    <Compile Include="Charts\Clone\CloneSavedChartsResponse.cs" />
+    <Compile Include="Charts\Clone\CloneSavedChartsResponseItem.cs" />
+    <Compile Include="Charts\Clone\CloneSavedChartsService.cs" />
+    <Compile Include="Charts\SavedChart.cs" />
+    <Compile Include="Charts\Share\ShareSavedChartsDialog.cs" />
+    <Compile Include="Charts\Share\ShareSavedChartsRequest.cs" />
+    <Compile Include="Charts\Share\ShareSavedChartsResponse.cs" />
+    <Compile Include="Charts\Share\ShareSavedChartsResponseItem.cs" />
+    <Compile Include="Charts\Share\ShareSavedChartsService.cs" />
+    <Compile Include="Charts\UserSavedChartsUtilityDialog.cs" />
+    <Compile Include="Charts\UserSavedChartsUtilityModule.cs" />
+    <Compile Include="Charts\UserSavedChartsUtilityRequest.cs" />
+    <Compile Include="Charts\UserSavedChartsUtilityResponse.cs" />
+    <Compile Include="Charts\UserSavedChartsUtilityResponseItem.cs" />
+    <Compile Include="Charts\UserSavedChartsUtilityService.cs" />
+    <Compile Include="Dashboards\Clone\CloneSavedDashboardsDialog.cs" />
+    <Compile Include="Dashboards\Clone\CloneSavedDashboardsRequest.cs" />
+    <Compile Include="Dashboards\Clone\CloneSavedDashboardsResponse.cs" />
+    <Compile Include="Dashboards\Clone\CloneSavedDashboardsResponseItem.cs" />
+    <Compile Include="Dashboards\Clone\CloneSavedDashboardsService.cs" />
+    <Compile Include="Dashboards\SavedDashboard.cs" />
+    <Compile Include="Dashboards\Share\ShareSavedDashboardsDialog.cs" />
+    <Compile Include="Dashboards\Share\ShareSavedDashboardsRequest.cs" />
+    <Compile Include="Dashboards\Share\ShareSavedDashboardsResponse.cs" />
+    <Compile Include="Dashboards\Share\ShareSavedDashboardsResponseItem.cs" />
+    <Compile Include="Dashboards\Share\ShareSavedDashboardsService.cs" />
+    <Compile Include="Dashboards\UserSavedDashboardsUtilityDialog.cs" />
+    <Compile Include="Dashboards\UserSavedDashboardsUtilityModule.cs" />
+    <Compile Include="Dashboards\UserSavedDashboardsUtilityRequest.cs" />
+    <Compile Include="Dashboards\UserSavedDashboardsUtilityResponse.cs" />
+    <Compile Include="Dashboards\UserSavedDashboardsUtilityResponseItem.cs" />
+    <Compile Include="Dashboards\UserSavedDashboardsUtilityService.cs" />
+    <Compile Include="UserSavedObjectsUtilityModule.cs" />
+    <Compile Include="Views\Share\ShareSavedViewsDialog.cs" />
+    <Compile Include="Views\Share\ShareSavedViewsRequest.cs" />
+    <Compile Include="Views\Share\ShareSavedViewsResponse.cs" />
+    <Compile Include="Views\Share\ShareSavedViewsResponseItem.cs" />
+    <Compile Include="Views\Share\ShareSavedViewsService.cs" />
+    <Compile Include="Views\Clone\CloneSavedViewsDialog.cs" />
+    <Compile Include="Views\Clone\CloneSavedViewsRequest.cs" />
+    <Compile Include="Views\Clone\CloneSavedViewsResponse.cs" />
+    <Compile Include="Views\Clone\CloneSavedViewsResponseItem.cs" />
+    <Compile Include="Views\Clone\CloneSavedViewsService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\SavedView.cs" />
+    <Compile Include="Views\UserSavedViewsUtilityDialog.cs" />
+    <Compile Include="Views\UserSavedViewsUtilityModule.cs" />
+    <Compile Include="Views\UserSavedViewsUtilityRequest.cs" />
+    <Compile Include="Views\UserSavedViewsUtilityResponse.cs" />
+    <Compile Include="Views\UserSavedViewsUtilityResponseItem.cs" />
+    <Compile Include="Views\UserSavedViewsUtilityService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JosephM.Application.Desktop\JosephM.Application.Desktop.csproj">
+      <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
+      <Name>JosephM.Application.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Application.ViewModel\JosephM.Application.ViewModel.csproj">
+      <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>
+      <Name>JosephM.Application.ViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
+      <Project>{7bf3e622-67ca-4e67-a9ca-f3b334c954fd}</Project>
+      <Name>JosephM.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
+      <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
+      <Name>JosephM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Xrm\JosephM.Record.Xrm.csproj">
+      <Project>{850bb50c-d03d-4c6b-8fbb-6055936148c8}</Project>
+      <Name>JosephM.Record.Xrm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
+      <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
+      <Name>JosephM.Record</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
+      <Project>{7f69213d-3efb-4736-9962-0151f92fa7d4}</Project>
+      <Name>JosephM.Xrm</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="JosephM.snk" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

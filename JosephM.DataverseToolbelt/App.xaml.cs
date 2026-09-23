@@ -11,9 +11,9 @@ using JosephM.CustomisationImporter;
 using JosephM.Deployment;
 using JosephM.InstanceComparer;
 using JosephM.RecordCounts;
-using JosephM.SavedViewsExport;
 using JosephM.SolutionComponentExporter;
 using JosephM.ToolbeltTheme;
+using JosephM.UserSavedObjectsUtility;
 using JosephM.Xrm.DataImportExport.Modules;
 using JosephM.Xrm.DataImportExport.XmlExport;
 using JosephM.Xrm.DataImportExport.XmlImport;
@@ -63,7 +63,7 @@ namespace JosephM.XrmDeveloperTool
             app.AddModule<ColourThemeModule>();
             app.AddModule<DevAppApplicationInsightsModule>();
             app.AddModule<DonateModule>();
-            app.AddModule<SavedViewsExportModule>();
+            app.AddModule<UserSavedObjectsUtilityModule>();
             app.Run();
         }
 
