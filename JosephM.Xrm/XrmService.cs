@@ -84,6 +84,18 @@ namespace JosephM.Xrm
             }
         }
 
+        public XrmService Clone()
+        {
+            var xrmService = new XrmService(XrmConfiguration, ServiceFactory);
+            if (Service is CrmServiceClient crmServiceClient)
+            {
+                xrmService._service = crmServiceClient.Clone();
+                xrmService._organisation = _organisation;
+                SetImpersonatingUser(_impersonatingUserId);
+            }
+            return xrmService;
+        }
+
         private void SetImpersonatingUser(Guid? impersonatingUserId)
         {
             if (_service is OrganizationServiceProxy proxy)
@@ -329,31 +341,14 @@ namespace JosephM.Xrm
                     throw;
                 if (request is ImportSolutionRequest)
                     throw;
-                lock (_lockObject)
-                {
-                    //I have seen this error thrown when the sand box server is busy, and subsequent calls are successful. Going to add a retry
-                    Thread.Sleep(50);
-                    result = Service.Execute(request);
-                }
+                Thread.Sleep(50);
+                result = Service.Execute(request);
             }
             catch (CommunicationException)
             {
                 if (!allowRetry)
                     throw;
-                lock (_lockObject)
-                {
-                    //Error was being thrown after service running overnight with no activity
-                    //adding logic to reconnect when this error thrown
-                    if (XrmConfiguration != null)
-                    {
-                        _service = null;
-                        result = Service.Execute(request);
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                result = Service.Execute(request);
             }
             catch (NullReferenceException ex)
             {

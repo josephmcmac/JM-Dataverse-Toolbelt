@@ -77,7 +77,11 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IRecordService CloneForParellelProcessing()
         {
-            return new XrmRecordService(XrmRecordConfiguration, Controller, ServiceFactory.Clone(), formService: _formService);
+            var service = new XrmRecordService(XrmRecordConfiguration, Controller, ServiceFactory.Clone(), formService: _formService)
+            {
+                _xrmService = _xrmService.Clone()
+            };
+            return service;
         }
 
         public void LoadFieldsForAllEntities(LogController logController)
@@ -2041,7 +2045,8 @@ namespace JosephM.Record.Xrm.XrmRecord
             {
                 if (item.Fault != null)
                 {
-                    response.Add(new ExecuteQueryResponse { Exception = new FaultException<OrganizationServiceFault>(item.Fault) });
+                    response.Add(new ExecuteQueryResponse { Exception = new FaultException<OrganizationServiceFault>(item.Fault, item.Fault.Message
+                        ) });
                 }
                 else
                 {
@@ -2081,7 +2086,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             {
                 if (response.Fault != null)
                 {
-                    results.Add(new CreateRecordResponse { Exception = new FaultException<OrganizationServiceFault>(response.Fault) });
+                    results.Add(new CreateRecordResponse { Exception = new FaultException<OrganizationServiceFault>(response.Fault, response.Fault.Message) });
                 }
                 else
                 {

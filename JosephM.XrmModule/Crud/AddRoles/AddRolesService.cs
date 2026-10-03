@@ -51,7 +51,7 @@ namespace JosephM.XrmModule.Crud.AddRoles
             var principalsWithoutSecurityRole = allPrincipals
                 .Where(p => !existingSecurityRoleAssociationPrincipalIds.Contains(p.Id))
                 .ToArray();
-            response.CountRoleAlreadyPresent = principalsWithoutSecurityRole.Count();
+            response.CountRoleAlreadyPresent = allPrincipals.Count() - principalsWithoutSecurityRole.Count();
 
             var countUpdated = 0;
             var countToAdd = principalsWithoutSecurityRole.Count();
