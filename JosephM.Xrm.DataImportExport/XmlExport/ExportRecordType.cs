@@ -53,7 +53,7 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
         [RequiredProperty]
         public IEnumerable<FieldSetting> IncludeOnlyTheseFields { get; set; }
 
-        [MyDescription("This Allows Setting A Specific Value For A Field In All Records Exported")]
+        [MyDescription("This allows setting a specific value for a field in all records imported")]
         [GridWidth(300)]
         [DisplayOrder(45)]
         [FormEntry]
@@ -61,7 +61,7 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
         public IEnumerable<ExplicitFieldValues> ExplicitValuesToSet { get; set; }
 
-        [MyDescription("If Type = Specific Records This Defines The Records To Export")]
+        [MyDescription("If type = specific records this defines the records to export")]
         [GridWidth(300)]
         [DisplayOrder(50)]
         [RequiredProperty]
@@ -69,7 +69,7 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
         public IEnumerable<LookupSetting> SpecificRecordsToExport { get; set; }
 
-        [MyDescription("If Type = FetchXml This Defines The Fetch Xml Query To Use")]
+        [MyDescription("If type = FetchXml this defines the Fetch Xml query to use")]
         [DisplayOrder(100)]
         [Group(Sections.Fetch)]
         [DisplayName("Fetch XML")]

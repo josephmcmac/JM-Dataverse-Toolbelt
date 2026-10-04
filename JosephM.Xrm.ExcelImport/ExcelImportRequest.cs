@@ -156,10 +156,12 @@ namespace JosephM.Xrm.ExcelImport
             [IncludeManyToManyIntersects]
             [RecordTypeFor(nameof(Mappings) + "." + nameof(ExcelImportFieldMapping.TargetField))]
             [RecordTypeFor(nameof(AltMatchKeys) + "." + nameof(ExcelImportMatchKey.TargetField))]
+            [RecordTypeFor(nameof(ExplicitValuesToSet) + "." + nameof(ExplicitFieldValues.FieldToSet))]
             public RecordType TargetType { get; set; }
 
             [AllowNestedGridEdit]
             [PropertyInContextByPropertyNotNull(nameof(TargetType))]
+            [DisplayOrder(30)]
             public IEnumerable<ExcelImportMatchKey> AltMatchKeys { get; set; }
 
             [AllowNestedGridEdit]
@@ -167,8 +169,15 @@ namespace JosephM.Xrm.ExcelImport
             [GridWidth(800)]
             [PropertyInContextByPropertyNotNull(nameof(SourceTab))]
             [PropertyInContextByPropertyNotNull(nameof(TargetType))]
+            [DisplayOrder(40)]
             public IEnumerable<ExcelImportFieldMapping> Mappings { get; set; }
 
+            [MyDescription("This allows setting a specific value for a field in all records imported")]
+            [GridWidth(300)]
+            [DisplayOrder(50)]
+            [FormEntry]
+            [AllowNestedGridEdit]
+            [PropertyInContextByPropertyNotNull(nameof(TargetType))]
             public IEnumerable<ExplicitFieldValues> ExplicitValuesToSet { get; set; } = new ExplicitFieldValues[0];
 
             string IMapSourceImport.SourceType => SourceTab?.Key;
