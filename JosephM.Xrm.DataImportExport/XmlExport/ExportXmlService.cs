@@ -120,7 +120,7 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
                 }
 
                 var excludeFields = exportType.IncludeAllFields
-                    ? new string[0]
+                    ? exportType.ExcludeTheseFields?.Select(f => f.RecordField == null ? null : f.RecordField.Key).Distinct().ToArray() ?? new string[0]
                     : XrmService.GetFields(exportType.RecordType.Key).Except(exportType.IncludeOnlyTheseFields.Select(f => f.RecordField == null ? null : f.RecordField.Key).Distinct().ToArray());
                 
                 if (thisTypeConfig != null)
@@ -211,6 +211,10 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
                     .Select(fm => fm.LogicalName)
                     .ToArray()
                     : exportType.IncludeOnlyTheseFields.Select(f => f.RecordField.Key);
+                if(exportType.IncludeAllFields && exportType.ExcludeTheseFields != null && exportType.ExcludeTheseFields.Any())
+                {
+                    fieldsPopulateIfNull = fieldsPopulateIfNull.Except(exportType.ExcludeTheseFields.Select(f => f.RecordField?.Key).Where(k => !string.IsNullOrWhiteSpace(k))).ToArray();
+                }
 
                 var fileFields = XrmService
                     .GetEntityFieldMetadata(exportType.RecordType.Key)
@@ -427,40 +431,6 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
 
         private bool CheckIgnoreForExport(ExportRecordType exportType, Entity entity)
         {
-            if (XrmService.FieldExists("statecode", entity.LogicalName))
-            {
-                if (!exportType.IncludeInactive)
-                {
-                    var activeStates = new List<int>(new[] { XrmPicklists.State.Active });
-                    if (entity.LogicalName == Entities.product)
-                        activeStates.AddRange(new[] {
-                            OptionSets.Product.Status.Draft,
-                            OptionSets.Product.Status.UnderRevision });
-                    if (entity.LogicalName == Entities.knowledgearticle)
-                    {
-                        activeStates.Clear();
-                        activeStates.AddRange(new[] {
-                            OptionSets.KnowledgeArticle.Status.Draft,
-                            OptionSets.KnowledgeArticle.Status.Approved,
-                            OptionSets.KnowledgeArticle.Status.Scheduled,
-                            OptionSets.KnowledgeArticle.Status.Published });
-                    }
-                    if (entity.LogicalName == Entities.email
-                        || entity.LogicalName == Entities.appointment
-                        || entity.LogicalName == Entities.task
-                        || entity.LogicalName == Entities.phonecall
-                        || entity.LogicalName == Entities.letter)
-                    {
-                        activeStates.Clear();
-                        activeStates.AddRange(new[] {
-                            OptionSets.Activity.ActivityStatus.Open,
-                            OptionSets.Activity.ActivityStatus.Completed,
-                            OptionSets.Activity.ActivityStatus.Scheduled});
-                    }
-                    if (!activeStates.Contains(entity.GetOptionSetValue("statecode")))
-                        return true;
-                }
-            }
             //include 1 = public
             if (entity.LogicalName == "queue" && entity.GetOptionSetValue("queueviewtype") == 1)
                 return true;

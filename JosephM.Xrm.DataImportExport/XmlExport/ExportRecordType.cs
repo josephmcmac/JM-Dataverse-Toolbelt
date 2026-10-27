@@ -12,7 +12,7 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
     [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
     [Group(Sections.Fields, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 15)]
     [Group(Sections.Fetch, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20)]
-    public partial class ExportRecordType
+    public class ExportRecordType
     {
         public ExportRecordType()
         {
@@ -34,6 +34,7 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
         [ReadOnlyWhenSet]
         [RecordTypeExclusions(Entities.activitypointer, Entities.workflow, Entities.asyncoperation, Entities.pluginassembly, Entities.plugintracelog, Entities.plugintype, Entities.plugintypestatistic, Entities.tracelog, Entities.convertrule, Entities.importjob, Entities.emailserverprofile, Entities.sharepointdocument, Entities.serviceendpoint, Entities.role, Entities.sdkmessage, Entities.sdkmessagefilter, Entities.sdkmessageprocessingstepimage, Entities.sdkmessageprocessingstepsecureconfig, Entities.routingrule)]
         [RecordTypeFor(nameof(IncludeOnlyTheseFields) + "." + nameof(RecordField))]
+        [RecordTypeFor(nameof(ExcludeTheseFields) + "." + nameof(RecordField))]
         [RecordTypeFor(nameof(SpecificRecordsToExport) + "." + nameof(LookupSetting.Record))]
         [RecordTypeFor(nameof(ExplicitValuesToSet) + "." + nameof(ExplicitFieldValues.FieldToSet))]
         public RecordType RecordType { get; set; }
@@ -45,7 +46,7 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
         public bool IncludeAllFields { get; set; }
 
-        [MyDescription("If Not Including All Fields This Defines The Fields To Include")]
+        [MyDescription("If not including all fields this defines the fields to include")]
         [GridWidth(300)]
         [DisplayOrder(40)]
         [Group(Sections.Fields)]
@@ -53,13 +54,12 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
         [RequiredProperty]
         public IEnumerable<FieldSetting> IncludeOnlyTheseFields { get; set; }
 
-        [MyDescription("This allows setting a specific value for a field in all records imported")]
+        [MyDescription("If Including all fields this enables exclusions")]
         [GridWidth(300)]
-        [DisplayOrder(45)]
-        [FormEntry]
-        [AllowNestedGridEdit]
-        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
-        public IEnumerable<ExplicitFieldValues> ExplicitValuesToSet { get; set; }
+        [DisplayOrder(41)]
+        [Group(Sections.Fields)]
+        [PropertyInContextByPropertyValue(nameof(IncludeAllFields), true)]
+        public IEnumerable<FieldSetting> ExcludeTheseFields { get; set; }
 
         [MyDescription("If type = specific records this defines the records to export")]
         [GridWidth(300)]
@@ -70,7 +70,7 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
         public IEnumerable<LookupSetting> SpecificRecordsToExport { get; set; }
 
         [MyDescription("If type = FetchXml this defines the Fetch Xml query to use")]
-        [DisplayOrder(100)]
+        [DisplayOrder(60)]
         [Group(Sections.Fetch)]
         [DisplayName("Fetch XML")]
         [Multiline]
@@ -78,12 +78,13 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
         [PropertyInContextByPropertyValue(nameof(Type), ExportType.FetchXml)]
         public string FetchXml { get; set; }
 
-        [MyDescription("If Not Set Inactive Records Will Not Be Included")]
-        [GridWidth(100)]
-        [DisplayOrder(110)]
-        [PropertyInContextByPropertyNotNull(nameof(Type))]
-        [Group(Sections.Main)]
-        public bool IncludeInactive { get; set; }
+        [MyDescription("This allows setting a specific value for a field in all records imported")]
+        [GridWidth(300)]
+        [DisplayOrder(70)]
+        [FormEntry]
+        [AllowNestedGridEdit]
+        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+        public IEnumerable<ExplicitFieldValues> ExplicitValuesToSet { get; set; }
 
         public override string ToString()
         {

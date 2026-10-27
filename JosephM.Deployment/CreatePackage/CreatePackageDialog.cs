@@ -37,7 +37,6 @@ namespace JosephM.Deployment.CreatePackage
                 {
                     addProperty($"Include Data {data.RecordType?.Key}", data.Type.ToString());
                     addProperty($"Include Data All Fields {data.RecordType?.Key}", data.IncludeAllFields.ToString());
-                    addProperty($"Include Data Include Inactive {data.RecordType?.Key}", data.IncludeInactive.ToString());
                     if (data.Type == ExportType.SpecificRecords)
                     {
                         addProperty($"Include Data Specific Record Count {data.RecordType?.Key}", data.SpecificRecordsToExport.Count().ToString());
