@@ -95,7 +95,7 @@ namespace JosephM.Xrm.DataImportExport.Import
                 : (int?)null;
             var primaryField = XrmRecordService.GetPrimaryField(entity.Type);
             Response.AddImportError(entity,
-                new DataImportResponseItem(entity.Type, field, entity.GetStringField(primaryField), value,
+                new DataImportResponseItem(entity.Type, field, !string.IsNullOrWhiteSpace(primaryField) ? entity.GetStringField(primaryField) : value ?? "No name field", value,
                     ex.Message + (entity.Id != null ? " Id=" + entity.Id : ""),
                     ex, rowNumber: rowNumber));
         }
